@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AreaDataList
   areaDataList:
   - areaType: 0
-    branchRate: 
-    fieldRate: 20,20,20,10,10
+    branchRate: 0
+    fieldRate: 20,20,20,20,20
     fieldType: 0,1,2,3,4
     iconNo: 0

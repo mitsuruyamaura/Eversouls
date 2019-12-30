@@ -45,17 +45,24 @@ public class QuestManager : MonoBehaviour
 
     [Header("クエストの進捗度")]
     public float progressPoint;
+    [Header("宝箱の天井値")]
+    public int ceilChestPoint;
 
-    void Start() {
+    [Header("デバッグ表示用")]
+    public TMP_Text txtDebug;
+
+    public void Init() {
+        txtDebug.text += "Init start\n";
         // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
         if (!GameData.instance.endTutorial) {
             // チュートリアルが終わっていなければ
             QuestData quest = Instantiate(questDataPrefab, questTran, false);
+            quest.questManager = this;
             quest.InitQuestData(0);
             quest.no = 0;
-            quest.clearCount = 10;
-            quest.questManager = this;
+            quest.clearCount = 10;           
             questList.Add(quest);
+            txtDebug.text += "Init end\n";
         } else {
             for (int i = 0; 0 < GameData.instance.clearQuestCount; i++) {
                 QuestData quest = Instantiate(questDataPrefab, questTran, false);

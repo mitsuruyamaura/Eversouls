@@ -33,6 +33,7 @@ public class GameData : MonoBehaviour
     public float volumeSE;
 
     public bool useDebugOn;
+    public QuestManager questManager;
 
     public void Awake() {
         if (instance == null) {
@@ -55,5 +56,7 @@ public class GameData : MonoBehaviour
         exp = 0;
         visionPoint = 0;
         contactCount = 0;
+
+        questManager.Init();
     }
 }

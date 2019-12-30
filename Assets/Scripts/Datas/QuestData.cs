@@ -22,11 +22,13 @@ public class QuestData : MonoBehaviour
     public QuestManager questManager;
     public bool isSubmit;
     public int iconNo;
+    public AreaDataList areaDataList;
 
     public void InitQuestData(int areaNo) {
         imgArea.DOFade(1, 0.5f);
-        foreach (AreaDataList.AreaData data in GameData.instance.areaDatas.areaDataList) {
-            Debug.Log((AREA_TYPE)areaNo);
+        questManager.txtDebug.text += "InitQuest\n";
+        foreach (AreaDataList.AreaData data in areaDataList.areaDataList) {
+            questManager.txtDebug.text = data.areaType.ToString() + "\n";
             if ((AREA_TYPE)areaNo == data.areaType) {
                 areaType = data.areaType;
                 feildRates = GetFieldRates(data.fieldRate);

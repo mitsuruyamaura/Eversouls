@@ -301,7 +301,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 85ee4721ab286c04e82b0cd873216629, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 85d6f921d8649f44ea742a9fec572d8f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -336,6 +336,7 @@ MonoBehaviour:
   questManager: {fileID: 0}
   isSubmit: 0
   iconNo: 0
+  areaDataList: {fileID: 11400000, guid: 0137183a245eb50489ac7234ebbdb190, type: 2}
 --- !u!114 &4540783992270681183
 MonoBehaviour:
   m_ObjectHideFlags: 0

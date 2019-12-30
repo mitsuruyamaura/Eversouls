@@ -53,7 +53,7 @@ public class ActionInfo : MonoBehaviour
     public void InitField(FieldDataList.FieldData fieldData, ActionDataList.ActionData actionData) {
         // 行動を設定
         fieldType = fieldData.fieldType;
-        cost = fieldData.cost;
+        cost = fieldData.cost + actionData.cost;
         progress = fieldData.progress;
 
         // 行動のイメージ設定
@@ -61,6 +61,7 @@ public class ActionInfo : MonoBehaviour
 
         // 行動対象となる地形のイメージ設定
         imgField.sprite = Resources.Load<Sprite>("Fields/" + fieldData.imageNo);
+        imageNo = fieldData.imageNo;
 
         // テキスト関連表示
         txtActionName.text = fieldType.ToString();

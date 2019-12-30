@@ -48,7 +48,7 @@ public class GameData : MonoBehaviour
 
     private void LoadDebug() {
         level = 1;
-        ap = 30;
+        ap = 3000;
         playerName = "visions";
         maxHp = 100;
         money = 0;

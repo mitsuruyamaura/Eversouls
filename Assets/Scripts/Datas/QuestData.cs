@@ -24,6 +24,7 @@ public class QuestData : MonoBehaviour
     public int iconNo;
 
     public void InitQuestData(int areaNo) {
+        imgArea.DOFade(1, 0.5f);
         foreach (AreaDataList.AreaData data in GameData.instance.areaDatas.areaDataList) {
             Debug.Log((AREA_TYPE)areaNo);
             if ((AREA_TYPE)areaNo == data.areaType) {
@@ -84,11 +85,13 @@ public class QuestData : MonoBehaviour
         if (!isSubmit) {
             isSubmit = true;
             GameData.instance.questData = this;
+            StartCoroutine(questManager.SetAreaImage(areaType));
             questManager.CreateActions(iconNo);
             Sequence seq = DOTween.Sequence();
             seq.Append(transform.DOScale(1.2f, 0.15f));
             seq.Append(transform.DOScale(1.0f, 0.15f));
-            Destroy(gameObject, 0.5f);
+            seq.Join(imgArea.DOFade(0, 0.15f));
+            Destroy(gameObject, 0.3f);
         }
     }
 }

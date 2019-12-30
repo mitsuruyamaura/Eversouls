@@ -38,6 +38,10 @@ public class QuestManager : MonoBehaviour
     public Image imgProgress;
     [Header("実行中のイベント(地形、敵、罠、宝箱など)イメージ表示用")]
     public Image imgEvent;
+    [Header("エリアイメージ表示フェイドイン用")]
+    public Image imgAreaBack;
+    [Header("エリアイメージ表示フェイドアウト用")]
+    public Image imgAreaFront;
 
     [Header("クエストの進捗度")]
     public float progressPoint;
@@ -107,7 +111,7 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 行為判定処理
+    /// 行為判定
     /// </summary>
     /// <returns></returns>
     public IEnumerator ActionJudgment(int cost, float progress, bool isAction, int iconNo) {
@@ -137,12 +141,18 @@ public class QuestManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 行動を作成
+    /// </summary>
+    /// <param name="iconNo"></param>
     public void CreateActions(int iconNo) {
         // Eventイメージ表示(現在いる地形、敵、ワナなどのイベントなど)
-        if (!imgEvent.gameObject.activeSelf) {
-            imgEvent.gameObject.SetActive(true);
-        }
-        imgEvent.sprite = Resources.Load<Sprite>("Fields/" + iconNo);
+        //if (!imgEvent.gameObject.activeSelf) {
+        //    imgEvent.gameObject.SetActive(true);
+        //}
+        //imgEvent.sprite = Resources.Load<Sprite>("Fields/" + iconNo);
+        StartCoroutine(SetFieldImage(iconNo));
+
 
         scrollViewAction.SetActive(true);
 
@@ -158,7 +168,6 @@ public class QuestManager : MonoBehaviour
         for (int i = 0; i < actionBaseCount; i++) {
             int value = Random.Range(0, total + 1);
             for (int j = 0; j < questList[0].feildRates.Length; j++) {
-                Debug.Log(value);
                 if (value < questList[0].feildRates[j]) {
                     ActionInfo action = Instantiate(actionInfoPrefab, actionTran, false);
                     action.questManager = this;
@@ -183,5 +192,43 @@ public class QuestManager : MonoBehaviour
             Destroy(actionList[i].gameObject);
         }
         CreateActions(iconNo);
+    }
+
+    /// <summary>
+    /// 背景イメージを選択したクエストのエリアのイメージに切り替える
+    /// </summary>
+    /// <param name="areaType"></param>
+    public IEnumerator SetAreaImage(AREA_TYPE areaType) {
+        // 背景用の後ろのイメージを変更しておく
+        imgAreaBack.sprite = Resources.Load<Sprite>("Areas/" + (int)areaType);
+
+        // 手前側のイメージをフェイドアウトさせる
+        Sequence seq = DOTween.Sequence();
+        seq.Append(imgAreaFront.DOFade(0f, 1.0f));
+        seq.Join(imgAreaBack.DOFade(0.75f, 1.0f));
+
+        yield return new WaitForSeconds(1.0f);
+
+        // 次のために手前側のイメージも変更しておく
+        imgAreaFront.sprite = Resources.Load<Sprite>("Areas/" + (int)areaType);
+        seq.Append(imgAreaFront.DOFade(0.75f, 1.0f));
+        seq.Join(imgAreaBack.DOFade(0f, 1.0f));
+    }
+
+    public IEnumerator SetFieldImage(int fieldNo) {
+        // 背景用の後ろのイメージを変更しておく
+        imgAreaBack.sprite = Resources.Load<Sprite>("Fields/" + fieldNo);
+
+        // 手前側のイメージをフェイドアウトさせる
+        Sequence seq = DOTween.Sequence();
+        seq.Append(imgAreaFront.DOFade(0f, 1.0f));
+        seq.Join(imgAreaBack.DOFade(0.75f, 1.0f));
+
+        yield return new WaitForSeconds(1.0f);
+
+        // 次のために手前側のイメージも変更しておく
+        imgAreaFront.sprite = Resources.Load<Sprite>("Fields/" + fieldNo);
+        seq.Append(imgAreaBack.DOFade(0f, 0.01f));       
+        seq.Join(imgAreaFront.DOFade(0.75f, 0.01f));
     }
 }

@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72790e765d7dc7d4d88c592d22cfa551, type: 3}
   m_Name: ActionData
   m_EditorClassIdentifier: 
-  actionDataList: []
+  actionDataList:
+  - actionType: 0
+    cost: 10
+    progress: 5
+    imageNo: 0
+    info: 
+    criticalRate: 10

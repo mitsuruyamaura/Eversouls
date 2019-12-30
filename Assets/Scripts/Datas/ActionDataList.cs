@@ -9,9 +9,11 @@ public class ActionDataList : ScriptableObject
 
     [System.Serializable]
     public class ActionData {
-        public ACTION_TYPE actionType;
-        public int cost;
+        public ACTION_TYPE actionType; // 行動タイプ
+        public int cost;               // 移動するためのコスト
+        public int progress;           // 成功時にプラスされる進捗度。失敗時は半分
         public int imageNo;
         public string info;
+        public float criticalRate;     // クリティカル発生確率。クリティカルするとコスト0で進捗2倍。
     }
 }

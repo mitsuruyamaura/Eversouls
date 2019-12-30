@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class QuestData : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class QuestData : MonoBehaviour
     public Button btnSubmit;
     public QuestManager questManager;
     public bool isSubmit;
+    public int iconNo;
 
     public void InitQuestData(int areaNo) {
         foreach (AreaDataList.AreaData data in GameData.instance.areaDatas.areaDataList) {
@@ -29,7 +31,8 @@ public class QuestData : MonoBehaviour
                 feildRates = GetFieldRates(data.fieldRate);
                 fieldTypes = GetFieldTypes(data.fieldType);
                 fieldDatas = GetFieldDatas();
-                imgArea.sprite = Resources.Load<Sprite>("Events/Areas/" + data.iconNo);
+                imgArea.sprite = Resources.Load<Sprite>("Areas/" + data.iconNo);
+                iconNo = data.iconNo;
                 branchCount = 0;
             }
         }
@@ -81,7 +84,10 @@ public class QuestData : MonoBehaviour
         if (!isSubmit) {
             isSubmit = true;
             GameData.instance.questData = this;
-            questManager.CreateActions();
+            questManager.CreateActions(iconNo);
+            Sequence seq = DOTween.Sequence();
+            seq.Append(transform.DOScale(1.2f, 0.15f));
+            seq.Append(transform.DOScale(1.0f, 0.15f));
             Destroy(gameObject, 0.5f);
         }
     }

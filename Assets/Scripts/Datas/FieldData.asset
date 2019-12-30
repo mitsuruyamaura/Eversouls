@@ -15,21 +15,31 @@ MonoBehaviour:
   fieldDataList:
   - fieldType: 0
     cost: 5
+    progress: 5
     imageNo: 0
     info: 
+    criticalRate: 0
   - fieldType: 1
     cost: 10
+    progress: 5
     imageNo: 1
     info: 
+    criticalRate: 0
   - fieldType: 2
     cost: 15
+    progress: 10
     imageNo: 2
     info: 
+    criticalRate: 0
   - fieldType: 3
     cost: 20
+    progress: 10
     imageNo: 3
     info: 
+    criticalRate: 0
   - fieldType: 4
     cost: 25
+    progress: 5
     imageNo: 4
     info: 
+    criticalRate: 0

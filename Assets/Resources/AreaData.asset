@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 08ff3a40313a2d64a97e492fc9c90f3f, type: 3}
   m_Name: AreaData
-  m_EditorClassIdentifier: Assembly-CSharp::AreaDataList
+  m_EditorClassIdentifier: 
   areaDataList:
   - areaType: 0
     branchRate: 0
-    fieldRate: 20,20,20,20,20
+    fieldRate: 20,10,10,10,10
     fieldType: 0,1,2,3,4
     iconNo: 0

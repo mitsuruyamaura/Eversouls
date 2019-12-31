@@ -43,8 +43,9 @@ public class QuestData : MonoBehaviour
     public void InitQuestData(int areaNo) {
         imgArea.DOFade(1, 0.5f);
         questManager.txtDebug.text += "InitQuest\n";
+        questManager.txtDebug.text += GameData.instance.areaDatas.areaDataList.Count.ToString() + "\n";
         foreach (AreaDataList.AreaData data in GameData.instance.areaDatas.areaDataList) {
-            questManager.txtDebug.text = data.areaType.ToString() + "\n";
+            questManager.txtDebug.text += data.areaType.ToString() + "\n";
             if ((AREA_TYPE)areaNo == data.areaType) {
                 // 生成されたクエストのデータを設定
                 areaType = data.areaType;

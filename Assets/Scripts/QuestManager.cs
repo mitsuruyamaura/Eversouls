@@ -22,6 +22,8 @@ public class QuestManager : MonoBehaviour
     public Transform questTran;
     [Header("行動用プレファブの生成位置")]
     public Transform actionTran;
+    [Header("イベント用プレファブの生成位置")]
+    public Transform eventTran;
     [Header("行動用プレファブの基本生成回数")]
     public int actionBaseCount;
 
@@ -121,16 +123,39 @@ public class QuestManager : MonoBehaviour
     /// 行為判定
     /// </summary>
     /// <returns></returns>
-    public IEnumerator ActionJudgment(int cost, float progress, bool isAction, int iconNo) {
+    public IEnumerator ActionJudgment(int cost, float progress, bool isAction, int iconNo, float criticalRate) {
         yield return new WaitForSeconds(0.5f);
-        // 最初にクリティカルかどうか判定する
+        // 最初にクリティカルかどうか判定
+        if (CheckActionCritical(criticalRate)) {
+            Debug.Log("Critical!");
+            // クリティカルならボーナス授与
+            cost = 0;
+            progress *= 2;
+        } else {
+            // クリティカル以外で、移動以外の行動(isAction = true)の場合は成否判定
+            if (isAction) {
 
-        // trueの場合、成功か失敗かを表示する
+            }
+        }
 
         // その後、進捗度を更新し、次の行動を作成
 
         UpdateHeaderInfo(cost, progress);
         UpDateActions(iconNo);
+    }
+
+    /// <summary>
+    /// クリティカル判定
+    /// </summary>
+    /// <param name="criticalRate"></param>
+    /// <returns></returns>
+    public bool CheckActionCritical(float criticalRate) {
+        bool isCritical = false;
+        float value = Random.Range(0, 100);
+        if (value <= criticalRate) {
+            isCritical = true;
+        }
+        return isCritical; 
     }
 
     /// <summary>
@@ -199,6 +224,15 @@ public class QuestManager : MonoBehaviour
             Destroy(actionList[i].gameObject);
         }
         CreateActions(iconNo);
+    }
+
+    /// <summary>
+    /// １つの行動を選択したら、他の行動をタップできないように制御
+    /// </summary>
+    public void InactieActionInfo() {
+        for (int i = 0; i < actionList.Count; i++) {
+            actionList[i].btnActionInfo.interactable = false;
+        }
     }
 
     /// <summary>

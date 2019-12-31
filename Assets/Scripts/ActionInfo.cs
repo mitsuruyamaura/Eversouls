@@ -11,6 +11,8 @@ public class ActionInfo : MonoBehaviour
     public int cost;
     [Header("成功時に獲得できる進捗度")]
     public float progress;
+    [Header("クリティカル確率")]
+    public float critical;
 
     // UI系
     [Header("地形/行動名")]
@@ -55,6 +57,7 @@ public class ActionInfo : MonoBehaviour
         fieldType = fieldData.fieldType;
         cost = fieldData.cost + actionData.cost;
         progress = fieldData.progress;
+        critical = fieldData.criticalRate + actionData.criticalRate;
 
         // 行動のイメージ設定
         imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + (int)actionData.actionType);
@@ -95,7 +98,8 @@ public class ActionInfo : MonoBehaviour
             Sequence seq = DOTween.Sequence();
             seq.Append(transform.DOScale(1.2f, 0.15f));
             seq.Append(transform.DOScale(1.0f, 0.15f));
-            StartCoroutine(questManager.ActionJudgment(cost, progress, isAction, imageNo));
+            questManager.InactieActionInfo();
+            StartCoroutine(questManager.ActionJudgment(cost, progress, isAction, imageNo, critical));
         }
     }
 }

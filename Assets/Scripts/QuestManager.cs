@@ -50,11 +50,7 @@ public class QuestManager : MonoBehaviour
     [Header("宝箱の天井値")]
     public int ceilChestPoint;
 
-    [Header("デバッグ表示用")]
-    public TMP_Text txtDebug;
-
     public void Init() {
-        txtDebug.text += "Init start\n";
         // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
         if (!GameData.instance.endTutorial) {
             // チュートリアルが終わっていなければ
@@ -64,7 +60,6 @@ public class QuestManager : MonoBehaviour
             quest.no = 0;
             quest.clearCount = 10;           
             questList.Add(quest);
-            txtDebug.text += "Init end\n";
         } else {
             for (int i = 0; 0 < GameData.instance.clearQuestCount; i++) {
                 QuestData quest = Instantiate(questDataPrefab, questTran, false);
@@ -124,7 +119,18 @@ public class QuestManager : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public IEnumerator ActionJudgment(int cost, float progress, bool isAction, int iconNo, float criticalRate) {
-        yield return new WaitForSeconds(0.5f);
+        // 順番にチェックする
+        if (questList[0].CheckEncountEnemy(0)) {  // チェックする地形の番号を渡す
+            Debug.Log("敵が出現");
+        } else if (questList[0].CheckEncoutSecret(0)) {
+            Debug.Log("秘匿物発見");
+        } else if (questList[0].CheckEncountTrap(0)) {
+            Debug.Log("罠発見");
+        } else if (questList[0].CheckEncountTrap(0)) {
+            Debug.Log("景勝地発見");
+        }
+
+            yield return new WaitForSeconds(0.1f);
         // 最初にクリティカルかどうか判定
         if (CheckActionCritical(criticalRate)) {
             Debug.Log("Critical!");
@@ -159,25 +165,10 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 移動開始前に敵が出現するかチェック
-    /// </summary>
-    public void CheckEnterEnemy() {
-
-    }
-
-    public void CheckTrap() {
-
-    }
-
-    public void CheckChest() {
-
-    }
-
-    /// <summary>
-    /// 行動を作成
+    /// 地形と行動を作成
     /// </summary>
     /// <param name="iconNo"></param>
-    public void CreateActions(int iconNo) {
+    public void CreateField(int iconNo) {
         // Eventイメージ表示(現在いる地形、敵、ワナなどのイベントなど)
         //if (!imgEvent.gameObject.activeSelf) {
         //    imgEvent.gameObject.SetActive(true);
@@ -223,7 +214,7 @@ public class QuestManager : MonoBehaviour
         for (int i = 0; i < actionList.Count; i++) {
             Destroy(actionList[i].gameObject);
         }
-        CreateActions(iconNo);
+        CreateField(iconNo);
     }
 
     /// <summary>

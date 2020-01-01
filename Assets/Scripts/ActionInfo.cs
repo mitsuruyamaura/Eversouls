@@ -44,6 +44,9 @@ public class ActionInfo : MonoBehaviour
     [Header("地形/行動の表示用番号")]
     private int imageNo;
 
+    public QuestData.EventData eventData = new QuestData.EventData();
+
+
     private void Start() {
         if (cost > GameData.instance.ap) {
             btnActionInfo.interactable = false;
@@ -58,6 +61,7 @@ public class ActionInfo : MonoBehaviour
         cost = fieldData.cost + actionData.cost;
         progress = fieldData.progress;
         critical = fieldData.criticalRate + actionData.criticalRate;
+        
 
         // 行動のイメージ設定
         imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + (int)actionData.actionType);

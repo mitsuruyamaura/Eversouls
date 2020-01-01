@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaDataList:
   - areaType: 0
+    timeType: 1
+    tempType: 1
     branchRate: 0
     fieldRate: 20,10,10,10,10
     fieldType: 0,1,2,3,4
+    defaultName: 
     iconNo: 0
+    rareliry: 1

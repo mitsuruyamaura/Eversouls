@@ -18,7 +18,7 @@ public class QuestData : MonoBehaviour
     public int clearCount;
     [Header("クエストに出現する地形リスト")]
     public List<FieldDataList.FieldData> fieldDatas;
-    [HideInInspector]
+
     public FIELD_TYPE[] fieldTypes;                // 出現する地形タイプ
     [Header("地形の出現割合")]
     public int[] feildRates;
@@ -28,8 +28,10 @@ public class QuestData : MonoBehaviour
     public int branchCount;
 
     // UI関連
-    [Header("エリアのタイプ")]
-    public TMP_Text txtAreaName;
+    [Header("エリアのタイプ名表示")]
+    public TMP_Text txtAreaType;
+    [Header("エリアの任意名称表示")]
+    public TMP_Text txtUniqueAreaName;
     public Image imgArea;
     public Button btnSubmit;
 
@@ -40,12 +42,33 @@ public class QuestData : MonoBehaviour
     [HideInInspector]
     public int iconNo;                   //地形のイメージ番号
 
+    [System.Serializable]
+    public class EventData {
+        // stringを配列に入れるための用意
+        [Header("イベント発生率(敵/秘匿物/罠/景勝地)")]
+        public int[] eventsRates;
+        [Header("敵の出現率")]
+        public int[] enemyEncountRates;
+        public int[] secretItemRates;
+        public int[] landscapeRates;
+        public int[] trapRates;
+    }
+    public List<EventData> eventDataList = new List<EventData>();
+
+    [Header("昼夜")]
+    public AreaDataList.TIME_TYPE timeType;
+    [Header("希少度")]
+    public AreaDataList.RARELITY areaRarelity;
+    [Header("温度")]
+    public TEMPERATURE_TYPE tempratureType;
+
+    /// <summary>
+    /// クエストデータを設定
+    /// </summary>
+    /// <param name="areaNo"></param>
     public void InitQuestData(int areaNo) {
         imgArea.DOFade(1, 0.5f);
-        questManager.txtDebug.text += "InitQuest\n";
-        questManager.txtDebug.text += GameData.instance.areaDatas.areaDataList.Count.ToString() + "\n";
         foreach (AreaDataList.AreaData data in GameData.instance.areaDatas.areaDataList) {
-            questManager.txtDebug.text += data.areaType.ToString() + "\n";
             if ((AREA_TYPE)areaNo == data.areaType) {
                 // 生成されたクエストのデータを設定
                 areaType = data.areaType;
@@ -54,15 +77,28 @@ public class QuestData : MonoBehaviour
                 fieldDatas = GetFieldDatas();
 
                 for (int i = 0; i < fieldDatas.Count; i++) {
-                    // 敵の出現率と宝箱の出現率を配列に入れる
-                    fieldDatas[i].encountRates = new int[4];
-                    fieldDatas[i].chestRates = new int[4];
-                    fieldDatas[i].encountRates = fieldDatas[i].encount.Split(',').Select(int.Parse).ToArray();
-                    fieldDatas[i].chestRates = fieldDatas[i].chest.Split(',').Select(int.Parse).ToArray();
+                    EventData eventData = new EventData();
+                    // 各出現率を文字列からIntに変更し、配列に入れる
+                    eventData.eventsRates = new int[(int)EVENT_TYPE.COUNT];
+                    eventData.enemyEncountRates = new int[5];
+                    eventData.secretItemRates = new int[(int)SECRET_ITEM_TYPE.COUNT];                                       
+                    eventData.landscapeRates = new int[(int)LANDSCAPE_TYPE.COUNT];
+                    eventData.trapRates = new int[(int)TRAP_TYPE.COUNT];
+
+                    eventData.eventsRates = fieldDatas[i].events.Split(',').Select(int.Parse).ToArray();
+                    eventData.enemyEncountRates = fieldDatas[i].enemyEncount.Split(',').Select(int.Parse).ToArray();
+                    eventData.secretItemRates = fieldDatas[i].secretItem.Split(',').Select(int.Parse).ToArray();
+                    eventData.landscapeRates = fieldDatas[i].landscape.Split(',').Select(int.Parse).ToArray();
+                    eventData.trapRates = fieldDatas[i].trap.Split(',').Select(int.Parse).ToArray();
+                    
+                    eventDataList.Add(eventData);
                 }
                 imgArea.sprite = Resources.Load<Sprite>("Areas/" + data.iconNo);
                 iconNo = data.iconNo;
                 branchCount = 0;
+                timeType = data.timeType;
+                areaRarelity = data.rareliry;
+                tempratureType = data.tempType;
             }
         }
         btnSubmit.onClick.AddListener(OnClickSubmit);
@@ -114,9 +150,8 @@ public class QuestData : MonoBehaviour
     public void OnClickSubmit() {
         if (!isSubmit) {
             isSubmit = true;
-            GameData.instance.questData = this;
             StartCoroutine(questManager.SetAreaImage(areaType));
-            questManager.CreateActions(iconNo);
+            questManager.CreateField(iconNo);
 
             // アニメさせながら破棄する
             Sequence seq = DOTween.Sequence();
@@ -125,5 +160,51 @@ public class QuestData : MonoBehaviour
             seq.Join(imgArea.DOFade(0, 0.15f));
             Destroy(gameObject, 0.3f);
         }
+    }
+
+    /// <summary>
+    /// エリアに任意の名前を付ける
+    /// </summary>
+    public void GiveUniqueAreaName() {
+
+    }
+
+    /// <summary>
+    /// 移動開始前に敵が出現するかチェック
+    /// </summary>
+    public bool CheckEncountEnemy(int fieldNo) {  // 地形情報をもらって判断する
+        bool isEncount = false;
+        float value = UnityEngine.Random.Range(0, 100);
+        if (value < eventDataList[fieldNo].eventsRates[0]) {
+            isEncount = true;
+        }
+        return isEncount;
+    }
+
+    public bool CheckEncoutSecret(int fieldNo) {
+        bool isEncount = false;
+        float value = UnityEngine.Random.Range(0, 100);
+        if (value < eventDataList[fieldNo].eventsRates[1]) {
+            isEncount = true;
+        }
+        return isEncount;
+    }
+
+    public bool CheckEncountTrap(int fieldNo) {
+        bool isEncount = false;
+        float value = UnityEngine.Random.Range(0, 100);
+        if (value < eventDataList[fieldNo].eventsRates[2]) {
+            isEncount = true;
+        }
+        return isEncount;
+    }
+
+    public bool CheckEncountLandscape(int fieldNo) {
+        bool isEncount = false;
+        float value = UnityEngine.Random.Range(0, 100);
+        if (value < eventDataList[fieldNo].eventsRates[3]) {
+            isEncount = true;
+        }
+        return isEncount;
     }
 }

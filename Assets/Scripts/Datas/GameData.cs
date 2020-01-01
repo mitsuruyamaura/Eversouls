@@ -17,7 +17,6 @@ public class GameData : MonoBehaviour
     public int clearQuestCount;
     public long totalCount;
 
-    public QuestData questData = new QuestData();
     public bool endTutorial;
     public AreaDataList areaDatas;
     public CharaDataList charaDatas;
@@ -28,6 +27,8 @@ public class GameData : MonoBehaviour
     public List<CharaDataList.CharaData> charas;
     [Header("現在実行可能な行動リスト")]
     public List<ActionDataList.ActionData> actions;
+    [Header("エリアリスト")]
+    public List<AreaDataList.AreaData> areas;
 
     public float volumeBGM;
     public float volumeSE;

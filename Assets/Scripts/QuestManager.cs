@@ -50,6 +50,10 @@ public class QuestManager : MonoBehaviour
     [Header("宝箱の天井値")]
     public int ceilChestPoint;
 
+    private void Start() {
+        StartCoroutine(TransitionManager.instance.EnterScene());
+    }
+
     public void Init() {
         // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
         if (!GameData.instance.endTutorial) {
@@ -118,19 +122,24 @@ public class QuestManager : MonoBehaviour
     /// 行為判定
     /// </summary>
     /// <returns></returns>
-    public IEnumerator ActionJudgment(int cost, float progress, bool isAction, int iconNo, float criticalRate) {
-        // 順番にチェックする
-        if (questList[0].CheckEncountEnemy(0)) {  // チェックする地形の番号を渡す
+    public IEnumerator ActionJudgment(int cost, float progress, int iconNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action) {
+        // クリティカル以外はイベント判定を順番にチェックする
+        if (questList[0].CheckEncountEnemy(field)) {  // チェックする地形の番号を渡す
             Debug.Log("敵が出現");
-        } else if (questList[0].CheckEncoutSecret(0)) {
-            Debug.Log("秘匿物発見");
-        } else if (questList[0].CheckEncountTrap(0)) {
-            Debug.Log("罠発見");
-        } else if (questList[0].CheckEncountTrap(0)) {
-            Debug.Log("景勝地発見");
+        } else if (questList[0].CheckEncoutSecret(field)) {
+            Debug.Log("秘匿物を発見");
+        } else if (questList[0].CheckEncountTrap(field)) {
+            Debug.Log("罠を発見");
+        } else if (questList[0].CheckEncountTrap(field)) {
+            Debug.Log("景勝地を発見");
+        } else {
+            Debug.Log("移動");
         }
 
-            yield return new WaitForSeconds(0.1f);
+        // 上記の行動に合わせて分岐し、その中で行為判定を行う
+
+        yield return new WaitForSeconds(0.1f);
+
         // 最初にクリティカルかどうか判定
         if (CheckActionCritical(criticalRate)) {
             Debug.Log("Critical!");
@@ -138,10 +147,9 @@ public class QuestManager : MonoBehaviour
             cost = 0;
             progress *= 2;
         } else {
-            // クリティカル以外で、移動以外の行動(isAction = true)の場合は成否判定
-            if (isAction) {
+            
 
-            }
+
         }
 
         // その後、進捗度を更新し、次の行動を作成
@@ -194,11 +202,12 @@ public class QuestManager : MonoBehaviour
                 if (value < questList[0].feildRates[j]) {
                     ActionInfo action = Instantiate(actionInfoPrefab, actionTran, false);
                     action.questManager = this;
-                    action.InitField(questList[0].fieldDatas[j], GameData.instance.actionDataList.actionDataList[0]);
+                    action.InitField(questList[0].fieldDatas[j], GameData.instance.actionDataList.actionDataList[Random.Range(0, 3)]);
                     actionList.Add(action);
                     break;
                 } else {
                     value -= questList[0].feildRates[j];
+
                 }
             }
         }

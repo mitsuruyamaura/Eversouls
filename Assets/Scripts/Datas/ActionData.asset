@@ -14,14 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionDataList:
   - actionType: 0
-    cost: 0
+    cost: 5
     progress: 5
     imageNo: 0
     info: 
     criticalRate: 10
-  - actionType: 2
+  - actionType: 3
     cost: 10
     progress: 10
     imageNo: 1
     info: 
     criticalRate: 15
+  - actionType: 4
+    cost: 20
+    progress: 15
+    imageNo: 3
+    info: 
+    criticalRate: 5
+  - actionType: 10
+    cost: 15
+    progress: 0
+    imageNo: 5
+    info: 
+    criticalRate: 10

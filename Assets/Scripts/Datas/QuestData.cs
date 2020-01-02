@@ -52,6 +52,7 @@ public class QuestData : MonoBehaviour
         public int[] secretItemRates;
         public int[] landscapeRates;
         public int[] trapRates;
+        public FIELD_TYPE field;
     }
     public List<EventData> eventDataList = new List<EventData>();
 
@@ -61,6 +62,9 @@ public class QuestData : MonoBehaviour
     public AreaDataList.RARELITY areaRarelity;
     [Header("温度")]
     public TEMPERATURE_TYPE tempratureType;
+
+    [Header("エンカウント判定イベントデータ")]
+    public EventData checkEventData;
 
     /// <summary>
     /// クエストデータを設定
@@ -90,7 +94,9 @@ public class QuestData : MonoBehaviour
                     eventData.secretItemRates = fieldDatas[i].secretItem.Split(',').Select(int.Parse).ToArray();
                     eventData.landscapeRates = fieldDatas[i].landscape.Split(',').Select(int.Parse).ToArray();
                     eventData.trapRates = fieldDatas[i].trap.Split(',').Select(int.Parse).ToArray();
-                    
+
+                    eventData.field = fieldDatas[i].fieldType;
+
                     eventDataList.Add(eventData);
                 }
                 imgArea.sprite = Resources.Load<Sprite>("Areas/" + data.iconNo);
@@ -172,37 +178,43 @@ public class QuestData : MonoBehaviour
     /// <summary>
     /// 移動開始前に敵が出現するかチェック
     /// </summary>
-    public bool CheckEncountEnemy(int fieldNo) {  // 地形情報をもらって判断する
+    public bool CheckEncountEnemy(FIELD_TYPE fieldType) {  // 地形情報をもらって判断する
         bool isEncount = false;
         float value = UnityEngine.Random.Range(0, 100);
-        if (value < eventDataList[fieldNo].eventsRates[0]) {
+        Debug.Log(value);
+        foreach (EventData data in eventDataList) {
+            if (data.field == fieldType) {
+                checkEventData = data;
+                if (value < data.eventsRates[0]) {
+                    isEncount = true;
+                }
+            }      
+        }
+        return isEncount;
+    }
+
+    public bool CheckEncoutSecret(FIELD_TYPE fieldType) {
+        bool isEncount = false;
+        float value = UnityEngine.Random.Range(0, 100);
+        if (value < checkEventData.eventsRates[1]) {
             isEncount = true;
         }
         return isEncount;
     }
 
-    public bool CheckEncoutSecret(int fieldNo) {
+    public bool CheckEncountTrap(FIELD_TYPE fieldType) {
         bool isEncount = false;
         float value = UnityEngine.Random.Range(0, 100);
-        if (value < eventDataList[fieldNo].eventsRates[1]) {
+        if (value < checkEventData.eventsRates[2]) {
             isEncount = true;
         }
         return isEncount;
     }
 
-    public bool CheckEncountTrap(int fieldNo) {
+    public bool CheckEncountLandscape(FIELD_TYPE fieldType) {
         bool isEncount = false;
         float value = UnityEngine.Random.Range(0, 100);
-        if (value < eventDataList[fieldNo].eventsRates[2]) {
-            isEncount = true;
-        }
-        return isEncount;
-    }
-
-    public bool CheckEncountLandscape(int fieldNo) {
-        bool isEncount = false;
-        float value = UnityEngine.Random.Range(0, 100);
-        if (value < eventDataList[fieldNo].eventsRates[3]) {
+        if (value < checkEventData.eventsRates[3]) {
             isEncount = true;
         }
         return isEncount;

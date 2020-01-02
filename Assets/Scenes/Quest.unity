@@ -465,11 +465,11 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 3
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0
+  m_FillAmount: 0.99
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -809,7 +809,6 @@ MonoBehaviour:
   imgAreaFront: {fileID: 1067863131}
   progressPoint: 0
   ceilChestPoint: 0
-  txtDebug: {fileID: 0}
 --- !u!4 &444253677
 Transform:
   m_ObjectHideFlags: 0
@@ -1869,7 +1868,6 @@ MonoBehaviour:
   contactCount: 0
   clearQuestCount: 0
   totalCount: 0
-  questData: {fileID: 0}
   endTutorial: 0
   areaDatas: {fileID: 11400000, guid: 0137183a245eb50489ac7234ebbdb190, type: 2}
   charaDatas: {fileID: 11400000, guid: 2c63350afce2d9c4fab2fb2e9eaac91a, type: 2}
@@ -1877,6 +1875,7 @@ MonoBehaviour:
   fieldDataList: {fileID: 11400000, guid: 36c696ed4dcc21f4eb17867130c9b123, type: 2}
   charas: []
   actions: []
+  areas: []
   volumeBGM: 0
   volumeSE: 0
   useDebugOn: 1

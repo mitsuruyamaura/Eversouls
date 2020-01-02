@@ -98,8 +98,8 @@ public class ActionInfo : MonoBehaviour
         if (!isSubmit) {
             isSubmit = true;
             Sequence seq = DOTween.Sequence();
-            seq.Append(transform.DOScale(1.2f, 0.15f));
-            seq.Append(transform.DOScale(1.0f, 0.15f));
+            seq.Append(transform.DOScale(1.2f, 0.2f));
+            seq.Append(transform.DOScale(1.0f, 0.2f));
             questManager.InactieActionInfo();
             StartCoroutine(questManager.ActionJudgment(cost, progress, imageNo, critical, fieldType, actionType));
         }

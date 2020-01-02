@@ -138,7 +138,7 @@ public class QuestManager : MonoBehaviour
 
         // 上記の行動に合わせて分岐し、その中で行為判定を行う
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1.0f);
 
         // 最初にクリティカルかどうか判定
         if (CheckActionCritical(criticalRate)) {

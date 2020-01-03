@@ -12,6 +12,8 @@ public class QuestManager : MonoBehaviour
     public QuestData questDataPrefab;
     [Header("行動用プレファブ")]
     public ActionInfo actionInfoPrefab;
+    [Header("行動用プレファブ")]
+    public EventInfo eventInfoPrefab;
 
     [Header("探索しているクエストのリスト")]
     public List<QuestData> questList = new List<QuestData>();
@@ -52,6 +54,7 @@ public class QuestManager : MonoBehaviour
 
     private void Start() {
         StartCoroutine(TransitionManager.instance.EnterScene());
+        Init();
     }
 
     public void Init() {
@@ -123,37 +126,63 @@ public class QuestManager : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public IEnumerator ActionJudgment(int cost, float progress, int iconNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action) {
+        yield return new WaitForSeconds(0.5f);
+
+        EVENT_TYPE eventType = new EVENT_TYPE();
         // クリティカル以外はイベント判定を順番にチェックする
-        if (questList[0].CheckEncountEnemy(field)) {  // チェックする地形の番号を渡す
+        float[] amount = new float[4];
+        foreach (ActionDataList.ActionData data in GameData.instance.actionDataList.actionDataList) {
+            if (data.actionType == action) {
+                switch (action) {
+                    case ACTION_TYPE.警戒移動:
+                        // 敵の出現率と罠の出現率ダウン
+                        amount[0] = data.value;
+                        amount[2] = data.value;
+                        break;
+                    case ACTION_TYPE.探索:
+                        // 秘匿物と景勝地の出現率アップ
+                        amount[1] = data.value;
+                        amount[3] = data.value;
+                        break;
+                }
+            }
+        }
+
+        // チェックする地形の番号を渡す
+        if (questList[0].CheckEncountEnemy(field, amount[0])) {
             Debug.Log("敵が出現");
-        } else if (questList[0].CheckEncoutSecret(field)) {
+            eventType = EVENT_TYPE.敵;
+        } else if (questList[0].CheckEncoutSecret(field, amount[1])) {
             Debug.Log("秘匿物を発見");
-        } else if (questList[0].CheckEncountTrap(field)) {
+            eventType = EVENT_TYPE.秘匿物;
+        } else if (questList[0].CheckEncountTrap(field, amount[2])) {
             Debug.Log("罠を発見");
-        } else if (questList[0].CheckEncountTrap(field)) {
+            eventType = EVENT_TYPE.罠;
+        } else if (questList[0].CheckEncountLandscape(field, amount[3])) {
             Debug.Log("景勝地を発見");
+            eventType = EVENT_TYPE.景勝地;
         } else {
             Debug.Log("移動");
+            eventType = EVENT_TYPE.移動;
         }
 
         // 上記の行動に合わせて分岐し、その中で行為判定を行う
+        if (eventType != EVENT_TYPE.移動) {
+            // 移動以外ならイベントを作成する
+            EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
+            eventInfo.Init(eventType, questList[0], field);
 
-        yield return new WaitForSeconds(1.0f);
-
-        // 最初にクリティカルかどうか判定
-        if (CheckActionCritical(criticalRate)) {
-            Debug.Log("Critical!");
-            // クリティカルならボーナス授与
-            cost = 0;
-            progress *= 2;
         } else {
-            
-
-
+            // 移動の場合には最初にクリティカルかどうか判定
+            if (CheckActionCritical(criticalRate)) {
+                Debug.Log("Critical!");
+                // クリティカルならボーナス授与
+                cost = 0;
+                progress *= 2;
+            }            
         }
-
+        
         // その後、進捗度を更新し、次の行動を作成
-
         UpdateHeaderInfo(cost, progress);
         UpDateActions(iconNo);
     }
@@ -202,7 +231,7 @@ public class QuestManager : MonoBehaviour
                 if (value < questList[0].feildRates[j]) {
                     ActionInfo action = Instantiate(actionInfoPrefab, actionTran, false);
                     action.questManager = this;
-                    action.InitField(questList[0].fieldDatas[j], GameData.instance.actionDataList.actionDataList[Random.Range(0, 3)]);
+                    action.InitField(questList[0].fieldDatas[j], GameData.instance.actionDataList.actionDataList[Random.Range(0, GameData.instance.actionDataList.actionDataList.Count)]);
                     actionList.Add(action);
                     break;
                 } else {

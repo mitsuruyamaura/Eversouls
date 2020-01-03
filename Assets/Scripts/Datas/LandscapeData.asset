@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad0d2d0c340c3e4d826e7ca0ff0616e, type: 3}
+  m_Name: LandscapeData
+  m_EditorClassIdentifier: 
+  landscapeDatas:
+  - landscapeType: 0
+    rarelity: 0
+    appearance: 50
+    info: 
+  - landscapeType: 1
+    rarelity: 0
+    appearance: 40
+    info: 
+  - landscapeType: 2
+    rarelity: 0
+    appearance: 30
+    info: 
+  - landscapeType: 3
+    rarelity: 0
+    appearance: 20
+    info: 
+  - landscapeType: 4
+    rarelity: 0
+    appearance: 10
+    info: 
+  - landscapeType: 5
+    rarelity: 1
+    appearance: 50
+    info: 
+  - landscapeType: 6
+    rarelity: 1
+    appearance: 30
+    info: 
+  - landscapeType: 7
+    rarelity: 2
+    appearance: 40
+    info: 
+  - landscapeType: 8
+    rarelity: 3
+    appearance: 30
+    info: 
+  - landscapeType: 9
+    rarelity: 4
+    appearance: 10
+    info: 

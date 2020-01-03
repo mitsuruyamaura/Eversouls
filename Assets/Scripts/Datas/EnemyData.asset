@@ -1,0 +1,155 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 631033d597e2f544898c35135b7c2ab0, type: 3}
+  m_Name: EnemyData
+  m_EditorClassIdentifier: 
+  enemyDatas:
+  - no: 0
+    name: enemy1
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 0
+    isTalk: 0
+    timeType: 2
+    appearance: 155
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 1
+    name: enemy2
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 0
+    isTalk: 0
+    timeType: 2
+    appearance: 100
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 2
+    name: enemy3
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 0
+    isTalk: 0
+    timeType: 2
+    appearance: 75
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 3
+    name: enemy4
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 0
+    isTalk: 0
+    timeType: 2
+    appearance: 50
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 4
+    name: enemy5
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 0
+    isTalk: 0
+    timeType: 2
+    appearance: 30
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 5
+    name: enemy6
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 1
+    isTalk: 0
+    timeType: 2
+    appearance: 100
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 6
+    name: enemy7
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 1
+    isTalk: 0
+    timeType: 2
+    appearance: 50
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 7
+    name: enemy8
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 2
+    isTalk: 0
+    timeType: 2
+    appearance: 100
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 8
+    name: enemy9
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 3
+    isTalk: 0
+    timeType: 2
+    appearance: 100
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0
+  - no: 9
+    name: enemy10
+    habitats: 0000000001000000020000000300000004000000
+    rarelity: 4
+    isTalk: 0
+    timeType: 2
+    appearance: 50
+    hp: 30
+    speed: 10
+    weaponType: 0
+    magicType: 0
+    skills: 
+    chestType: 
+    exp: 0

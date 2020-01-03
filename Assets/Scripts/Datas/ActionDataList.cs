@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ActionData", menuName = "ScritablaObjects/CreateActionData")]
+[CreateAssetMenu(fileName = "ActionData", menuName = "ScriptableObjects/CreateActionData")]
 public class ActionDataList : ScriptableObject
 {
     public List<ActionData> actionDataList = new List<ActionData>();
@@ -15,5 +15,6 @@ public class ActionDataList : ScriptableObject
         public int imageNo;
         public string info;
         public float criticalRate;     // クリティカル発生確率。クリティカルするとコスト0で進捗2倍。
+        public float value;
     }
 }

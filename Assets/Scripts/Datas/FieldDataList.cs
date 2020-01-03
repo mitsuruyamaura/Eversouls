@@ -2,20 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "FieldData", menuName = "ScritablaObjects/CreateFieldData")]
+[CreateAssetMenu(fileName = "FieldData", menuName = "ScriptableObjects/CreateFieldData")]
 public class FieldDataList : ScriptableObject {//31415
 
     public List<FieldData> fieldDataList = new List<FieldData>();
-
-    [System.Serializable]
-    public enum RARELITY {
-        COMMON,
-        UN_COMMON,
-        RARE,
-        S_RARE,
-        MISTIC,
-        COUNT
-    }
 
     [System.Serializable]
     public class FieldData {

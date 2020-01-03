@@ -15,5 +15,4 @@ public enum SECRET_ITEM_TYPE {
     食物の収穫,        // 10  C
     石の宝箱,          // 11  C
     COUNT,
-
 }

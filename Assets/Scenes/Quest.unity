@@ -1877,6 +1877,8 @@ MonoBehaviour:
   fieldDataList: {fileID: 11400000, guid: 36c696ed4dcc21f4eb17867130c9b123, type: 2}
   enemyDataList: {fileID: 0}
   secretItemDataList: {fileID: 0}
+  landscapeDataList: {fileID: 0}
+  trapDataList: {fileID: 0}
   charas: []
   actions: []
   areas: []
@@ -2408,7 +2410,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.4975, y: -57}
+  m_AnchoredPosition: {x: -2.4975, y: -124}
   m_SizeDelta: {x: 624.3, y: 569.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1309528856

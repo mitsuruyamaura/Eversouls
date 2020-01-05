@@ -15,12 +15,12 @@ public class TransitionManager : MonoBehaviour {
     [Header("マスク用イメージ制御用")]
     public Image imgMask;
 
-    //[SerializeField, Header("マスク用イメージ制御用")]
-    //public GameObject maskImage;
-    //private bool isSet;
+    [Header("マスク用イメージ制御用")]
+    public GameObject maskImage;
+    private bool isSet;
 
     private void Awake() {
-        imgMask.material.SetFloat("_Flip", imgMask.material.GetFloat("_Flip") + 2.0f);
+        //imgMask.material.SetFloat("_Flip", imgMask.material.GetFloat("_Flip") + 2.0f);
         if (instance == null) {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -30,7 +30,7 @@ public class TransitionManager : MonoBehaviour {
     }
 
     void Start () {
-        //TransFadeIn(0.7f);
+        TransFadeIn(0.7f);
     }
 
     /// <summary>
@@ -71,34 +71,34 @@ public class TransitionManager : MonoBehaviour {
     /// 各ステージの開始時のフェイドイン処理
     /// フェイドインが終わってからゲーム画面関連を表示させる
     /// </summary>
-    //public void TransFadeIn(float time) {
-    //    fade.FadeIn(0.1f, () => {
-    //        if (!isSet) {
-    //            isSet = true;
-    //            imgMask.material.SetFloat("_Flip", imgMask.material.GetFloat("_Flip") - 0.05f); ;
-    //            SetUp();
-    //        }
-    //        fade.FadeOut(time);
-    //    });
-    //}
+    public void TransFadeIn(float time) {
+        fade.FadeIn(0.1f, () => {
+            if (!isSet) {
+                isSet = true;
+                imgMask.material.SetFloat("_Flip", imgMask.material.GetFloat("_Flip") - 0.05f); ;
+                SetUp();
+            }
+            fade.FadeOut(time);
+        });
+    }
 
     /// <summary>
     /// 未使用
     /// カメラなどを有効化する処理
     /// </summary>
-    //private void SetUp() {
-    //    maskImage.SetActive(false);
-    //}
+    private void SetUp() {
+        maskImage.SetActive(false);
+    }
 
     /// <summary>
     /// 未使用
     /// 各ステージ終了時のフェイドアウト処理
     /// </summary>
     /// <param name="time"></param>
-	//public void TransFadeOut(float time) {
- //       fade.FadeIn(0.7f, () =>
- //       {
- //           fade.FadeOut(time);
- //       });
- //   }
+    //public void TransFadeOut(float time) {
+    //       fade.FadeIn(0.7f, () =>
+    //       {
+    //           fade.FadeOut(time);
+    //       });
+    //   }
 }

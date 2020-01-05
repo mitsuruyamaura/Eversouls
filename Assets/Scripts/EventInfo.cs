@@ -9,9 +9,13 @@ public class EventInfo : MonoBehaviour
 {
     // UI関連
     public Button btnSubmit;
+    public Button btnField;
+    public GameObject objEvent;
     public TMP_Text txtEventName;
+    public TMP_Text txtSearchTargetName;
     public Image imgMain;
     public CanvasGroup canvasGroup;
+    public SEARCH_TARGET_TYPE searchType;
 
     // 地形ごとの対象リストと実際に使うデータ
     public List<EnemyDataList.EnemyData> enemyList = new List<EnemyDataList.EnemyData>();
@@ -49,7 +53,25 @@ public class EventInfo : MonoBehaviour
                 CreateLandscape(questData, fieldType);
                 break;
         }
+        btnField.onClick.AddListener(CheckOpenEvent);
         btnSubmit.onClick.AddListener(DestroyEventInfo);
+        btnSubmit.interactable = false;
+        SetupSearchTarget();
+    }
+
+    private void SetupSearchTarget() {
+        int value = Random.Range(0, (int)SEARCH_TARGET_TYPE.COUNT);
+        searchType = (SEARCH_TARGET_TYPE)value;
+        txtSearchTargetName.text = searchType.ToString();
+    }
+
+    /// <summary>
+    /// イベントの探索に成功したかチェック
+    /// </summary>
+    public void CheckOpenEvent() {
+        objEvent.SetActive(true);
+        btnField.gameObject.SetActive(false);
+        btnSubmit.interactable = true;
     }
 
     /// <summary>

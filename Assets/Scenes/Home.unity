@@ -818,6 +818,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   btnQuest: {fileID: 331924264}
+  imgHome: {fileID: 1864891244}
 --- !u!4 &439907598
 Transform:
   m_ObjectHideFlags: 0
@@ -1028,6 +1029,11 @@ PrefabInstance:
       propertyPath: imgMask
       value: 
       objectReference: {fileID: 1585797037}
+    - target: {fileID: 114220156205803316, guid: 3eb243b4281bc1a49aa49c95864b86f8,
+        type: 3}
+      propertyPath: maskImage
+      value: 
+      objectReference: {fileID: 849335277}
     - target: {fileID: 114009683106134964, guid: 3eb243b4281bc1a49aa49c95864b86f8,
         type: 3}
       propertyPath: m_ReferenceResolution.x
@@ -1058,6 +1064,30 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 2100000, guid: 9bfa85bee47e45645ba4467f74ae212a, type: 2}
+    - target: {fileID: 1836264262015204, guid: 3eb243b4281bc1a49aa49c95864b86f8, type: 3}
+      propertyPath: m_Name
+      value: MaskImage_PageNext
+      objectReference: {fileID: 0}
+    - target: {fileID: 7375900194711379014, guid: 3eb243b4281bc1a49aa49c95864b86f8,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -2.9001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7375900194711379014, guid: 3eb243b4281bc1a49aa49c95864b86f8,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1539.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1322362701122559514, guid: 3eb243b4281bc1a49aa49c95864b86f8,
+        type: 3}
+      propertyPath: m_Name
+      value: MaskImage_White
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350258479960172816, guid: 3eb243b4281bc1a49aa49c95864b86f8,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3eb243b4281bc1a49aa49c95864b86f8, type: 3}
 --- !u!1 &531096677
@@ -1457,6 +1487,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 833181904}
   m_CullTransparentMesh: 0
+--- !u!1 &849335277 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1322362701122559514, guid: 3eb243b4281bc1a49aa49c95864b86f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 524686057}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &914509685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1765,7 +1801,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 52
   orthographic: 1
   orthographic size: 5
   m_Depth: -1
@@ -2964,7 +3000,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1101393128}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1

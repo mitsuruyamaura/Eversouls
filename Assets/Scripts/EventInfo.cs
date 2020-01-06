@@ -14,6 +14,7 @@ public class EventInfo : MonoBehaviour
     public TMP_Text txtEventName;
     public TMP_Text txtSearchTargetName;
     public Image imgMain;
+    public Image imgSearchTarget;
     public CanvasGroup canvasGroup;
     public SEARCH_TARGET_TYPE searchType;
 
@@ -63,6 +64,7 @@ public class EventInfo : MonoBehaviour
         int value = Random.Range(0, (int)SEARCH_TARGET_TYPE.COUNT);
         searchType = (SEARCH_TARGET_TYPE)value;
         txtSearchTargetName.text = searchType.ToString();
+        imgSearchTarget.sprite = Resources.Load<Sprite>("SearchTargets/" + value);
     }
 
     /// <summary>

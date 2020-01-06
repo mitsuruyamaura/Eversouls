@@ -57,6 +57,9 @@ public class TransitionManager : MonoBehaviour {
     /// </summary>
     /// <returns></returns>
     public IEnumerator ExitScene() {
+        if (!imgMask.gameObject.activeSelf) {
+            imgMask.gameObject.SetActive(true);
+        }
         // マスク画像がゲーム画面を隠すまでアニメさせる
         while (imgMask.material.GetFloat("_Flip") < 1.0f) {
             // マテリアルのFlipプロパティを徐々に加算することでマスク画像を表示する
@@ -72,6 +75,7 @@ public class TransitionManager : MonoBehaviour {
     /// フェイドインが終わってからゲーム画面関連を表示させる
     /// </summary>
     public void TransFadeIn(float time) {
+        imgMask.gameObject.SetActive(false);
         fade.FadeIn(0.1f, () => {
             if (!isSet) {
                 isSet = true;
@@ -95,10 +99,9 @@ public class TransitionManager : MonoBehaviour {
     /// 各ステージ終了時のフェイドアウト処理
     /// </summary>
     /// <param name="time"></param>
-    //public void TransFadeOut(float time) {
-    //       fade.FadeIn(0.7f, () =>
-    //       {
-    //           fade.FadeOut(time);
-    //       });
-    //   }
+    public void TransFadeOut(float time) {
+        fade.FadeIn(0.7f, () => {
+            fade.FadeOut(time);
+        });
+    }
 }

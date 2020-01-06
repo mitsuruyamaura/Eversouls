@@ -10,6 +10,8 @@ public class HomeManager : MonoBehaviour
     public Image imgHome;
 
     void Start(){
+        SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.HOME);
+        TransitionManager.instance.TransFadeIn(0.7f);
         //StartCoroutine(TransitionManager.instance.EnterScene());
         btnQuest.onClick.AddListener(() => StartCoroutine(OnClickQuestScene()));
         StartCoroutine(SetupHomeImage());
@@ -26,6 +28,6 @@ public class HomeManager : MonoBehaviour
     private IEnumerator SetupHomeImage() {
         imgHome.transform.DOScale(1.5f, 0.25f);
         yield return new WaitForSeconds(0.25f);
-        imgHome.transform.DOScale(1.0f, 1.5f);
+        imgHome.transform.DOScale(1.0f, 1.25f);
     }
 }

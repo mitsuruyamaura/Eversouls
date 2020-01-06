@@ -53,6 +53,7 @@ public class QuestManager : MonoBehaviour
     public int ceilChestPoint;
 
     private void Start() {
+        SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
         StartCoroutine(TransitionManager.instance.EnterScene());
         Init();
     }

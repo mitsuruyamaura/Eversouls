@@ -25,11 +25,11 @@ public class SoundManager : MonoBehaviour {
     // 音楽管理
     public enum ENUM_BGM : int {
         TITLE,
-        MAIN,
-        MATCHING,
+        HOME,
+        QUEST,
         BATTLE,
         RESULT,
-        LAST_ONE_MINUTE,
+        EVENT,
     }
 
     // 効果音管理

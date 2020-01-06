@@ -25,6 +25,7 @@ public class TitleManager : MonoBehaviour
     public void OnClickStart() {
         if (isEnterTitle) {
             isEnterTitle = false;
+            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
             TransitionManager.instance.TransFadeOut(1.0f);
             StartCoroutine(SceneStateManager.instance.MoveHome(SCENE_TYPE.HOME));
         }

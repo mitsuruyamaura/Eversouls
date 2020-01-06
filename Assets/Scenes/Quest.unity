@@ -823,7 +823,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -1831,75 +1831,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1033883398}
   m_CullTransparentMesh: 0
---- !u!1 &1064757645
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1064757647}
-  - component: {fileID: 1064757646}
-  m_Layer: 0
-  m_Name: GameData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1064757646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064757645}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf89a49c953395b458f838d66998b475, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 0
-  ap: 0
-  playerName: 
-  maxHp: 0
-  money: 0
-  exp: 0
-  soulPoint: 0
-  contactCount: 0
-  clearQuestCount: 0
-  totalCount: 0
-  endTutorial: 0
-  areaDatas: {fileID: 11400000, guid: 0137183a245eb50489ac7234ebbdb190, type: 2}
-  charaDatas: {fileID: 11400000, guid: 2c63350afce2d9c4fab2fb2e9eaac91a, type: 2}
-  actionDataList: {fileID: 11400000, guid: 8fe4ba5a2dbbf1645a9254d6a6f21973, type: 2}
-  fieldDataList: {fileID: 11400000, guid: 36c696ed4dcc21f4eb17867130c9b123, type: 2}
-  enemyDataList: {fileID: 0}
-  secretItemDataList: {fileID: 0}
-  landscapeDataList: {fileID: 0}
-  trapDataList: {fileID: 0}
-  charas: []
-  actions: []
-  areas: []
-  volumeBGM: 0
-  volumeSE: 0
-  useDebugOn: 1
-  questManager: {fileID: 444253676}
---- !u!4 &1064757647
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1064757645}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 66.64356, y: 431.43286, z: -41.104763}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1067863130
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,7 +1976,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1197582980
 GameObject:
@@ -3337,7 +3268,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.25
+  m_padding: 1.79
   m_canvasRenderer: {fileID: 1761521473}
   m_TextComponent: {fileID: 1019372648}
   m_materialReferenceIndex: 1
@@ -4208,7 +4139,7 @@ RectTransform:
   - {fileID: 539064467}
   - {fileID: 1847386000}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

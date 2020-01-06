@@ -96,6 +96,7 @@ public class ActionInfo : MonoBehaviour
 
     public void OnClickCheckActions() {
         if (!isSubmit) {
+            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
             isSubmit = true;
             Sequence seq = DOTween.Sequence();
             seq.Append(transform.DOScale(1.2f, 0.2f));

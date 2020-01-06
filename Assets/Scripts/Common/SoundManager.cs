@@ -25,7 +25,9 @@ public class SoundManager : MonoBehaviour {
     // 音楽管理
     public enum ENUM_BGM : int {
         TITLE,
-        HOME,
+        HOME_1,
+        HOME_2,
+        HOME_3,
         QUEST,
         BATTLE,
         RESULT,

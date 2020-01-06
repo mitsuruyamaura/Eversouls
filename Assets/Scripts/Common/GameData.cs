@@ -38,6 +38,7 @@ public class GameData : MonoBehaviour
 
     public float volumeBGM;
     public float volumeSE;
+    public SoundManager.ENUM_BGM homeBgmType;
 
     public bool useDebugOn;
     public QuestManager questManager;
@@ -64,6 +65,7 @@ public class GameData : MonoBehaviour
         soulPoint = 0;
         contactCount = 0;
 
+        homeBgmType = SoundManager.ENUM_BGM.HOME_1;
         //questManager.Init();
     }
 }

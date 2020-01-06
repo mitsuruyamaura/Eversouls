@@ -155,6 +155,7 @@ public class QuestData : MonoBehaviour
     /// </summary>
     public void OnClickSubmit() {
         if (!isSubmit) {
+            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
             isSubmit = true;
             StartCoroutine(questManager.SetAreaImage(areaType));
             questManager.CreateField(iconNo);

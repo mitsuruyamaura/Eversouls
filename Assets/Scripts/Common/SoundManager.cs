@@ -27,7 +27,6 @@ public class SoundManager : MonoBehaviour {
         TITLE,
         HOME_1,
         HOME_2,
-        HOME_3,
         QUEST,
         BATTLE,
         RESULT,

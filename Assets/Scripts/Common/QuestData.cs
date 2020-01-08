@@ -107,7 +107,7 @@ public class QuestData : MonoBehaviour
                 tempratureType = data.tempType;
             }
         }
-        btnSubmit.onClick.AddListener(OnClickSubmit);
+        btnSubmit.onClick.AddListener(() => StartCoroutine(OnClickSubmit()));
     }
 
     /// <summary>
@@ -153,20 +153,23 @@ public class QuestData : MonoBehaviour
     /// <summary>
     /// 選択したクエストのデータをQuestManagerに渡す
     /// </summary>
-    public void OnClickSubmit() {
+    public IEnumerator OnClickSubmit() {
         if (!isSubmit) {
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
             isSubmit = true;
+            
+            // アニメさせながら隠す
+            Sequence seq = DOTween.Sequence();
+            seq.Append(transform.DOMove(questManager.centerTran.position, 1.0f));
+            seq.Append(transform.DOScale(0f, 0.5f));
+            yield return new WaitForSeconds(1.35f);
+            
+            // アクションを生成
             StartCoroutine(questManager.SetAreaImage(areaType));
             questManager.CreateField(iconNo);
 
-            // アニメさせながら破棄する
-            Sequence seq = DOTween.Sequence();
-            seq.Append(transform.DOScale(1.2f, 0.15f));
-            seq.Append(transform.DOScale(1.0f, 0.15f));
-            seq.Join(imgArea.DOFade(0, 0.15f));
+            yield return new WaitForSeconds(0.15f);
             gameObject.SetActive(false);
-            //Destroy(gameObject, 0.3f);
         }
     }
 

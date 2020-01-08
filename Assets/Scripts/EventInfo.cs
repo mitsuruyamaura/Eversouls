@@ -13,9 +13,11 @@ public class EventInfo : MonoBehaviour
     public GameObject objEvent;
     public TMP_Text txtEventName;
     public TMP_Text txtSearchTargetName;
+    public TMP_Text txtCurrentCount;
     public Image imgMain;
     public Image imgSearchTarget;
     public CanvasGroup canvasGroup;
+
     public SEARCH_TARGET_TYPE searchType;
 
     // 地形ごとの対象リストと実際に使うデータ
@@ -27,6 +29,11 @@ public class EventInfo : MonoBehaviour
     public TrapDataList.TrapData trapData = new TrapDataList.TrapData();
     public List<LandscapeDataList.LandscapeData> landscapeList = new List<LandscapeDataList.LandscapeData>();
     public LandscapeDataList.LandscapeData landscapeData = new LandscapeDataList.LandscapeData();
+
+    [Header("最大探索回数")]
+    public int maxCheckCount;
+    private int currentCount;   // 現在の探索回数    
+    private bool isCheckable;   // 重複タップ防止用
 
     /// <summary>
     /// イベントの初期設定
@@ -54,34 +61,89 @@ public class EventInfo : MonoBehaviour
                 CreateLandscape(questData, fieldType);
                 break;
         }
-        btnField.onClick.AddListener(CheckOpenEvent);
-        btnSubmit.onClick.AddListener(DestroyEventInfo);
+        btnField.onClick.AddListener(() => StartCoroutine(CheckOpenEvent()));
+        btnSubmit.onClick.AddListener(HideEventInfo);
         btnSubmit.interactable = false;
         SetupSearchTarget();
     }
 
+    /// <summary>
+    /// 探索対象を設定
+    /// </summary>
     private void SetupSearchTarget() {
         int value = Random.Range(0, (int)SEARCH_TARGET_TYPE.COUNT);
         searchType = (SEARCH_TARGET_TYPE)value;
         txtSearchTargetName.text = searchType.ToString();
         imgSearchTarget.sprite = Resources.Load<Sprite>("SearchTargets/" + value);
+        currentCount = maxCheckCount;
+        txtCurrentCount.text = currentCount.ToString();
     }
 
     /// <summary>
-    /// イベントの探索に成功したかチェック
+    /// イベントの成否チェック
     /// </summary>
-    public void CheckOpenEvent() {
+    public IEnumerator CheckOpenEvent() {
+        if (!isCheckable) {
+            isCheckable = true;
+            currentCount--;
+            txtCurrentCount.text = currentCount.ToString();
+
+            // 判定待ち時間
+            gameObject.transform.DOScale(0.75f, 0.75f);
+            yield return new WaitForSeconds(0.75f);
+
+            // TODO 成功判定を行う。
+            // 今は50％で判定。クリティカルなし
+            int value = Random.Range(0, 100);
+            if (value > 50) {
+                // 成功した場合
+                StartCoroutine(SuccessEvent());
+            } else {
+                // 失敗した場合               
+                StartCoroutine(FailureEvent());
+            }
+        }
+    }
+
+    /// <summary>
+    /// 成功
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator SuccessEvent() {
+        // 画像を拡大
+        gameObject.transform.DOScale(1.3f, 0.25f);
+        yield return new WaitForSeconds(0.25f);
+        gameObject.transform.DOScale(1.0f, 0.25f);
         objEvent.SetActive(true);
         btnField.gameObject.SetActive(false);
         btnSubmit.interactable = true;
     }
 
     /// <summary>
-    /// イベントを破壊
+    /// 失敗
     /// </summary>
-    public void DestroyEventInfo() {
+    /// <returns></returns>
+    private IEnumerator FailureEvent() {       
+        if (currentCount <= 0) {
+            // 探索最大回数を超えたらイベント終了
+            // そのままイベントを縮小する
+            gameObject.transform.DOScale(0f, 0.25f);
+            yield return new WaitForSeconds(0.25f);
+            HideEventInfo();
+        } else {
+            // 画像を元の大きさに戻す
+            gameObject.transform.DOScale(1.0f, 0.25f);
+            yield return new WaitForSeconds(0.25f);
+            // 再度タップできるようにする
+            isCheckable = false;
+        }
+    }
+
+    /// <summary>
+    /// イベントを隠す(破壊はQuestManagerで行う)
+    /// </summary>
+    public void HideEventInfo() {
         canvasGroup.DOFade(0, 0.5f);
-        Destroy(gameObject, 0.5f);
     }
 
     /// <summary>

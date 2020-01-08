@@ -26,6 +26,8 @@ public class QuestManager : MonoBehaviour
     public Transform actionTran;
     [Header("イベント用プレファブの生成位置")]
     public Transform eventTran;
+    [Header("中央位置")]
+    public Transform centerTran;
     [Header("行動用プレファブの基本生成回数")]
     public int actionBaseCount;
 
@@ -51,6 +53,8 @@ public class QuestManager : MonoBehaviour
     public float progressPoint;
     [Header("宝箱の天井値")]
     public int ceilChestPoint;
+    [Header("出現したイベント")]
+    public List<EventInfo> eventList = new List<EventInfo>();
 
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
@@ -166,21 +170,29 @@ public class QuestManager : MonoBehaviour
             Debug.Log("移動");
             eventType = EVENT_TYPE.移動;
         }
-
+        Debug.Log(eventType);
+        // もしもイベントが開いていたらそれを破壊
+        if (eventList.Count > 0) {
+            for (int i = 0; i < eventList.Count; i++) {
+                Destroy(eventList[i].gameObject);
+            }
+            eventList.Clear();
+        }
         // 上記の行動に合わせて分岐し、その中で行為判定を行う
-        if (eventType != EVENT_TYPE.移動) {
-            // 移動以外ならイベントを作成する
-            EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
-            eventInfo.Init(eventType, questList[0], field);
-
-        } else {
-            // 移動の場合には最初にクリティカルかどうか判定
+        if (eventType == EVENT_TYPE.移動) {
+            // 移動の場合
+            // 最初にクリティカルかどうか判定
             if (CheckActionCritical(criticalRate)) {
                 Debug.Log("Critical!");
                 // クリティカルならボーナス授与
                 cost = 0;
                 progress *= 2;
-            }            
+            }
+        } else {
+            // 移動以外ならイベントを作成する
+            EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
+            eventInfo.Init(eventType, questList[0], field);
+            eventList.Add(eventInfo);           
         }
         
         // その後、進捗度を更新し、次の行動を作成

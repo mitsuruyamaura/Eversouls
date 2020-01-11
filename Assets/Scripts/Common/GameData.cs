@@ -50,7 +50,9 @@ public class GameData : MonoBehaviour
         } else {
             Destroy(gameObject);
         }
+
         if (useDebugOn) {
+            // デバッグ用
             LoadDebug();
         }
     }
@@ -58,13 +60,14 @@ public class GameData : MonoBehaviour
     private void LoadDebug() {
         level = 1;
         ap = 3000;
-        playerName = "visions";
+        playerName = "souls";
         maxHp = 100;
         money = 0;
         exp = 0;
         soulPoint = 0;
         contactCount = 0;
-
+        volumeBGM = 0.5f;
+        volumeSE = 0.5f;
         homeBgmType = SoundManager.ENUM_BGM.HOME_1;
         //questManager.Init();
     }

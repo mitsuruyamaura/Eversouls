@@ -822,9 +822,10 @@ MonoBehaviour:
   btnBgm2: {fileID: 1474884034}
   btnSetting: {fileID: 1043530841}
   imgHome: {fileID: 1864891244}
-  settingPopupPrefab: {fileID: 7468018562277284044, guid: 8f0251241c831f04a96118bd74a53733,
+  settingPopupPrefab: {fileID: 9009526783046369467, guid: 8f0251241c831f04a96118bd74a53733,
     type: 3}
   canvasTran: {fileID: 2009948566}
+  isSetting: 0
 --- !u!4 &439907598
 Transform:
   m_ObjectHideFlags: 0
@@ -2971,7 +2972,7 @@ GameObject:
   - component: {fileID: 1864891245}
   - component: {fileID: 1864891244}
   m_Layer: 5
-  m_Name: Imag_MainChara
+  m_Name: Image_MainChara
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

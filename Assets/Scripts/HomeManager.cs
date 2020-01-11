@@ -12,7 +12,11 @@ public class HomeManager : MonoBehaviour
     public Button btnBgm1;
     [Header("BGM#2再生ボタン")]
     public Button btnBgm2;
+    public Button btnSetting;
     public Image imgHome;
+
+    public SettingPopup settingPopupPrefab;
+    public Transform canvasTran;
 
     void Start(){
         SoundManager.Instance.PlayBGM(GameData.instance.homeBgmType);
@@ -21,6 +25,7 @@ public class HomeManager : MonoBehaviour
         btnQuest.onClick.AddListener(() => StartCoroutine(OnClickQuestScene()));
         btnBgm1.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_1));
         btnBgm2.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_2));
+        btnSetting.onClick.AddListener(OnClickOpenSettingPopup);
         StartCoroutine(SetupHomeImage());
     }
 
@@ -54,5 +59,11 @@ public class HomeManager : MonoBehaviour
     public void OnClickChangeBGM(SoundManager.ENUM_BGM bgmType) {
         SoundManager.Instance.PlayBGM(bgmType);
         GameData.instance.homeBgmType = bgmType;
+    }
+
+    private void OnClickOpenSettingPopup() {
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+        SettingPopup setting = Instantiate(settingPopupPrefab, canvasTran, false);
+        setting.Setup();
     }
 }

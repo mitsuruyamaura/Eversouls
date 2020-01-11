@@ -62,6 +62,13 @@ public class SoundManager : MonoBehaviour {
 
     }
 
+    // 音量設定用
+    public enum VOLUME_TYPE {
+        MASTERVol,
+        BGMVol,
+        SEVol
+    }
+
     // クロスフェード時間
     public const float XFADE_TIME = 1.4f;
 
@@ -84,8 +91,10 @@ public class SoundManager : MonoBehaviour {
     // 音声
     public AudioClip[] Voice;
 
-    // SE用AudioMixer
+    // AudioMixer
     public AudioMixer audioMixer;
+    // AudioMixerGroup(Master以下のBGM,SEの設定)
+    public AudioMixerGroup[] audioMixerGroup;
 
     bool isXFading;
 
@@ -112,10 +121,14 @@ public class SoundManager : MonoBehaviour {
         // BGM AudioSource
         BGMsources[0] = gameObject.AddComponent<AudioSource>();
         BGMsources[1] = gameObject.AddComponent<AudioSource>();
+        // BGMのAudioMixerGroupを設定
+        BGMsources[0].outputAudioMixerGroup = audioMixerGroup[0];
+        BGMsources[1].outputAudioMixerGroup = audioMixerGroup[0];
 
         // SE AudioSource
         for (int i = 0; i < SEsources.Length; i++) {
             SEsources[i] = gameObject.AddComponent<AudioSource>();
+            SEsources[i].outputAudioMixerGroup = audioMixerGroup[1];
         }
 
         // 音声 AudioSource
@@ -275,6 +288,35 @@ public class SoundManager : MonoBehaviour {
         BGMsources[0].Play();
         BGMsources[1].Play();
     }
+
+    public void SetMaster(float sliderValue) {
+        float volume = ConvertVolume2dB(sliderValue);
+        audioMixer.SetFloat(VOLUME_TYPE.MASTERVol.ToString(), volume);
+    }
+
+    /// <summary>
+    /// Sliderの値に合わせてBGMの音量を変更
+    /// </summary>
+    /// <param name="sliderValue"></param>
+    public void SetBGM(float sliderValue) {
+        // 0-1のvalueを-80dB～0dBに変換する。そうしないと音量が正常に変化しない
+        float volume = ConvertVolume2dB(sliderValue);
+        audioMixer.SetFloat(VOLUME_TYPE.BGMVol.ToString(), volume);
+        GameData.instance.volumeBGM = sliderValue;
+    }
+
+    public void SetSE(float sliderValue) {
+        float volume = ConvertVolume2dB(sliderValue);
+        audioMixer.SetFloat(VOLUME_TYPE.SEVol.ToString(), volume);
+        GameData.instance.volumeSE = sliderValue;
+    }
+
+    /// <summary>
+    /// 0-1の値を-80～0dB(デシベル)に変換(0にすると音量MAXになるので0.01fで止める) 
+    /// </summary>
+    /// <param name="valume"></param>
+    /// <returns></returns>
+    private float ConvertVolume2dB(float volume) => 20f * Mathf.Log10(Mathf.Clamp(volume, 0.01f, 1f));
 
     // ***** 音声再生 *****
     // 音声再生

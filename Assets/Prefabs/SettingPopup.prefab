@@ -2162,7 +2162,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000011444, y: -0.76186}
+  m_AnchoredPosition: {x: 0, y: -0.7618408}
   m_SizeDelta: {x: 0, y: -1.5138}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9009526783046369466
@@ -2185,11 +2185,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a973d6d7abd48743a22f9ca70394828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliderBGM: {fileID: 9009526781490923154}
-  sliderSE: {fileID: 2989006626637520722}
   btnClose: {fileID: 63101101037936403}
   btnFilter: {fileID: 8599849220330635246}
   canvasGroup: {fileID: 8845334336987649121}
+  sliderBGM: {fileID: 9009526781490923154}
+  sliderSE: {fileID: 2989006626637520722}
 --- !u!225 &8845334336987649121
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2198,7 +2198,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9009526783046369463}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

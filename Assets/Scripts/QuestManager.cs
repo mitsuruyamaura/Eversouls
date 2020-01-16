@@ -190,6 +190,7 @@ public class QuestManager : MonoBehaviour
             }
         } else {
             // 移動以外ならイベントを作成する
+            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.FIND);
             EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
             eventInfo.Init(eventType, questList[0], field);
             eventList.Add(eventInfo);           

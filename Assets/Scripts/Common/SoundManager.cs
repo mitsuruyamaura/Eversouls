@@ -36,6 +36,7 @@ public class SoundManager : MonoBehaviour {
     // 効果音管理
     public enum ENUM_SE : int {
         BTN_OK,
+        FIND,
         BTN_NO,
         RELEASE_OK,
         RELEASE_NG,

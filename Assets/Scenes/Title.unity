@@ -382,6 +382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnStart: {fileID: 625108509}
   lblTapStart: {fileID: 1370251073}
+  loadMasterDataFrom: {fileID: 1024907772}
 --- !u!4 &439907598
 Transform:
   m_ObjectHideFlags: 0
@@ -987,6 +988,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1024907771}
   - component: {fileID: 1024907770}
+  - component: {fileID: 1024907772}
   m_Layer: 0
   m_Name: GameData
   m_TagString: Untagged
@@ -1047,6 +1049,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1024907772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024907769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cfa7158bc407644988af1a875282e15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSO: {fileID: 11400000, guid: 8141deb7b9939ff4a88e050408bfb4fe, type: 2}
 --- !u!1 &1101393126
 GameObject:
   m_ObjectHideFlags: 0

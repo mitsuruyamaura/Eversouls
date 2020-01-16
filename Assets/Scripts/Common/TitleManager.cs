@@ -11,9 +11,11 @@ public class TitleManager : MonoBehaviour
     public Button btnStart;
     [Header("Start点滅アニメ用")]
     public TMP_Text lblTapStart;
+    [Header("Jsonファイル読み込み用")]
+    public LoadMasterDataFromJson loadMasterDataFrom;
 
     private bool isEnterTitle;     // 重複タップ防止用
-
+    
     void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.TITLE);
         btnStart.onClick.AddListener(OnClickStart);
@@ -29,6 +31,9 @@ public class TitleManager : MonoBehaviour
         if (isEnterTitle) {
             isEnterTitle = false;
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+
+            // ItemMasterData(スクリプタブル・オブジェクト)にJsonからデータを読み込んで入れ込む
+            loadMasterDataFrom.LoadFromJson();
 
             // トランジション処理してシーン遷移
             TransitionManager.instance.TransFadeOut(1.0f);

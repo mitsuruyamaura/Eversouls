@@ -43,14 +43,16 @@ public class GameData : MonoBehaviour
     public bool useDebugOn;
     public QuestManager questManager;
 
-    public void Awake() {
+    void Awake() {
         if (instance == null) {
             instance = this;
             DontDestroyOnLoad(gameObject);
         } else {
             Destroy(gameObject);
-        }
+        }      
+    }
 
+    void Start() {
         if (useDebugOn) {
             // デバッグ用
             LoadDebug();
@@ -70,5 +72,5 @@ public class GameData : MonoBehaviour
         volumeSE = 0.5f;
         homeBgmType = SoundManager.ENUM_BGM.HOME_1;
         //questManager.Init();
-    }
+    }    
 }

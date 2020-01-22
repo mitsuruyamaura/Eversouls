@@ -48,7 +48,7 @@ public class ActionInfo : MonoBehaviour
         if (cost > GameData.instance.ap) {
             btnActionInfo.interactable = false;
         } else {
-            btnActionInfo.onClick.AddListener(OnClickCheckActions);
+            btnActionInfo.onClick.AddListener(OnClickCheckMove);
         }
     }
 
@@ -75,6 +75,7 @@ public class ActionInfo : MonoBehaviour
     }
 
     public void InitAction(ActionDataList.ActionData data) {
+        btnActionInfo.onClick.AddListener(OnClickCheckChooseAction);
         isAction = true;
 
         // 行動を設定
@@ -84,8 +85,8 @@ public class ActionInfo : MonoBehaviour
         imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + data.imageNo);
         imageNo = data.imageNo;
 
-        imgCharaIcon.gameObject.SetActive(true);
-        imgCharaIcon.sprite = Resources.Load<Sprite>("Charas/" + GameData.instance.charas[0].imageNo);
+        //imgCharaIcon.gameObject.SetActive(true);
+        //imgCharaIcon.sprite = Resources.Load<Sprite>("Charas/" + GameData.instance.charas[0].imageNo);
 
         txtActionName.text = actionType.ToString();
         txtActionInfo.text = data.info;
@@ -94,7 +95,10 @@ public class ActionInfo : MonoBehaviour
         //txtAmountCount.text
     }
 
-    public void OnClickCheckActions() {
+    /// <summary>
+    /// 移動時のイベント発生を確認
+    /// </summary>
+    public void OnClickCheckMove() {
         if (!isSubmit) {
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
             isSubmit = true;
@@ -102,7 +106,23 @@ public class ActionInfo : MonoBehaviour
             seq.Append(transform.DOScale(1.2f, 0.2f));
             seq.Append(transform.DOScale(1.0f, 0.2f));
             questManager.InactieActionInfo();
-            StartCoroutine(questManager.ActionJudgment(cost, progress, imageNo, critical, fieldType, actionType));
+            StartCoroutine(questManager.MoveJudgment(cost, progress, imageNo, critical, fieldType, actionType));
+        }
+    }
+
+    /// <summary>
+    /// イベント時の行動の成否チェック TODO　使わないかも
+    /// </summary>
+    public void OnClickCheckChooseAction() {
+        if (!isSubmit) {
+            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+            isSubmit = true;
+            Sequence seq = DOTween.Sequence();
+            seq.Append(transform.DOScale(1.2f, 0.2f));
+            seq.Append(transform.DOScale(1.0f, 0.2f));
+            questManager.InactieActionInfo();
+                       
+            StartCoroutine(questManager.ActionJudgment(cost, progress, imageNo, actionType));
         }
     }
 }

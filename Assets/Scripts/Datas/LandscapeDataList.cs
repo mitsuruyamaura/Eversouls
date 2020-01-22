@@ -11,6 +11,7 @@ public class LandscapeDataList : ScriptableObject {
     public class LandscapeData {
         public LANDSCAPE_TYPE landscapeType;
         public RARE_TYPE rarelity;
+        [Header("出現率")]
         public int appearance;
         public string info;
     }

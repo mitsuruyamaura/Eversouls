@@ -62,10 +62,13 @@ public class QuestManager : MonoBehaviour
         Init();
     }
 
+    /// <summary>
+    /// 初期移動可能エリアの選択用オブジェクトの生成
+    /// </summary>
     public void Init() {
         // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
         if (!GameData.instance.endTutorial) {
-            // チュートリアルが終わっていなければ
+            // チュートリアルが終わっていなければチュートリアル用エリアの生成
             QuestData quest = Instantiate(questDataPrefab, questTran, false);
             quest.questManager = this;
             quest.InitQuestData(0);
@@ -127,10 +130,10 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 行為判定
+    /// 移動時のイベント発生判定
     /// </summary>
     /// <returns></returns>
-    public IEnumerator ActionJudgment(int cost, float progress, int iconNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action) {
+    public IEnumerator MoveJudgment(int cost, float progress, int iconNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action) {
         yield return new WaitForSeconds(0.5f);
 
         EVENT_TYPE eventType = new EVENT_TYPE();
@@ -188,17 +191,61 @@ public class QuestManager : MonoBehaviour
                 cost = 0;
                 progress *= 2;
             }
+            // その後、進捗度を更新し、次の行動を作成
+            UpdateHeaderInfo(cost, progress);
+            UpdateActions(iconNo);
         } else {
             // 移動以外ならイベントを作成する
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.FIND);
             EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
-            eventInfo.Init(eventType, questList[0], field);
-            eventList.Add(eventInfo);           
+            eventInfo.Init(eventType, questList[0], field, cost, progress, iconNo);
+            eventList.Add(eventInfo);
+
+            // 前の移動用パネルを破棄
+            UpdateActions(iconNo, false);
+            // イベントの種類に応じた行動パネルを生成
+            //eventInfo.ChooseActions();
+
+            CreateEventActions(eventType);
+        }     
+    }
+
+    /// <summary>
+    /// 選択した行動の成否判定
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator ActionJudgment(int cost, float progress, int iconNo, ACTION_TYPE actionType) {
+        yield return new WaitForSeconds(0.5f);
+
+        if (actionType == ACTION_TYPE.先を急ぐ) {
+            // もしもイベントが開いていたらそれを破壊
+            if (eventList.Count > 0) {
+                for (int i = 0; i < eventList.Count; i++) {
+                    Destroy(eventList[i].gameObject);
+                }
+                eventList.Clear();
+            }
+            UpdateHeaderInfo(cost, progress);
+            UpdateActions(iconNo);            
         }
+    }
+
+    /// <summary>
+    /// イベントに応じた行動パネルを生成
+    /// </summary>
+    /// <param name="eventType"></param>
+    public void CreateEventActions(EVENT_TYPE eventType) {
+        actionList = new List<ActionInfo>();
+
+        // 必ず「先を急ぐ(諦める)」パネルを表示する
+        ActionInfo action = Instantiate(actionInfoPrefab, actionTran, false);
+        action.questManager = this;
+        //action.InitField(questList[0].fieldDatas[j], GameData.instance.actionDataList.actionDataList[Random.Range(0, GameData.instance.actionDataList.actionDataList.Count)]);
+
+        action.InitAction(GameData.instance.actionDataList.actionDataList[6]);
         
-        // その後、進捗度を更新し、次の行動を作成
-        UpdateHeaderInfo(cost, progress);
-        UpDateActions(iconNo);
+        actionList.Add(action);
+
     }
 
     /// <summary>
@@ -262,11 +309,14 @@ public class QuestManager : MonoBehaviour
     /// <summary>
     /// 今までの行動を破棄して新規に行動を作成
     /// </summary>
-    public void UpDateActions(int iconNo) {
+    public void UpdateActions(int iconNo, bool isCreate = true) {
         for (int i = 0; i < actionList.Count; i++) {
             Destroy(actionList[i].gameObject);
         }
-        CreateField(iconNo);
+        if (isCreate) {
+            // 移動以外の場合は始めはfalseなので移動先は生成しない
+            CreateField(iconNo);
+        }
     }
 
     /// <summary>

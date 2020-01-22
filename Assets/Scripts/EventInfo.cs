@@ -16,7 +16,9 @@ public class EventInfo : MonoBehaviour
     public TMP_Text txtCurrentCount;
     public Image imgMain;
     public Image imgSearchTarget;
+    public Image imgSearchTitle;
     public CanvasGroup canvasGroup;
+    public Image imgHeader;
 
     public SEARCH_TARGET_TYPE searchType;
 
@@ -35,6 +37,15 @@ public class EventInfo : MonoBehaviour
     private int currentCount;   // 現在の探索回数    
     private bool isCheckable;   // 重複タップ防止用
 
+    private int _cost;
+    private float _progress;
+    private int _iconNo;
+    private bool isClearEvent;
+
+    private float succeseRate;
+    private float encountRate;
+
+
     /// <summary>
     /// イベントの初期設定
     /// イベントタイプにより分岐
@@ -42,7 +53,12 @@ public class EventInfo : MonoBehaviour
     /// <param name="eventType"></param>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    public void Init(EVENT_TYPE eventType, QuestData questData, FIELD_TYPE fieldType) {
+    public void Init(EVENT_TYPE eventType, QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int iconNo) {
+        // イベントにかかわる値を取得
+        _cost = cost;
+        _progress = progress;
+        _iconNo = iconNo;
+
         Sequence seq = DOTween.Sequence();
         seq.Append(gameObject.transform.DOScale(1.3f, 0.2f)).SetEase(Ease.Linear);
         seq.Append(gameObject.transform.DOScale(1.0f, 0.2f)).SetEase(Ease.Linear);
@@ -61,14 +77,17 @@ public class EventInfo : MonoBehaviour
                 CreateLandscape(questData, fieldType);
                 break;
         }
+        // 各ボタンの登録
         btnField.onClick.AddListener(() => StartCoroutine(CheckOpenEvent()));
         btnSubmit.onClick.AddListener(HideEventInfo);
         btnSubmit.interactable = false;
+
+        // 探索対象の設定
         SetupSearchTarget();
     }
 
     /// <summary>
-    /// 探索対象を設定
+    /// 探索対象を設定し表示する
     /// </summary>
     private void SetupSearchTarget() {
         int value = Random.Range(0, (int)SEARCH_TARGET_TYPE.COUNT);
@@ -80,22 +99,39 @@ public class EventInfo : MonoBehaviour
     }
 
     /// <summary>
+    /// イベントの種類に応じて選択可能な行動パネルを生成
+    /// </summary>
+    public void ChooseActions() {
+        if (isClearEvent) {
+            QuestManager quest = GameObject.FindGameObjectWithTag("QuestManager").GetComponent<QuestManager>();
+            quest.UpdateHeaderInfo(_cost, _progress);
+            quest.UpdateActions(_iconNo);
+            return;
+        }
+        // TODO 行動パネル作成
+        
+    }
+
+    /// <summary>
     /// イベントの成否チェック
     /// </summary>
-    public IEnumerator CheckOpenEvent() {
+    public IEnumerator CheckOpenEvent(int successRate = 50) {
         if (!isCheckable) {
             isCheckable = true;
             currentCount--;
             txtCurrentCount.text = currentCount.ToString();
 
             // 判定待ち時間
-            gameObject.transform.DOScale(0.75f, 0.75f);
+            Sequence seq = DOTween.Sequence();
+            seq.Append(objEvent.transform.DOScale(0.75f, 0.75f)).SetEase(Ease.Linear);
+            seq.Join(btnField.gameObject.transform.DOScale(0.75f, 0.75f)).SetEase(Ease.Linear);
+            //gameObject.transform.DOScale(0.75f, 0.75f);
             yield return new WaitForSeconds(0.75f);
 
             // TODO 成功判定を行う。
             // 今は50％で判定。クリティカルなし
             int value = Random.Range(0, 100);
-            if (value > 50) {
+            if (value < successRate) {
                 // 成功した場合
                 StartCoroutine(SuccessEvent());
             } else {
@@ -111,11 +147,22 @@ public class EventInfo : MonoBehaviour
     /// <returns></returns>
     private IEnumerator SuccessEvent() {
         // 画像を拡大
-        gameObject.transform.DOScale(1.3f, 0.25f);
+        Sequence seq = DOTween.Sequence();
+        seq.Append(objEvent.transform.DOScale(1.3f, 0.25f)).SetEase(Ease.Linear);
+        seq.Join(btnField.gameObject.transform.DOScale(1.3f, 0.25f)).SetEase(Ease.Linear);
         yield return new WaitForSeconds(0.25f);
-        gameObject.transform.DOScale(1.0f, 0.25f);
+
+        // 画像を元の大きさに戻す
+        seq.Append(objEvent.transform.DOScale(1.0f, 0.25f)).SetEase(Ease.Linear);
+        seq.Join(btnField.gameObject.transform.DOScale(1.0f, 0.25f)).SetEase(Ease.Linear);
+
+        // 下に隠れていたイベントを表示し、他のイメージを隠す
         objEvent.SetActive(true);
         btnField.gameObject.SetActive(false);
+        imgSearchTitle.gameObject.SetActive(false);
+        imgHeader.gameObject.SetActive(false);
+
+        // TODO イベントの種類にあわせてHeaderを表示
         btnSubmit.interactable = true;
     }
 
@@ -132,7 +179,9 @@ public class EventInfo : MonoBehaviour
             HideEventInfo();
         } else {
             // 画像を元の大きさに戻す
-            gameObject.transform.DOScale(1.0f, 0.25f);
+            Sequence seq = DOTween.Sequence();
+            seq.Append(objEvent.transform.DOScale(1.0f, 0.25f)).SetEase(Ease.Linear);
+            seq.Join(btnField.gameObject.transform.DOScale(1.0f, 0.25f)).SetEase(Ease.Linear);
             yield return new WaitForSeconds(0.25f);
             // 再度タップできるようにする
             isCheckable = false;

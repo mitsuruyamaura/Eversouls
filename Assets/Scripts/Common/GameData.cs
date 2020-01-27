@@ -43,6 +43,9 @@ public class GameData : MonoBehaviour
     public bool useDebugOn;
     public QuestManager questManager;
 
+    public ItemSO itemSO;
+    public bool isScriptableObjectLoad;
+
     void Awake() {
         if (instance == null) {
             instance = this;

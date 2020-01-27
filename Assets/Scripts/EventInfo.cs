@@ -42,8 +42,8 @@ public class EventInfo : MonoBehaviour
     private int _iconNo;
     private bool isClearEvent;
 
-    private float succeseRate;
-    private float encountRate;
+    public float succeseRate = 50;
+    public float encountRate = 20;
 
 
     /// <summary>

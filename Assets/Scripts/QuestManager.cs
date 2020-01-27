@@ -56,6 +56,8 @@ public class QuestManager : MonoBehaviour
     [Header("出現したイベント")]
     public List<EventInfo> eventList = new List<EventInfo>();
 
+    public bool isEvent;
+
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
         StartCoroutine(TransitionManager.instance.EnterScene());
@@ -180,6 +182,7 @@ public class QuestManager : MonoBehaviour
                 Destroy(eventList[i].gameObject);
             }
             eventList.Clear();
+            isEvent = false;
         }
         // 上記の行動に合わせて分岐し、その中で行為判定を行う
         if (eventType == EVENT_TYPE.移動) {
@@ -195,6 +198,7 @@ public class QuestManager : MonoBehaviour
             UpdateHeaderInfo(cost, progress);
             UpdateActions(iconNo);
         } else {
+            isEvent = true;
             // 移動以外ならイベントを作成する
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.FIND);
             EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
@@ -221,9 +225,11 @@ public class QuestManager : MonoBehaviour
             // もしもイベントが開いていたらそれを破壊
             if (eventList.Count > 0) {
                 for (int i = 0; i < eventList.Count; i++) {
-                    Destroy(eventList[i].gameObject);
+                    eventList[i].HideEventInfo();
+                    Destroy(eventList[i].gameObject, 0.5f);
                 }
                 eventList.Clear();
+                isEvent = false;
             }
             UpdateHeaderInfo(cost, progress);
             UpdateActions(iconNo);            

@@ -36,6 +36,7 @@ public class ActionInfo : MonoBehaviour
     public FIELD_TYPE fieldType;
     public ACTION_TYPE actionType;    
     public QuestManager questManager;
+    public ItemMasterData.ItemData itemData;
 
     [Header("重複タップ防止フラグ")]
     public bool isSubmit;
@@ -43,6 +44,9 @@ public class ActionInfo : MonoBehaviour
     private bool isAction = false;
     [Header("地形/行動の表示用番号")]
     private int imageNo;
+
+    // レリックによる修正があり/なし
+    private bool isRelicFix;
 
     private void Start() {
         if (cost > GameData.instance.ap) {
@@ -93,6 +97,43 @@ public class ActionInfo : MonoBehaviour
         txtCost.text = data.cost.ToString();
 
         //txtAmountCount.text
+    }
+
+    public void InitRelicAction(ItemMasterData.ItemData data) {
+        itemData = data;
+
+        // 行動を設定
+        actionType = data.actionType;
+        cost = data.cost;
+        imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + data.imageNo);
+
+        txtActionName.text = data.itemName.ToString();
+        txtActionInfo.text = data.fravorTxt;
+        txtCost.text = cost.ToString();
+
+        btnActionInfo.onClick.AddListener(() => OnClickEventFix(itemData));      
+    }
+
+    public void OnClickEventFix(ItemMasterData.ItemData data) {
+        if (questManager.isEvent) {
+            EventInfo eventInfo = questManager.eventList[0];
+            if (eventInfo != null) {
+                // イベントに修正値を渡す
+                if (isRelicFix) {
+                    isRelicFix = false;
+                    questManager.eventList[0].succeseRate += data.successFix;
+                    questManager.eventList[0].encountRate += data.encountFix;
+
+                    // 選択中のアイコン出す 
+
+                } else {
+                    isRelicFix = true;
+                    questManager.eventList[0].succeseRate -= data.successFix;
+                    questManager.eventList[0].encountRate -= data.encountFix;
+                }
+                Debug.Log(isRelicFix);
+            }
+        }
     }
 
     /// <summary>

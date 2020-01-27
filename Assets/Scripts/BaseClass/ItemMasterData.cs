@@ -26,5 +26,27 @@ public class ItemMasterData {
         public int sellPrice;
         // フレーバーテキスト
         public string fravorTxt;
+        // 探索成功率
+        public float successFix;
+        // 敵とのエンカウント率
+        public float encountFix;
+        // クリティカル率
+        public float criticalFix;
+        // 命中率
+        public float hittingFix;
+        // 回避率
+        public float evadeFix;
+        // 攻撃力
+        public int damageFix;
+        // 防御力
+        public int diffenceFix;
+        // 回復力
+        public int recoveryFix;
+        // コスト
+        public int cost;
+        // 行動の場合、行動のタイプ
+        public ACTION_TYPE actionType;
+        // イメージ
+        public int imageNo;
     }
 }

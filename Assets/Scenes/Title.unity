@@ -1035,6 +1035,8 @@ MonoBehaviour:
   homeBgmType: 0
   useDebugOn: 1
   questManager: {fileID: 0}
+  itemSO: {fileID: 11400000, guid: 8141deb7b9939ff4a88e050408bfb4fe, type: 2}
+  isScriptableObjectLoad: 1
 --- !u!4 &1024907771
 Transform:
   m_ObjectHideFlags: 0

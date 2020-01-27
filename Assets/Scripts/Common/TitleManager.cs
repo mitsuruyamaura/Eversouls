@@ -32,9 +32,11 @@ public class TitleManager : MonoBehaviour
             isEnterTitle = false;
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
 
-            // ItemMasterData(スクリプタブル・オブジェクトで扱うマスターデータ用クラス)に
-            // Jsonファイルのデータを読み込んで入れ込む
-            loadMasterDataFrom.LoadFromJson();
+            if (GameData.instance.isScriptableObjectLoad) {
+                // ItemMasterData(スクリプタブル・オブジェクトで扱うマスターデータ用クラス)に
+                // Jsonファイルのデータを読み込んで入れ込む
+                loadMasterDataFrom.LoadFromJson();
+            }
 
             // トランジション処理してシーン遷移
             TransitionManager.instance.TransFadeOut(1.0f);

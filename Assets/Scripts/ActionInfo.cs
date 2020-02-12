@@ -29,6 +29,8 @@ public class ActionInfo : MonoBehaviour
     public Image imgMainAction;
     [Header("移動/行動の対象となる地形のイメージ")]
     public Image imgField;
+    [Header("発生するイベントのシルエット・イメージ")]
+    public Image[] imgEventSilhouettes;
     [Header("ボタン用")]
     public Button btnActionInfo;
 
@@ -47,6 +49,8 @@ public class ActionInfo : MonoBehaviour
 
     // レリックによる修正があり/なし
     private bool isRelicFix;
+
+    Dictionary<int, int> eventOccurrenceRates = new Dictionary<int, int>();
 
     private void Start() {
         if (cost > GameData.instance.ap) {
@@ -71,6 +75,16 @@ public class ActionInfo : MonoBehaviour
         // 行動対象となる地形のイメージ設定
         imgField.sprite = Resources.Load<Sprite>("Fields/" + fieldData.imageNo);
         imageNo = fieldData.imageNo;
+
+        // 発生するイベントをシルエットで表示
+        // 【？(秘匿物・景勝地・罠・敵)】【敵】【魂(囚人：プリズナー/使者：メッセンジャー/鑑定士:アプレイザー)】
+        //int randomValue = Random.Range(0, 2);
+        //int rate = 0;
+        //for (int i = 0; i < randomValue; i++) {
+
+        //}
+
+        //eventOccurrenceRates.Add();
 
         // テキスト関連表示
         txtActionName.text = fieldType.ToString();

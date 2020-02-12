@@ -45,6 +45,7 @@ public class GameData : MonoBehaviour
 
     public ItemSO itemSO;
     public bool isScriptableObjectLoad;
+    public bool isFirstAccess;
 
     void Awake() {
         if (instance == null) {
@@ -71,9 +72,9 @@ public class GameData : MonoBehaviour
         exp = 0;
         soulPoint = 0;
         contactCount = 0;
-        volumeBGM = 0.5f;
-        volumeSE = 0.5f;
-        homeBgmType = SoundManager.ENUM_BGM.HOME_1;
+        //volumeBGM = 0.5f;
+        //volumeSE = 0.5f;
+        //homeBgmType = SoundManager.ENUM_BGM.HOME_1;
         //questManager.Init();
     }    
 }

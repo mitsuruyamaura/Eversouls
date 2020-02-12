@@ -299,14 +299,14 @@ public class SoundManager : MonoBehaviour {
     /// Sliderの値に合わせてBGMの音量を変更
     /// </summary>
     /// <param name="sliderValue"></param>
-    public void SetBGM(float sliderValue) {
+    public void SetBGMVolume(float sliderValue) {
         // 0-1のvalueを-80dB～0dBに変換する。そうしないと音量が正常に変化しない
         float volume = ConvertVolume2dB(sliderValue);
         audioMixer.SetFloat(VOLUME_TYPE.BGMVol.ToString(), volume);
         GameData.instance.volumeBGM = sliderValue;
     }
 
-    public void SetSE(float sliderValue) {
+    public void SetSEVolume(float sliderValue) {
         float volume = ConvertVolume2dB(sliderValue);
         audioMixer.SetFloat(VOLUME_TYPE.SEVol.ToString(), volume);
         GameData.instance.volumeSE = sliderValue;

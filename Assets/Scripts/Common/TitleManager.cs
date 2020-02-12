@@ -15,9 +15,13 @@ public class TitleManager : MonoBehaviour
     public LoadMasterDataFromJson loadMasterDataFrom;
 
     private bool isEnterTitle;     // 重複タップ防止用
-    
+    public bool isPlayFabOn;
+
     void Start() {
-        SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.TITLE);
+        if (isPlayFabOn) {
+            PlayFabManager.instance.ConnectPlayfab();
+        }
+
         btnStart.onClick.AddListener(OnClickStart);
         isEnterTitle = true;
         // スタートテキストの点滅アニメ再生
@@ -35,7 +39,7 @@ public class TitleManager : MonoBehaviour
             if (GameData.instance.isScriptableObjectLoad) {
                 // ItemMasterData(スクリプタブル・オブジェクトで扱うマスターデータ用クラス)に
                 // Jsonファイルのデータを読み込んで入れ込む
-                loadMasterDataFrom.LoadFromJson();
+                //loadMasterDataFrom.LoadFromJson();
             }
 
             // トランジション処理してシーン遷移

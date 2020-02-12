@@ -22,12 +22,20 @@ public class SettingPopup : PopupBase
 
         // Sliderにイベントを登録
         // UnityAction(float value)がデリゲードされているので引数不要
-        sliderBGM.onValueChanged.AddListener(GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>().SetBGM);
-        sliderSE.onValueChanged.AddListener(GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>().SetSE);   
+        sliderBGM.onValueChanged.AddListener(GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>().SetBGMVolume);
+        sliderSE.onValueChanged.AddListener(GameObject.FindGameObjectWithTag("SoundManager").GetComponent<SoundManager>().SetSEVolume);   
     }
 
     public override void OnClickClosePopup() {
+        //StartCoroutine(SaveSettings());
         // 再度設定ボタンを押せるようにする
+        _homeManager.isSetting = false;
+
+        base.OnClickClosePopup();
+    }
+
+    private IEnumerator SaveSettings() {
+        yield return StartCoroutine(PlayFabManager.instance.UpdataUserDataInOptions());
         _homeManager.isSetting = false;
 
         base.OnClickClosePopup();

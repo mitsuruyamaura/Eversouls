@@ -67,6 +67,21 @@ public class HomeManager : MonoBehaviour
     public void OnClickChangeBGM(SoundManager.ENUM_BGM bgmType) {
         SoundManager.Instance.PlayBGM(bgmType);
         GameData.instance.homeBgmType = bgmType;
+        btnBgm1.interactable = false;
+        btnBgm2.interactable = false;
+        // 変更を保存
+        StartCoroutine(CoroutineCheck());
+    }
+
+    /// <summary>
+    /// BGMの変更をPlayFabへ保存
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator CoroutineCheck() {
+        yield return StartCoroutine(PlayFabManager.instance.UpdataUserDataInOptions());
+        // 保存完了後にボタンを押せるようにする
+        btnBgm1.interactable = true;
+        btnBgm2.interactable = true;
     }
 
     /// <summary>

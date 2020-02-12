@@ -4,7 +4,7 @@ public class GameBase : MonoBehaviour
 {
     public PlayFabManager playFabManager;
 
-    void Start() {
+    void Awake() {
         // クローンではない状態でインスタンスする
         Instantiate(playFabManager).name = "PlayFabManager";
     }

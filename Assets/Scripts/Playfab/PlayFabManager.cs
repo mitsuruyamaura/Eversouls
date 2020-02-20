@@ -6,8 +6,7 @@ using PlayFab.ClientModels;
 using System;
 using System.Linq;
 
-public class PlayFabManager : MonoBehaviour
-{
+public class PlayFabManager : MonoBehaviour {
     public static PlayFabManager instance;
 
     string loginMessage;
@@ -16,6 +15,24 @@ public class PlayFabManager : MonoBehaviour
     public bool isLogin;
     public bool isError;
     public string conErrorReport;
+
+    [System.Serializable]
+    public class PlayerStatus{
+        public int level;
+        public int exp;
+        public int skillPoint;
+        public int maxHp;
+        public int maxSp;
+        public int physical;      // 武術
+        public int mental;        // 魔術
+        public int technical;     // 技術
+        public int actionPoint;   // 行動力
+        public int response;      // 反応
+        public int search;        // 探索
+        public List<int> haveSkills;   // 所持スキルの番号
+        public List<string> haveSkillsName;  // 所持スキルの名前
+    }
+
 
     private void Awake() {
         if (instance == null) {
@@ -85,6 +102,9 @@ public class PlayFabManager : MonoBehaviour
     private IEnumerator SetUpDetas() {
         yield return StartCoroutine(GetTitleData());
         yield return StartCoroutine(GetUserData());
+
+        GameData.instance.isGetPlayfabDatas = true;
+        Debug.Log("Press OK Title");
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.TITLE);
     }
 

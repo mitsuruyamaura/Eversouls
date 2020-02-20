@@ -171,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -680,7 +680,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1019,7 +1019,9 @@ MonoBehaviour:
   contactCount: 0
   clearQuestCount: 0
   totalCount: 0
+  skillPoint: 0
   endTutorial: 0
+  isGetPlayfabDatas: 0
   areaDatas: {fileID: 11400000, guid: 0137183a245eb50489ac7234ebbdb190, type: 2}
   charaDatas: {fileID: 11400000, guid: 2c63350afce2d9c4fab2fb2e9eaac91a, type: 2}
   actionDataList: {fileID: 11400000, guid: 8fe4ba5a2dbbf1645a9254d6a6f21973, type: 2}
@@ -1367,7 +1369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1525,7 +1527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6473,7 +6475,7 @@ MonoBehaviour:
   - clip: {fileID: 8300000, guid: f919586de148a1841907139bb83c79d1, type: 3}
     loopTime: 0
     endTime: 96
-  - clip: {fileID: 8300000, guid: f73a0445dfec1724aaf8688ea273ceb7, type: 3}
+  - clip: {fileID: 8300000, guid: 096d8208b2942c946b1df08b169b3c63, type: 3}
     loopTime: 0
     endTime: 140
   SE:
@@ -11407,7 +11409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

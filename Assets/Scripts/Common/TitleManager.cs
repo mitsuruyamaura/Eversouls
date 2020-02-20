@@ -23,6 +23,7 @@ public class TitleManager : MonoBehaviour
         }
 
         btnStart.onClick.AddListener(OnClickStart);
+        btnStart.interactable = false;
         isEnterTitle = true;
         // スタートテキストの点滅アニメ再生
         lblTapStart.DOFade(1f, 1.5f).SetLoops(-1, LoopType.Yoyo);
@@ -46,5 +47,12 @@ public class TitleManager : MonoBehaviour
             TransitionManager.instance.TransFadeOut(1.0f);
             StartCoroutine(SceneStateManager.instance.MoveHome(SCENE_TYPE.HOME));
         }
+    }
+
+    void Update() {
+        // Playfabのデータ取得が終わったら画面タップ許可
+        if (GameData.instance.isGetPlayfabDatas && !btnStart.interactable) {
+            btnStart.interactable = true;
+        }    
     }
 }

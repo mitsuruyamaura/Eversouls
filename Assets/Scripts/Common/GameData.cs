@@ -16,8 +16,11 @@ public class GameData : MonoBehaviour
     public int contactCount;    // 現在契約している英傑の数
     public int clearQuestCount;
     public long totalCount;
+    public int skillPoint;
 
     public bool endTutorial;
+
+    public bool isGetPlayfabDatas;   // PlayfabからTitleとUserデータ取得確認
 
     // データ関連
     public AreaDataList areaDatas;

@@ -1020,6 +1020,13 @@ MonoBehaviour:
   clearQuestCount: 0
   totalCount: 0
   skillPoint: 0
+  maxSp: 0
+  physical: 0
+  mental: 0
+  technical: 0
+  actionPoint: 0
+  response: 0
+  search: 0
   endTutorial: 0
   isGetPlayfabDatas: 0
   areaDatas: {fileID: 11400000, guid: 0137183a245eb50489ac7234ebbdb190, type: 2}
@@ -1036,11 +1043,14 @@ MonoBehaviour:
   volumeBGM: 0
   volumeSE: 0
   homeBgmType: 0
-  useDebugOn: 1
+  useDebugOn: 0
   questManager: {fileID: 0}
   itemSO: {fileID: 11400000, guid: 8141deb7b9939ff4a88e050408bfb4fe, type: 2}
   isScriptableObjectLoad: 1
   isFirstAccess: 0
+  haveSkillNoListString: 
+  haveSkillNoList: 
+  haveSkillDatas: []
 --- !u!4 &1024907771
 Transform:
   m_ObjectHideFlags: 0

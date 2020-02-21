@@ -58,12 +58,12 @@ public class GameData : MonoBehaviour
     public bool isScriptableObjectLoad;
     public bool isFirstAccess;
 
-    public string haveSkillNoListString;
+    public string haveSkillNoListString;   // 所持しているスキルを１つの文字列として受け取ったり送ったりするための変数
 
     [Header("所持しているスキル番号リスト")]
-    public List<int> haveSkillNoList;
+    public List<int> haveSkillNoList;　　　// haveSkillNoListStringを元にリスト化し、これを元にhaveSkillNoListStringを作る
 
-    public List<PlayFabManager.SkillData> haveSkillDatas;
+    public List<PlayFabManager.SkillData> haveSkillDatas;　　// haveSkillNoListを参照してSkillDataから所持しているスキルリストを作る
 
     void Awake() {
         if (instance == null) {

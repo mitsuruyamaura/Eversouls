@@ -139,6 +139,7 @@ public class PlayFabManager : MonoBehaviour {
 
                 // PlayFabを更新
                 StartCoroutine(SetupUserDatas());
+                StartCoroutine(UpdataUserDataInOptions());
             } else {
                 // 保存されているデータを取得
                 GameData.instance.homeBgmType = (SoundManager.ENUM_BGM)Enum.Parse(typeof(SoundManager.ENUM_BGM), GetPlayfabUserDataString(result, "homeBGM"));
@@ -185,13 +186,10 @@ public class PlayFabManager : MonoBehaviour {
 
         bool isWait = true;
 
-        // 保存したいデータをStringでリクエストを作る
+        // 保存したいデータをStringでリクエストを作る(1回に10個まで)
         UpdateUserDataRequest request = new UpdateUserDataRequest() {
             Data = new Dictionary<string, string> {
                 { "isFirstAccess", GameData.instance.isFirstAccess.ToString()},
-                { "homeBGM", GameData.instance.homeBgmType.ToString()},
-                { "volumeBGM", GameData.instance.volumeBGM.ToString()},
-                { "volumeSE", GameData.instance.volumeSE.ToString()},
                 { "playerName", GameData.instance.playerName},
                 { "level", GameData.instance.level.ToString()},
                 { "exp", GameData.instance.exp.ToString()},
@@ -242,6 +240,7 @@ public class PlayFabManager : MonoBehaviour {
                 { "physical", GameData.instance.physical.ToString()},
                 { "mental", GameData.instance.mental.ToString()},
                 { "technical", GameData.instance.technical.ToString()},
+                { "haveSkillNoList", GameData.instance.GetHaveSkillListString()},
             }
         };
         // PlayFabへ送り、結果で分岐

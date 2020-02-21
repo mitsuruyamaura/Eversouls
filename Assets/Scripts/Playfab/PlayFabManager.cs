@@ -17,22 +17,13 @@ public class PlayFabManager : MonoBehaviour {
     public string conErrorReport;
 
     [System.Serializable]
-    public class PlayerStatus{
-        public int level;
-        public int exp;
-        public int skillPoint;
-        public int maxHp;
-        public int maxSp;
-        public int physical;      // 武術
-        public int mental;        // 魔術
-        public int technical;     // 技術
-        public int actionPoint;   // 行動力
-        public int response;      // 反応
-        public int search;        // 探索
-        public List<int> haveSkills;   // 所持スキルの番号
-        public List<string> haveSkillsName;  // 所持スキルの名前
+    public class SkillData {
+        public int skillNo;   // 所持スキルの番号
+        public string skillName;  // 所持スキルの名前。イメージ設定にも使う
+        public int cost;
+        public string skillType;
     }
-
+    public List<SkillData> skillDatas;
 
     private void Awake() {
         if (instance == null) {
@@ -41,15 +32,6 @@ public class PlayFabManager : MonoBehaviour {
         } else {
             Destroy(gameObject);
         }
-    }
-
-
-    [System.Serializable]
-    public class GachaMaster {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public int Rank { get; set; }
-        public int Rate { get; set; }
     }
 
     /// <summary>
@@ -96,7 +78,7 @@ public class PlayFabManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// ゲームに必要な情報をPlayFabへアクセスして順番に取得する
+    /// PlayFabへアクセスしてゲームに必要な情報を順番に取得
     /// </summary>
     /// <returns></returns>
     private IEnumerator SetUpDetas() {
@@ -109,7 +91,7 @@ public class PlayFabManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// ユーザーデータをPlayFabから取得
+    /// PlayFabからユーザーデータを取得
     /// </summary>
     /// <returns></returns>
     public IEnumerator GetUserData() {
@@ -129,21 +111,58 @@ public class PlayFabManager : MonoBehaviour {
         }
 
         void OnSuccess(GetUserDataResult result) {
-            Debug.Log("GetUserDataResult : Success!");
+            
+            // 初回起動か、それ以外かで分岐
             GameData.instance.isFirstAccess = GetPlayfabUserDataBoolean(result, "isFirstAccess");
             if (!GameData.instance.isFirstAccess) {
-                // 初期設定を行う
+                Debug.Log("GetUserDataResult : SetUp!");
+                // 初回起動の場合は初期設定
+                // 環境設定
                 GameData.instance.isFirstAccess = true;
                 GameData.instance.homeBgmType = SoundManager.ENUM_BGM.HOME_1;
                 GameData.instance.volumeBGM = 0.5f;
                 GameData.instance.volumeSE = 0.5f;
+
+                // ユーザー情報設定
+                GameData.instance.playerName = "everSouls"; 
+                GameData.instance.level = 10;
+                GameData.instance.exp = 1000;
+                GameData.instance.maxHp = 300;
+                GameData.instance.physical = 100;
+                GameData.instance.mental = 50;
+                GameData.instance.technical = 70;
+
+                GameData.instance.haveSkillNoList = new List<int>();
+                for (int i = 0; i < 3; i++) {      
+                    GameData.instance.haveSkillNoList.Add(i);
+                }
+
                 // PlayFabを更新
                 StartCoroutine(SetupUserDatas());
             } else {
+                // 保存されているデータを取得
                 GameData.instance.homeBgmType = (SoundManager.ENUM_BGM)Enum.Parse(typeof(SoundManager.ENUM_BGM), GetPlayfabUserDataString(result, "homeBGM"));
                 GameData.instance.volumeBGM = GetPlayfabUserDataFloat(result, "volumeBGM");
                 GameData.instance.volumeSE = GetPlayfabUserDataFloat(result, "volumeSE");
+
+                GameData.instance.playerName = GetPlayfabUserDataString(result, "playerName");
+                GameData.instance.level = GetPlayfabUserDataInt(result, "level");
+                GameData.instance.exp = GetPlayfabUserDataInt(result, "exp");
+                GameData.instance.maxHp = GetPlayfabUserDataInt(result, "maxHp");
+                GameData.instance.physical = GetPlayfabUserDataInt(result, "physical");
+                GameData.instance.mental = GetPlayfabUserDataInt(result, "mental");
+                GameData.instance.technical = GetPlayfabUserDataInt(result, "technical");
+
+                // 所持しているスキルリストを取得
+                GameData.instance.haveSkillNoListString = GetPlayfabUserDataString(result, "haveSkillNoList");
+                if (GameData.instance.haveSkillNoListString != "") {
+                    // ストリング化されたリストがあれば、それを配列に入れてからリストに直す
+                    GameData.instance.haveSkillNoList = GameData.instance.haveSkillNoListString.Split(',').Select(Int32.Parse).ToList();
+                }
+
+                Debug.Log("GetUserDataResult : Success!");
             }
+            // 待機を終了
             isWait = false;
         }
 
@@ -156,7 +175,7 @@ public class PlayFabManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// 初回起動時の初期値を更新
+    /// Playfabへ初回起動時の初期値を設定して更新
     /// </summary>
     /// <returns></returns>
     private IEnumerator SetupUserDatas() {
@@ -173,6 +192,56 @@ public class PlayFabManager : MonoBehaviour {
                 { "homeBGM", GameData.instance.homeBgmType.ToString()},
                 { "volumeBGM", GameData.instance.volumeBGM.ToString()},
                 { "volumeSE", GameData.instance.volumeSE.ToString()},
+                { "playerName", GameData.instance.playerName},
+                { "level", GameData.instance.level.ToString()},
+                { "exp", GameData.instance.exp.ToString()},
+                { "maxHp", GameData.instance.maxHp.ToString()},
+                { "physical", GameData.instance.physical.ToString()},
+                { "mental", GameData.instance.mental.ToString()},
+                { "technical", GameData.instance.technical.ToString()},
+                { "haveSkillNoList", GameData.instance.GetHaveSkillListString()},
+            }
+        };
+        // PlayFabへ送り、結果で分岐
+        PlayFabClientAPI.UpdateUserData(request, OnSuccess, OnError);
+
+        while (isWait) {
+            yield return null;
+        }
+
+        void OnSuccess(UpdateUserDataResult result) {
+            Debug.Log("SetupUserDatasResult : OnSuccess");
+            isWait = false;
+        }
+
+        void OnError(PlayFabError error) {
+            Debug.Log("SetupUserDatasResult : OnError");
+            Debug.Log(error.GenerateErrorReport());
+            isWait = false;
+        }
+    }
+
+    /// <summary>
+    /// Playfabのユーザーの基本データを更新
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator UpdateUserDatas() {
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
+            // 取得できない場合の処理
+        }
+
+        bool isWait = true;
+
+        // 保存したいデータをStringでリクエストを作る
+        UpdateUserDataRequest request = new UpdateUserDataRequest() {
+            Data = new Dictionary<string, string> {
+                { "playerName", GameData.instance.playerName},
+                { "level", GameData.instance.level.ToString()},
+                { "exp", GameData.instance.exp.ToString()},
+                { "maxHp", GameData.instance.maxHp.ToString()},
+                { "physical", GameData.instance.physical.ToString()},
+                { "mental", GameData.instance.mental.ToString()},
+                { "technical", GameData.instance.technical.ToString()},
             }
         };
         // PlayFabへ送り、結果で分岐
@@ -195,7 +264,7 @@ public class PlayFabManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// オプション画面のデータをPlayFabに保存
+    /// PlayFabの環境設定データを更新（オプション画面）
     /// </summary>
     /// <returns></returns>
     public IEnumerator UpdataUserDataInOptions() {
@@ -259,10 +328,10 @@ public class PlayFabManager : MonoBehaviour {
             loginMessage = result.Data["LoginMessage"];
             Debug.Log(loginMessage);
 
-            //GachaMaster[] gachaMaster = Utf8Json.JsonSerializer.Deserialize<GachaMaster[]>(result.Data["GachaMaster"]);
-            //foreach (var master in gachaMaster) {
-            //    Debug.Log(master.Name);
-            //}
+            // スキルデータ取得
+            skillDatas = new List<SkillData>();
+            skillDatas = JsonHelper.ListFromJson<SkillData>(result.Data["SkillData"]);
+            
             isWait = false;
         }
 
@@ -272,6 +341,9 @@ public class PlayFabManager : MonoBehaviour {
             isWait = false;
         }
     }
+
+
+    ///***** ゲッターメソッド *****///
 
     public string GetPlayfabUserDataString(GetUserDataResult result, string key) {
         if (result.Data.ContainsKey(key)) {

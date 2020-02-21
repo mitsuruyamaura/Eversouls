@@ -18,6 +18,14 @@ public class GameData : MonoBehaviour
     public long totalCount;
     public int skillPoint;
 
+    public int maxSp;
+    public int physical;      // 武術
+    public int mental;        // 魔術
+    public int technical;     // 技術
+    public int actionPoint;   // 行動力
+    public int response;      // 反応
+    public int search;        // 探索
+
     public bool endTutorial;
 
     public bool isGetPlayfabDatas;   // PlayfabからTitleとUserデータ取得確認
@@ -50,6 +58,13 @@ public class GameData : MonoBehaviour
     public bool isScriptableObjectLoad;
     public bool isFirstAccess;
 
+    public string haveSkillNoListString;
+
+    [Header("所持しているスキル番号リスト")]
+    public List<int> haveSkillNoList;
+
+    public List<PlayFabManager.SkillData> haveSkillDatas;
+
     void Awake() {
         if (instance == null) {
             instance = this;
@@ -79,5 +94,21 @@ public class GameData : MonoBehaviour
         //volumeSE = 0.5f;
         //homeBgmType = SoundManager.ENUM_BGM.HOME_1;
         //questManager.Init();
-    }    
+    }
+
+    /// <summary>
+    /// スキルリストをカンマ区切りの１つの文字列にして戻す
+    /// </summary>
+    /// <returns></returns>
+    public string GetHaveSkillListString() {
+        string retStr = "";
+        for (int i = 0; i < haveSkillNoList.Count; i++) {
+            retStr += haveSkillNoList[i] + ",";
+        }
+        if (retStr != "") {
+            return retStr.Substring(0, retStr.Length - 1);
+        } else {
+            return "";
+        }
+    }
 }

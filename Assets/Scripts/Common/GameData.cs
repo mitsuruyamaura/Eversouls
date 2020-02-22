@@ -7,7 +7,7 @@ public class GameData : MonoBehaviour
     public static GameData instance;
 
     public int level;
-    public int ap;
+    public int ap = 100;
     public string playerName;
     public int maxHp;
     public long money;

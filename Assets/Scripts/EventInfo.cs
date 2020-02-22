@@ -39,7 +39,7 @@ public class EventInfo : MonoBehaviour
 
     private int _cost;
     private float _progress;
-    private int _iconNo;
+    private int _fieldImageNo;
     private bool isClearEvent;
 
     public float succeseRate = 50;
@@ -53,11 +53,11 @@ public class EventInfo : MonoBehaviour
     /// <param name="eventType"></param>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    public void Init(EVENT_TYPE eventType, QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int iconNo) {
+    public void Init(EVENT_TYPE eventType, QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo) {
         // イベントにかかわる値を取得
         _cost = cost;
         _progress = progress;
-        _iconNo = iconNo;
+        _fieldImageNo = fieldImageNo;
 
         Sequence seq = DOTween.Sequence();
         seq.Append(gameObject.transform.DOScale(1.3f, 0.2f)).SetEase(Ease.Linear);
@@ -105,7 +105,7 @@ public class EventInfo : MonoBehaviour
         if (isClearEvent) {
             QuestManager quest = GameObject.FindGameObjectWithTag("QuestManager").GetComponent<QuestManager>();
             quest.UpdateHeaderInfo(_cost, _progress);
-            quest.UpdateActions(_iconNo);
+            quest.UpdateMoveInfo(_fieldImageNo);
             return;
         }
         // TODO 行動パネル作成

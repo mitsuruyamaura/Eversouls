@@ -6491,6 +6491,7 @@ MonoBehaviour:
   SE:
   - {fileID: 8300000, guid: 0457d898a1157b4428826290c21c7109, type: 3}
   - {fileID: 8300000, guid: fd3be66978c921c4f9831a911e052856, type: 3}
+  - {fileID: 8300000, guid: 10fee6e7d22a26349a18c26b1448a792, type: 3}
   Voice: []
   audioMixer: {fileID: 24100000, guid: dba870784b4e3644ca8828d5badd71a6, type: 2}
   audioMixerGroup:

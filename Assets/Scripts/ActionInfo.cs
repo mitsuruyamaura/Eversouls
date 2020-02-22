@@ -160,7 +160,7 @@ public class ActionInfo : MonoBehaviour
             Sequence seq = DOTween.Sequence();
             seq.Append(transform.DOScale(1.2f, 0.2f));
             seq.Append(transform.DOScale(1.0f, 0.2f));
-            questManager.InactieActionInfo();
+            questManager.InactieMoveInfo();
             StartCoroutine(questManager.MoveJudgment(cost, progress, imageNo, critical, fieldType, actionType));
         }
     }
@@ -175,7 +175,7 @@ public class ActionInfo : MonoBehaviour
             Sequence seq = DOTween.Sequence();
             seq.Append(transform.DOScale(1.2f, 0.2f));
             seq.Append(transform.DOScale(1.0f, 0.2f));
-            questManager.InactieActionInfo();
+            questManager.InactieMoveInfo();
                        
             StartCoroutine(questManager.ActionJudgment(cost, progress, imageNo, actionType));
         }

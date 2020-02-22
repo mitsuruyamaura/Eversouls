@@ -166,7 +166,7 @@ public class QuestData : MonoBehaviour
             
             // アクションを生成
             StartCoroutine(questManager.SetAreaImage(areaType));
-            questManager.CreateField(iconNo);
+            questManager.CreateMoveInfos(iconNo);
 
             yield return new WaitForSeconds(0.15f);
             gameObject.SetActive(false);

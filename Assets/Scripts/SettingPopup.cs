@@ -27,17 +27,18 @@ public class SettingPopup : PopupBase
     }
 
     public override void OnClickClosePopup() {
-        //StartCoroutine(SaveSettings());
+        StartCoroutine(SaveSettings());
         // 再度設定ボタンを押せるようにする
         _homeManager.isSetting = false;
 
         base.OnClickClosePopup();
     }
 
+    /// <summary>
+    /// Playfabのボリューム設定を更新
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator SaveSettings() {
         yield return StartCoroutine(PlayFabManager.instance.UpdataUserDataInOptions());
-        _homeManager.isSetting = false;
-
-        base.OnClickClosePopup();
     }
 }

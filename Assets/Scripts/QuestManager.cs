@@ -12,13 +12,17 @@ public class QuestManager : MonoBehaviour
     public QuestData questDataPrefab;
     [Header("行動用プレファブ")]
     public ActionInfo actionInfoPrefab;
-    [Header("行動用プレファブ")]
+    [Header("イベント用プレファブ")]
     public EventInfo eventInfoPrefab;
+    [Header("移動用プレファブ")]
+    public MovePanelInfo moveInfoPrefab;
 
     [Header("探索しているクエストのリスト")]
     public List<QuestData> questList = new List<QuestData>();
     [Header("現在の行動リスト")]
     public List<ActionInfo> actionList = new List<ActionInfo>();
+    [Header("現在の移動リスト")]
+    public List<MovePanelInfo> moveList = new List<MovePanelInfo>();
 
     [Header("クエスト用プレファブの生成位置")]
     public Transform questTran;
@@ -28,12 +32,17 @@ public class QuestManager : MonoBehaviour
     public Transform eventTran;
     [Header("中央位置")]
     public Transform centerTran;
+    [Header("移動パネルの生成位置")]
+    public Transform moveInfoTran;
     [Header("行動用プレファブの基本生成回数")]
     public int actionBaseCount;
 
     // UI関連
     [Header("行動リストの表示/非表示切替用")]
     public GameObject scrollViewAction;
+    [Header("行動リストの表示/非表示切替用")]
+    public GameObject uiMoveObj;
+
     [Header("APの更新表示用")]
     public TMP_Text txtAp;
     [Header("進捗度の更新表示用")]
@@ -61,13 +70,13 @@ public class QuestManager : MonoBehaviour
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
         StartCoroutine(TransitionManager.instance.EnterScene());
-        Init();
+        CreateStartPanel();
     }
 
     /// <summary>
     /// 初期移動可能エリアの選択用オブジェクトの生成
     /// </summary>
-    public void Init() {
+    public void CreateStartPanel() {
         // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
         if (!GameData.instance.endTutorial) {
             // チュートリアルが終わっていなければチュートリアル用エリアの生成
@@ -135,7 +144,7 @@ public class QuestManager : MonoBehaviour
     /// 移動時のイベント発生判定
     /// </summary>
     /// <returns></returns>
-    public IEnumerator MoveJudgment(int cost, float progress, int iconNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action) {
+    public IEnumerator MoveJudgment(int cost, float progress, int fieldImageNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action) {
         yield return new WaitForSeconds(0.5f);
 
         EVENT_TYPE eventType = new EVENT_TYPE();
@@ -196,17 +205,17 @@ public class QuestManager : MonoBehaviour
             }
             // その後、進捗度を更新し、次の行動を作成
             UpdateHeaderInfo(cost, progress);
-            UpdateActions(iconNo);
+            UpdateMoveInfo(fieldImageNo);
         } else {
             isEvent = true;
             // 移動以外ならイベントを作成する
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.FIND);
             EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
-            eventInfo.Init(eventType, questList[0], field, cost, progress, iconNo);
+            eventInfo.Init(eventType, questList[0], field, cost, progress, fieldImageNo);
             eventList.Add(eventInfo);
 
             // 前の移動用パネルを破棄
-            UpdateActions(iconNo, false);
+            UpdateMoveInfo(fieldImageNo, false);
             // イベントの種類に応じた行動パネルを生成
             //eventInfo.ChooseActions();
 
@@ -218,7 +227,7 @@ public class QuestManager : MonoBehaviour
     /// 選択した行動の成否判定
     /// </summary>
     /// <returns></returns>
-    public IEnumerator ActionJudgment(int cost, float progress, int iconNo, ACTION_TYPE actionType) {
+    public IEnumerator ActionJudgment(int cost, float progress, int fieldImageNo, ACTION_TYPE actionType) {
         yield return new WaitForSeconds(0.5f);
 
         if (actionType == ACTION_TYPE.先を急ぐ) {
@@ -232,7 +241,7 @@ public class QuestManager : MonoBehaviour
                 isEvent = false;
             }
             UpdateHeaderInfo(cost, progress);
-            UpdateActions(iconNo);            
+            UpdateMoveInfo(fieldImageNo);            
         }
     }
 
@@ -269,21 +278,25 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 地形と行動を作成
+    /// 移動パネルを規定数だけ生成
     /// </summary>
     /// <param name="iconNo"></param>
-    public void CreateField(int iconNo) {
+    public void CreateMoveInfos(int fieldNo) {
         // Eventイメージ表示(現在いる地形、敵、ワナなどのイベントなど)
         //if (!imgEvent.gameObject.activeSelf) {
         //    imgEvent.gameObject.SetActive(true);
         //}
         //imgEvent.sprite = Resources.Load<Sprite>("Fields/" + iconNo);
-        StartCoroutine(SetFieldImage(iconNo));
+        
+        // 移動用背景イメージをアニメ表示
+        StartCoroutine(SetFieldImage(fieldNo));
 
-
+        // 所持スキルのリストと移動力を表示
         scrollViewAction.SetActive(true);
+        uiMoveObj.SetActive(true);
 
         actionList = new List<ActionInfo>();
+        moveList = new List<MovePanelInfo>();
 
         // エリアごとに生成可能な地形の出現割合を合計
         int total = 0;
@@ -296,41 +309,45 @@ public class QuestManager : MonoBehaviour
             int value = Random.Range(0, total + 1);
             for (int j = 0; j < questList[0].feildRates.Length; j++) {
                 if (value < questList[0].feildRates[j]) {
-                    ActionInfo action = Instantiate(actionInfoPrefab, actionTran, false);
-                    action.questManager = this;
-                    action.InitField(questList[0].fieldDatas[j], GameData.instance.actionDataList.actionDataList[Random.Range(0, GameData.instance.actionDataList.actionDataList.Count)]);
-                    actionList.Add(action);
+                    MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
+                    StartCoroutine(moveInfo.ChangePanelScale(0.5f + (i * 0.5f)));
+                    moveInfo.InitMovePanel(questList[0].fieldDatas[j]);
+                    moveInfo.questManager = this;
+                    moveList.Add(moveInfo);
                     break;
                 } else {
                     value -= questList[0].feildRates[j];
-
                 }
             }
         }
+    }
 
-        // 実行可能な行動を作成
+    /// <summary>
+    /// 所持しているスキルのうちで使用可能なスキルをスイッチパネルとして生成
+    /// </summary>
+    public void CreateSkillPanels() {
 
     }
 
     /// <summary>
     /// 今までの行動を破棄して新規に行動を作成
     /// </summary>
-    public void UpdateActions(int iconNo, bool isCreate = true) {
-        for (int i = 0; i < actionList.Count; i++) {
-            Destroy(actionList[i].gameObject);
+    public void UpdateMoveInfo(int fieldImageNo, bool isCreate = true) {
+        for (int i = 0; i < moveList.Count; i++) {
+            Destroy(moveList[i].gameObject);
         }
         if (isCreate) {
             // 移動以外の場合は始めはfalseなので移動先は生成しない
-            CreateField(iconNo);
+            CreateMoveInfos(fieldImageNo);
         }
     }
 
     /// <summary>
-    /// １つの行動を選択したら、他の行動をタップできないように制御
+    /// 移動パネルを１つ選択したら、他の移動パネルをタップできないように制御
     /// </summary>
-    public void InactieActionInfo() {
-        for (int i = 0; i < actionList.Count; i++) {
-            actionList[i].btnActionInfo.interactable = false;
+    public void InactieMoveInfo() {
+        for (int i = 0; i < moveList.Count; i++) {
+            moveList[i].btnSubmit.interactable = false;
         }
     }
 

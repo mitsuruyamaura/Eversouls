@@ -37,24 +37,8 @@ public class SoundManager : MonoBehaviour {
     public enum ENUM_SE : int {
         BTN_OK,
         FIND,
-        BTN_NO,
-        RELEASE_OK,
-        RELEASE_NG,
-        DISCOVERY_TRAP,
-        RELEASE_CHECK,    // 矢印を止めた時のSE
-        ITEMBOX_TRAP_GET, // アイテムボックスからトラップ入手時
-        HEAL,
-        GET_GEM,
-        READYGO,
-        LEVELUP,
-        SPEEDUP,
-        RANKDOWN,
-        TRAP_SET,
-        MISSILE_SET,
-        SUPER_MODE,
-        LOBBY_USER_IN,
-        LOBBY_MAX_READY,
-        LOBBY_START,
+        BTN_LUKCY,
+        BTN_NG,
     }
 
     // ボイス

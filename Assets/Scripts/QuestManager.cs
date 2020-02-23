@@ -66,11 +66,13 @@ public class QuestManager : MonoBehaviour
     public List<EventInfo> eventList = new List<EventInfo>();
 
     public bool isEvent;
+    public int ap;
 
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
         StartCoroutine(TransitionManager.instance.EnterScene());
         CreateStartPanel();
+        ap = 100;
     }
 
     /// <summary>
@@ -96,7 +98,6 @@ public class QuestManager : MonoBehaviour
                 questList.Add(quest);
             }
         }
-        UpdateHeaderInfo(0, 0);       
     }
 
     /// <summary>
@@ -104,7 +105,7 @@ public class QuestManager : MonoBehaviour
     /// </summary>
     public void UpdateHeaderInfo(int cost, float progress) {
         // APをアニメ更新
-        int currentAp = GameData.instance.ap;
+        int currentAp = ap;
         int updateAp = currentAp - cost;
         DOTween.To(
             () => currentAp,
@@ -114,7 +115,7 @@ public class QuestManager : MonoBehaviour
             },
             updateAp,
             1.0f);
-        GameData.instance.ap = updateAp;
+        ap = updateAp;
 
         // Progressをアニメ更新
         float currentProgress = progressPoint;
@@ -144,7 +145,7 @@ public class QuestManager : MonoBehaviour
     /// 移動時のイベント発生判定
     /// </summary>
     /// <returns></returns>
-    public IEnumerator MoveJudgment(int cost, float progress, int fieldImageNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action) {
+    public IEnumerator MoveJudgment(int cost, float progress, int fieldImageNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action, bool isLucky) {
         yield return new WaitForSeconds(0.5f);
 
         EVENT_TYPE eventType = new EVENT_TYPE();
@@ -203,9 +204,10 @@ public class QuestManager : MonoBehaviour
                 cost = 0;
                 progress *= 2;
             }
+            UpdateMoveInfo(fieldImageNo);
+
             // その後、進捗度を更新し、次の行動を作成
             UpdateHeaderInfo(cost, progress);
-            UpdateMoveInfo(fieldImageNo);
         } else {
             isEvent = true;
             // 移動以外ならイベントを作成する
@@ -219,6 +221,7 @@ public class QuestManager : MonoBehaviour
             // イベントの種類に応じた行動パネルを生成
             //eventInfo.ChooseActions();
 
+            UpdateHeaderInfo(cost, progress);
             CreateEventActions(eventType);
         }     
     }
@@ -240,7 +243,7 @@ public class QuestManager : MonoBehaviour
                 eventList.Clear();
                 isEvent = false;
             }
-            UpdateHeaderInfo(cost, progress);
+            //UpdateHeaderInfo(cost, progress);
             UpdateMoveInfo(fieldImageNo);            
         }
     }
@@ -294,6 +297,7 @@ public class QuestManager : MonoBehaviour
         // 所持スキルのリストと移動力を表示
         scrollViewAction.SetActive(true);
         uiMoveObj.SetActive(true);
+        UpdateHeaderInfo(0, 0);
 
         actionList = new List<ActionInfo>();
         moveList = new List<MovePanelInfo>();
@@ -308,7 +312,7 @@ public class QuestManager : MonoBehaviour
         for (int i = 0; i < actionBaseCount; i++) {
             int value = Random.Range(0, total + 1);
             for (int j = 0; j < questList[0].feildRates.Length; j++) {
-                if (value < questList[0].feildRates[j]) {
+                if (value <= questList[0].feildRates[j]) {
                     MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
                     StartCoroutine(moveInfo.ChangePanelScale(0.5f + (i * 0.5f)));
                     moveInfo.InitMovePanel(questList[0].fieldDatas[j]);
@@ -330,24 +334,29 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 今までの行動を破棄して新規に行動を作成
+    /// 移動パネルと行動パネルを破棄し、新しい移動パネルの生成を呼び出す
     /// </summary>
     public void UpdateMoveInfo(int fieldImageNo, bool isCreate = true) {
-        for (int i = 0; i < moveList.Count; i++) {
-            Destroy(moveList[i].gameObject);
+        if (moveList.Count > 0) {
+            Sequence seq = DOTween.Sequence();
+            for (int i = 0; i < moveList.Count; i++) {
+                if (moveList[i].transform.localScale.x > 0) {
+                    seq.Append(moveList[i].canvasGroup.DOFade(0, 0.25f));
+                    seq.Join(moveList[i].transform.DOScale(0, 0.25f));
+                }
+                Destroy(moveList[i].gameObject, 0.8f);
+            }
+            moveList.Clear();
+        }
+        if (actionList.Count > 0) {
+            for (int i = 0; i < actionList.Count; i++) {
+                Destroy(actionList[i].gameObject);
+            }
+            actionList.Clear();
         }
         if (isCreate) {
-            // 移動以外の場合は始めはfalseなので移動先は生成しない
+            // イベント発生の場合は始めはfalseなので移動パネルは生成しない
             CreateMoveInfos(fieldImageNo);
-        }
-    }
-
-    /// <summary>
-    /// 移動パネルを１つ選択したら、他の移動パネルをタップできないように制御
-    /// </summary>
-    public void InactieMoveInfo() {
-        for (int i = 0; i < moveList.Count; i++) {
-            moveList[i].btnSubmit.interactable = false;
         }
     }
 

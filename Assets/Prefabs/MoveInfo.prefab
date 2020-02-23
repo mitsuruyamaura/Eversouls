@@ -479,6 +479,7 @@ GameObject:
   - component: {fileID: 1313649507792760304}
   - component: {fileID: 1313649507792760305}
   - component: {fileID: 1313649507792760306}
+  - component: {fileID: 3969118682492441374}
   m_Layer: 5
   m_Name: MoveInfo
   m_TagString: Untagged
@@ -610,6 +611,7 @@ MonoBehaviour:
   txtCost: {fileID: 1313649506407567853}
   imgField: {fileID: 1313649507484074352}
   imgEventIcon: {fileID: 1313649506340202396}
+  canvasGroup: {fileID: 3969118682492441374}
   questManager: {fileID: 0}
   fieldData:
     fieldType: 0
@@ -623,6 +625,19 @@ MonoBehaviour:
     secretItem: 
     landscape: 
     trap: 
+  isSubmit: 0
+--- !u!225 &3969118682492441374
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313649507792760271}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6113543703942350526
 GameObject:
   m_ObjectHideFlags: 0

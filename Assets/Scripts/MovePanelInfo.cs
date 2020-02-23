@@ -14,6 +14,7 @@ public class MovePanelInfo : MonoBehaviour
     public TMP_Text txtCost;
     public Image imgField;
     public Image imgEventIcon;
+    public CanvasGroup canvasGroup;
 
     public QuestManager questManager;
     public FieldDataList.FieldData fieldData = new FieldDataList.FieldData();
@@ -37,6 +38,7 @@ public class MovePanelInfo : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Append(transform.DORotate(new Vector3(0, -360, 0), 0.5f, RotateMode.FastBeyond360));
         seq.Join(transform.DOScale(1.0f, 0.5f));
+        seq.Join(canvasGroup.DOFade(1.0f, 0.5f));
 
         // すべての移動パネルが揃ってからタップできるように時間調整
         yield return new WaitForSeconds((2.0f - time));
@@ -106,21 +108,21 @@ public class MovePanelInfo : MonoBehaviour
                 SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
                 // 通常
                 seq.Append(transform.DOScale(1.2f, 0.3f));
-                seq.Append(transform.DORotate(new Vector3(0, 360, 0), 0.5f, RotateMode.FastBeyond360));
-                seq.Join(transform.DOScale(0, 0.5f));
-                waitTime = 0.8f;
+                seq.Append(transform.DORotate(new Vector3(0, 360, 0), 0.75f, RotateMode.FastBeyond360));
+                seq.Join(transform.DOScale(0, 0.75f));
+                waitTime = 1.05f;
             }
             yield return new WaitForSeconds(waitTime);
 
             // 移動後の処理
-            //questManager.MoveJudgment();
+            StartCoroutine(questManager.MoveJudgment(fieldData.cost, fieldData.progress, fieldData.imageNo, fieldData.criticalRate, fieldData.fieldType, ACTION_TYPE.通常移動, isLucky));
 
-            // TODO メソッドにLucky引数をつけて分岐を消す？
-            if (isLucky) {
-                questManager.UpdateMoveInfo(fieldData.imageNo);
-            } else {
-                questManager.UpdateMoveInfo(fieldData.imageNo);
-            }
+            // Debug用 TODO メソッドにLucky引数をつけて分岐を消す？
+            //if (isLucky) {
+            //    questManager.UpdateMoveInfo(fieldData.imageNo);
+            //} else {
+            //    questManager.UpdateMoveInfo(fieldData.imageNo);
+            //}
         }
     }
 

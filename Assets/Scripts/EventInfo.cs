@@ -53,7 +53,7 @@ public class EventInfo : MonoBehaviour
     /// <param name="eventType"></param>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    public void Init(EVENT_TYPE eventType, QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo, bool isLucky) {
+    public void Init(EVENT_TYPE eventType, QuestInfo questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo, bool isLucky) {
         // イベントにかかわる値を取得
         _cost = cost;
         _progress = progress;
@@ -209,7 +209,7 @@ public class EventInfo : MonoBehaviour
     /// </summary>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    private void CreateEnemy(QuestData questData, FIELD_TYPE fieldType) {
+    private void CreateEnemy(QuestInfo questData, FIELD_TYPE fieldType) {
         // この地域に出現する敵の出現割合を合計する
         int total = 0;
         for (int i = 0; i < questData.checkEventData.enemyEncountRates.Length; i++) {
@@ -276,7 +276,7 @@ public class EventInfo : MonoBehaviour
     /// </summary>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    private void CreateSecretItem(QuestData questData, FIELD_TYPE fieldType) {
+    private void CreateSecretItem(QuestInfo questData, FIELD_TYPE fieldType) {
         // この地域に出現する秘匿物の出現割合を合計する
         int total = 0;
         for (int i = 0; i < questData.checkEventData.secretItemRates.Length; i++) {
@@ -326,7 +326,7 @@ public class EventInfo : MonoBehaviour
     /// </summary>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    private void CreateTrap(QuestData questData, FIELD_TYPE fieldType) {
+    private void CreateTrap(QuestInfo questData, FIELD_TYPE fieldType) {
         // この地域に出現する罠の出現割合を合計する
         int total = 0;
         for (int i = 0; i < questData.checkEventData.trapRates.Length; i++) {
@@ -375,7 +375,7 @@ public class EventInfo : MonoBehaviour
     /// </summary>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    private void CreateLandscape(QuestData questData, FIELD_TYPE fieldType) {
+    private void CreateLandscape(QuestInfo questData, FIELD_TYPE fieldType) {
         // この地域に出現する罠の出現割合を合計する
         int total = 0;
         for (int i = 0; i < questData.checkEventData.landscapeRates.Length; i++) {

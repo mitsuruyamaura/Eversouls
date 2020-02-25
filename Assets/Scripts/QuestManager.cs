@@ -8,8 +8,6 @@ using DG.Tweening;
 public class QuestManager : MonoBehaviour
 {
     // プレファブ関連
-    [Header("クエスト用プレファブ")]
-    public QuestData questDataPrefab;
     [Header("行動用プレファブ")]
     public ActionInfo actionInfoPrefab;
     [Header("イベント用プレファブ")]
@@ -20,7 +18,7 @@ public class QuestManager : MonoBehaviour
     public SkillInfo skillInfoPrefab;
 
     [Header("探索しているクエストのリスト")]
-    public List<QuestData> questList = new List<QuestData>();
+    public List<QuestInfo> questList = new List<QuestInfo>();
     [Header("現在の行動用スキルのリスト")]
     public List<ActionInfo> eventActionList = new List<ActionInfo>();
     [Header("現在の移動用スキルのリスト")]
@@ -84,33 +82,20 @@ public class QuestManager : MonoBehaviour
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
         StartCoroutine(TransitionManager.instance.EnterScene());
-        CreateStartPanel();
-        ap = 100;
+        InitQuestData();
     }
 
     /// <summary>
-    /// 初期移動可能エリアの選択用オブジェクトの生成
+    /// クエスト用データとスキルデータの初期設定と移動パネルの生成
     /// </summary>
-    public void CreateStartPanel() {
-        // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
-        if (!GameData.instance.endTutorial) {
-            // チュートリアルが終わっていなければチュートリアル用エリアの生成
-            QuestData quest = Instantiate(questDataPrefab, questTran, false);
-            quest.questManager = this;
-            quest.InitQuestData(0);
-            quest.no = 0;
-            quest.clearCount = 10;           
-            questList.Add(quest);
-        } else {
-            for (int i = 0; 0 < GameData.instance.questClearCountsByArea[0]; i++) {
-                QuestData quest = Instantiate(questDataPrefab, questTran, false);
-                int areaType = Random.Range(0, GameData.instance.areaDatas.areaDataList.Count);
-                quest.InitQuestData(areaType);
-                quest.no = GameData.instance.totalCount++;
-                quest.questManager = this;
-                questList.Add(quest);
-            }
-        }
+    public void InitQuestData() {
+        ap = 100;
+        //questList.Add(GameData.instance.questData);
+
+        int value = Random.Range(0, GameData.instance.questDataList.Count);
+        // 移動用パネルの生成
+        CreateMovePanelInfos(0, value);
+       
         // プレイヤーの所持しているスキルデータを取得
         SetupSkillDatas();
 
@@ -369,9 +354,9 @@ public class QuestManager : MonoBehaviour
     /// 移動先パネルを規定数だけ生成
     /// </summary>
     /// <param name="iconNo"></param>
-    public void CreateMovePanelInfos(int fieldNo) {
+    public void CreateMovePanelInfos(int fieldImageNo, int fieldNo) {
         // 移動用背景イメージをアニメ表示
-        StartCoroutine(SetFieldImage(fieldNo));
+        StartCoroutine(SetFieldImage(fieldImageNo));
 
         // 所持スキルのリストと移動力を表示
         scrollViewMoveSkillCanvasGroup.gameObject.SetActive(true);
@@ -396,23 +381,23 @@ public class QuestManager : MonoBehaviour
 
         // エリアごとに生成可能な地形の出現割合を合計
         int total = 0;
-        for (int i = 0; i < questList[0].feildRates.Length; i++) {
-            total += questList[0].feildRates[i];
+        for (int i = 0; i < GameData.instance.questDataList[fieldNo].feildRates.Length; i++) {
+            total += GameData.instance.questDataList[fieldNo].feildRates[i];
         }
 
         // 移動可能な地形をランダムに生成する
         for (int i = 0; i < actionBaseCount; i++) {
             int value = Random.Range(0, total + 1);
-            for (int j = 0; j < questList[0].feildRates.Length; j++) {
-                if (value <= questList[0].feildRates[j]) {
+            for (int j = 0; j < GameData.instance.questDataList[fieldNo].feildRates.Length; j++) {
+                if (value <= GameData.instance.questDataList[fieldNo].feildRates[j]) {
                     MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
                     StartCoroutine(moveInfo.ChangePanelScale(0.5f + (i * 0.5f)));
-                    moveInfo.InitMovePanel(questList[0].fieldDatas[j]);
+                    moveInfo.InitMovePanel(GameData.instance.questDataList[fieldNo].fieldDatas[j]);
                     moveInfo.questManager = this;
                     moveList.Add(moveInfo);
                     break;
                 } else {
-                    value -= questList[0].feildRates[j];
+                    value -= GameData.instance.questDataList[fieldNo].feildRates[j];
                 }
             }
         }
@@ -447,7 +432,7 @@ public class QuestManager : MonoBehaviour
         }
         if (isCreate) {
             // イベント発生の場合は始めはfalseなので移動パネルは生成しない
-            CreateMovePanelInfos(fieldImageNo);
+            CreateMovePanelInfos(fieldImageNo, Random.Range(0, GameData.instance.questDataList.Count));
         }
     }
 

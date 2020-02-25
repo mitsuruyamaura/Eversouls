@@ -6,8 +6,8 @@ using DG.Tweening;
 
 public class HomeManager : MonoBehaviour
 {
-    [Header("クエスト開始ボタン")]
-    public Button btnQuest;
+    [Header("エリアボタン")]
+    public Button[] btnAreas;
     [Header("BGM#1再生ボタン")]
     public Button btnBgm1;
     [Header("BGM#2再生ボタン")]
@@ -30,8 +30,9 @@ public class HomeManager : MonoBehaviour
         //StartCoroutine(TransitionManager.instance.EnterScene());
 
         // ボタンの登録
-        btnQuest.onClick.AddListener(() => OnClickOpenQuestSelectPopup(0));
-        //btnQuest.onClick.AddListener(() => StartCoroutine(OnClickQuestScene()));
+        for (int i = 0; i < btnAreas.Length; i++) {
+            btnAreas[i].onClick.AddListener(() => OnClickOpenQuestSelectPopup(i));
+        }      
         btnBgm1.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_1));
         btnBgm2.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_2));
         btnSetting.onClick.AddListener(OnClickOpenSettingPopup);
@@ -39,24 +40,28 @@ public class HomeManager : MonoBehaviour
         StartCoroutine(SetupHomeImage());
 
         // Debug用
-        GameData.instance.questClearCountsByArea = new int[5];
+        GameData.instance.questClearCountsByArea = new int[btnAreas.Length];
         GameData.instance.questClearCountsByArea[0] = 3;
     }
 
+    /// <summary>
+    /// QuestSelectPopupを生成
+    /// </summary>
+    /// <param name="areaNo"></param>
     private void OnClickOpenQuestSelectPopup(int areaNo) {
         QuestSelectPopup questSelectPopup = Instantiate(questSelectPopupPrefab, canvasTran, false);
-        questSelectPopup.CreateQuestPanels(areaNo);
+        questSelectPopup.CreateQuestPanels(areaNo, this);
     }
 
     /// <summary>
-    /// Questシーンへ遷移
+    /// Questシーンへ遷移(QuestSelectPopupから呼び出される)
     /// </summary>
     /// <returns></returns>
     public IEnumerator OnClickQuestScene() {
         SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-        Sequence seq = DOTween.Sequence();
-        seq.Append(btnQuest.transform.DOScale(1.2f, 0.15f));
-        seq.Append(btnQuest.transform.DOScale(1.0f, 0.15f));
+        //Sequence seq = DOTween.Sequence();
+        //seq.Append(btnAreas.transform.DOScale(1.2f, 0.15f));
+        //seq.Append(btnAreas.transform.DOScale(1.0f, 0.15f));
         yield return new WaitForSeconds(0.3f);
         StartCoroutine(SceneStateManager.instance.MoveScene(SCENE_TYPE.QUEST));
     }

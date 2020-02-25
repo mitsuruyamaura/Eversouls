@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class QuestSelectPopup : PopupBase {
 
-    public QuestData questDataPrefab;
-    public List<QuestData> questList = new List<QuestData>();
+    public QuestInfo questDataPrefab;
+    public List<QuestInfo> questList = new List<QuestInfo>();
 
     public Transform questTran;
     public Button btnRightArrow;
     public Button btnLeftArrow;
+    public TMP_Text txtQuestInfo;
 
     //重複タップ防止用フラグ
     private bool isMoveButton;
@@ -19,9 +21,10 @@ public class QuestSelectPopup : PopupBase {
     private int currentButtonNo = 0;
 
     public PageScrollRect page;
-    public QuestData selectQuestData;   // ObjectCencer.csよりもらう
-
-    private int displayNo;
+    [Header("ScrollViewで選択中のQuestDataをObjectCencerAreaよりもらう")]
+    public QuestInfo selectQuestData;
+    [Header("生成時にHomeManagerよりもらう")]
+    public HomeManager homeManager;
 
     protected override void Start() {
         base.Start();
@@ -38,17 +41,27 @@ public class QuestSelectPopup : PopupBase {
     /// 選択したエリアのクエストパネルを生成
     /// </summary>
     /// <param name="areaNo"></param>
-    public void CreateQuestPanels(int areaNo) {
-        for (int i = 0; i < GameData.instance.questClearCountsByArea[areaNo]; i++) {
-            QuestData quest = Instantiate(questDataPrefab, questTran, false);
-            int areaType = Random.Range(0, GameData.instance.areaDatas.areaDataList.Count);
-            quest.InitQuestData(areaType);
+    public void CreateQuestPanels(int areaNo, HomeManager homeManager) {
+        this.homeManager = homeManager;
+
+        // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
+        if (!GameData.instance.endTutorial) {
+            // チュートリアルが終わっていなければチュートリアル用エリアの生成
+            QuestInfo quest = Instantiate(questDataPrefab, questTran, false);
+            quest.InitQuestData(0, this);
             questList.Add(quest);
+        } else {
+            for (int i = 0; i < GameData.instance.questClearCountsByArea[areaNo]; i++) {
+                QuestInfo quest = Instantiate(questDataPrefab, questTran, false);
+                int areaType = Random.Range(0, GameData.instance.areaDatas.areaDataList.Count);
+                quest.InitQuestData(areaType, this);
+                questList.Add(quest);
+            }
         }
     }
 
     /// <summary>
-    /// ボタンリストを1ページ進める
+    /// クエストリストを１つ進める
     /// </summary>
     private void OnClickNextButtonList(bool isSwipe = false) {
         if (!isMoveButton) {
@@ -81,7 +94,7 @@ public class QuestSelectPopup : PopupBase {
 
 
     /// <summary>
-    /// ボタンリストを1つもどす
+    /// クエストリストを１つ戻す
     /// </summary>
     private void OnClickPrevButtonList(bool isSwipe = false) {
         if (!isMoveButton) {
@@ -112,8 +125,10 @@ public class QuestSelectPopup : PopupBase {
             isMoveButton = false;
         }
     }
-
-    //スワイプに合わせてボタンの左右矢印ボタンの表示/非表示を切り替え
+    /// <summary>
+    /// スワイプに合わせてボタンの左右矢印ボタンの表示/非表示を切り替え
+    /// </summary>
+    /// <param name="prevPageIndex"></param>
     public void OnClickArrowButton(int prevPageIndex) {
         //比較用にcurrentArrowButtonListNoを使うが、currentButtonListNoはこの後のメソッドで変更するので
         //ここではcurrentButtonListNoをいったん別の変数に入れて利用する
@@ -134,5 +149,13 @@ public class QuestSelectPopup : PopupBase {
         } else {
             OnClickNextButtonList(true);
         }
+    }
+
+    /// <summary>
+    /// クエスト決定時に呼ばれる
+    /// </summary>
+    public void LoadQuestScene() {
+        canvasGroup.DOFade(0, 0.5f);
+        StartCoroutine(homeManager.OnClickQuestScene());
     }
 }

@@ -10,20 +10,12 @@ using DG.Tweening;
 /// <summary>
 /// クエストのデータ管理クラス
 /// </summary>
-public class QuestData : MonoBehaviour
+public class QuestInfo : MonoBehaviour
 {
     [Header("クエストの通し番号")]
     public long no;
     [Header("クリアまでの必要なポイント(未使用)")]
-    public int clearCount;
-    [Header("クエストに出現する地形リスト")]
-    public List<FieldDataList.FieldData> fieldDatas;
-
-    public FIELD_TYPE[] fieldTypes;                // 出現する地形タイプ
-    [Header("地形の出現割合")]
-    public int[] feildRates;
-    [Header("エリアのタイプ")]
-    public AREA_TYPE areaType;
+    public int clearCount;   
     [Header("このクエストにおいてエリア分岐の発生する回数")]
     public int branchCount;
 
@@ -36,52 +28,31 @@ public class QuestData : MonoBehaviour
     public Button btnSubmit;
 
     [HideInInspector]
-    public QuestManager questManager;
+    public QuestSelectPopup questSelectPopup;
     [HideInInspector]
     public bool isSubmit;　　　          // 重複タップ防止用フラグ
     [HideInInspector]
-    public int iconNo;                   //地形のイメージ番号
-
-    [System.Serializable]
-    public class EventData {
-        // stringを配列に入れるための用意
-        [Header("イベント発生率(敵/秘匿物/罠/景勝地)")]
-        public int[] eventsRates;
-        [Header("敵の出現率")]
-        public int[] enemyEncountRates;
-        public int[] secretItemRates;
-        public int[] landscapeRates;
-        public int[] trapRates;
-        public FIELD_TYPE field;
-    }
-    public List<EventData> eventDataList = new List<EventData>();
-
-    [Header("昼夜")]
-    public TIME_TYPE timeType;
-    [Header("希少度")]
-    public RARE_TYPE areaRarelity;
-    [Header("温度")]
-    public TEMPERATURE_TYPE tempratureType;
+    public int fieldImageNo;                   //地形のイメージ番号
 
     [Header("エンカウント判定イベントデータ")]
-    public EventData checkEventData;
+    public GameData.QuestData checkEventData;
+    public List<GameData.QuestData> questDataList = new List<GameData.QuestData>();
 
     /// <summary>
     /// クエストデータを設定
     /// </summary>
     /// <param name="areaNo"></param>
-    public void InitQuestData(int areaNo) {
+    public void InitQuestData(int areaNo, QuestSelectPopup questSelectPopup) {
+        this.questSelectPopup = questSelectPopup;
         imgArea.DOFade(1, 0.5f);
         foreach (AreaDataList.AreaData data in GameData.instance.areaDatas.areaDataList) {
             if ((AREA_TYPE)areaNo == data.areaType) {
                 // 生成されたクエストのデータを設定
-                areaType = data.areaType;
-                feildRates = GetFieldRates(data.fieldRate);
-                fieldTypes = GetFieldTypes(data.fieldType);
-                fieldDatas = GetFieldDatas();
+                FIELD_TYPE[] fieldTypes = GetFieldTypes(data.fieldType);
+                List<FieldDataList.FieldData> fieldDatas = GetFieldDatas(fieldTypes);
 
                 for (int i = 0; i < fieldDatas.Count; i++) {
-                    EventData eventData = new EventData();
+                    GameData.QuestData eventData = new GameData.QuestData();
                     // 各出現率を文字列からIntに変更し、配列に入れる
                     eventData.eventsRates = new int[(int)EVENT_TYPE.COUNT];
                     eventData.enemyEncountRates = new int[5];
@@ -96,14 +67,20 @@ public class QuestData : MonoBehaviour
                     eventData.trapRates = fieldDatas[i].trap.Split(',').Select(int.Parse).ToArray();
 
                     eventData.field = fieldDatas[i].fieldType;
-                    eventDataList.Add(eventData);
+                    eventData.fieldDatas = fieldDatas;
+
+                    eventData.timeType = data.timeType;
+                    eventData.areaRarelity = data.rareliry;
+                    eventData.tempratureType = data.tempType;               
+                    eventData.feildRates = GetFieldRates(data.fieldRate);
+                    eventData.areaType = data.areaType;
+
+                    questDataList.Add(eventData);
                 }
+                // UI設定
                 imgArea.sprite = Resources.Load<Sprite>("Areas/" + data.iconNo);
-                iconNo = data.iconNo;
+                fieldImageNo = data.iconNo;
                 branchCount = 0;
-                timeType = data.timeType;
-                areaRarelity = data.rareliry;
-                tempratureType = data.tempType;
             }
         }
         btnSubmit.onClick.AddListener(() => StartCoroutine(OnClickSubmit()));
@@ -137,7 +114,7 @@ public class QuestData : MonoBehaviour
     /// 地形のデータを取得
     /// </summary>
     /// <returns></returns>
-    public List<FieldDataList.FieldData> GetFieldDatas() {
+    public List<FieldDataList.FieldData> GetFieldDatas(FIELD_TYPE[] fieldTypes) {
         List<FieldDataList.FieldData> fieldList = new List<FieldDataList.FieldData>();
         foreach (FieldDataList.FieldData data in GameData.instance.fieldDataList.fieldDataList) {
             for (int i = 0; i < fieldTypes.Length; i++) {
@@ -150,25 +127,31 @@ public class QuestData : MonoBehaviour
     }
 
     /// <summary>
-    /// 選択したクエストのデータをQuestManagerに渡す
+    /// 選択したQuestDataをGameDataに渡し、ポップアップを閉じる
     /// </summary>
     public IEnumerator OnClickSubmit() {
         if (!isSubmit) {
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
             isSubmit = true;
-            
+
             // アニメさせながら隠す
-            Sequence seq = DOTween.Sequence();
-            seq.Append(transform.DOMove(questManager.centerTran.position, 1.0f));
-            seq.Append(transform.DOScale(0f, 0.5f));
-            yield return new WaitForSeconds(1.35f);
-            
-            // アクションを生成
-            StartCoroutine(questManager.SetAreaImage(areaType));
-            questManager.CreateMovePanelInfos(iconNo);
+            //Sequence seq = DOTween.Sequence();
+            //seq.Append(transform.DOMove(questManager.centerTran.position, 1.0f));
+            //seq.Append(transform.DOScale(0f, 0.5f));
+            //yield return new WaitForSeconds(1.35f);
+
+            // GameDataにQuestDataの参照を保存
+            GameData.instance.questDataList = new List<GameData.QuestData>();
+            for (int i = 0; i < questDataList.Count; i++) {
+                GameData.instance.questDataList.Add(questDataList[i]);
+            }
+
+            //StartCoroutine(questManager.SetAreaImage(areaType));
+            //questManager.CreateMovePanelInfos(fieldImageNo);
 
             yield return new WaitForSeconds(0.15f);
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
+            questSelectPopup.LoadQuestScene();
         }
     }
 
@@ -186,7 +169,7 @@ public class QuestData : MonoBehaviour
         bool isEncount = false;
         float value = UnityEngine.Random.Range(0, 100);
         Debug.Log(value);
-        foreach (EventData data in eventDataList) {
+        foreach (GameData.QuestData data in GameData.instance.questDataList) {
             if (data.field == fieldType) {
                 checkEventData = data;
                 if (value <= data.eventsRates[0] + amount) {

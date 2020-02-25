@@ -18,7 +18,7 @@ public class PageScrollRect : ScrollRect {
 
         // 1ページの幅を取得
         pageWidth = grid.cellSize.x + grid.spacing.x;
-        Debug.Log(pageWidth);
+        //Debug.Log(pageWidth);
     }
 
     protected override void Start() {
@@ -39,8 +39,8 @@ public class PageScrollRect : ScrollRect {
     /// <param name="eventData"></param>
     public override void OnEndDrag(PointerEventData eventData) {
         base.OnEndDrag(eventData);
-        Debug.Log(eventData);
-        Debug.Log(eventData.delta.x);
+        //Debug.Log(eventData);
+        //Debug.Log(eventData.delta.x);
 
         // ドラッグを終了したとき、スクロールをとめる
         // スナップさせるページが決まった後も慣性が効いてしまうため
@@ -81,7 +81,7 @@ public class PageScrollRect : ScrollRect {
             questSelectPopup.OnClickArrowButton(prevPageIndex);
         }
         prevPageIndex = pageIndex;
-        Debug.Log(prevPageIndex);
+        //Debug.Log(prevPageIndex);
     }
 }
 

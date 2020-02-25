@@ -40,6 +40,35 @@ public class GameData : MonoBehaviour
     public LandscapeDataList landscapeDataList;
     public TrapDataList trapDataList;
 
+    [System.Serializable]
+    public class QuestData {
+        // stringを配列に入れるための用意
+        [Header("イベント発生率(敵/秘匿物/罠/景勝地)")]
+        public int[] eventsRates;
+        [Header("敵の出現率")]
+        public int[] enemyEncountRates;
+        public int[] secretItemRates;
+        public int[] landscapeRates;
+        public int[] trapRates;
+        public FIELD_TYPE field;
+
+        [Header("クエストに出現する地形リスト")]
+        public List<FieldDataList.FieldData> fieldDatas;
+        public FIELD_TYPE[] fieldTypes;                // 出現する地形タイプ
+        [Header("地形の出現割合")]
+        public int[] feildRates;
+        [Header("エリアのタイプ")]
+        public AREA_TYPE areaType;
+        [Header("昼夜")]
+        public TIME_TYPE timeType;
+        [Header("希少度")]
+        public RARE_TYPE areaRarelity;
+        [Header("温度")]
+        public TEMPERATURE_TYPE tempratureType;
+    }
+    public List<QuestData> questDataList = new List<QuestData>();
+    public QuestData questData = new QuestData();
+
     [Header("現在のパーティキャラリスト")]
     public List<CharaDataList.CharaData> charas;
     [Header("現在実行可能な行動リスト")]
@@ -52,7 +81,6 @@ public class GameData : MonoBehaviour
     public SoundManager.ENUM_BGM homeBgmType;
 
     public bool useDebugOn;
-    public QuestManager questManager;
 
     public ItemSO itemSO;
     public bool isScriptableObjectLoad;
@@ -62,8 +90,9 @@ public class GameData : MonoBehaviour
 
     [Header("所持しているスキル番号リスト")]
     public List<int> haveSkillNoList;　　　// haveSkillNoListStringを元にリスト化し、これを元にhaveSkillNoListStringを作る
-
+    [Header("所持しているスキルのデータリスト")]
     public List<PlayFabManager.SkillData> haveSkillDatas;　　// haveSkillNoListを参照してSkillDataから所持しているスキルリストを作る
+    
 
     public enum ABILITY_TYPE {
         PHYSICAL,

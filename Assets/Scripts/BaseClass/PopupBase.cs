@@ -12,6 +12,7 @@ public class PopupBase : MonoBehaviour
     public Button btnFilter;
 
     public CanvasGroup canvasGroup;
+    private bool isSubmit;   // 重複タップ防止
 
     protected virtual void Start() {
         // フェイドイン処理
@@ -26,8 +27,11 @@ public class PopupBase : MonoBehaviour
     /// ポップアップを閉じる
     /// </summary>
     public virtual void OnClickClosePopup() {
-        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-        canvasGroup.DOFade(0f, 0.5f);      
-        Destroy(gameObject, 0.5f);
+        if (!isSubmit) {
+            isSubmit = true;
+            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+            canvasGroup.DOFade(0f, 0.5f);
+            Destroy(gameObject, 0.5f);
+        }
     }
 }

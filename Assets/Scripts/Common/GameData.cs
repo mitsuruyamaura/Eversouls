@@ -14,9 +14,9 @@ public class GameData : MonoBehaviour
     public long exp;　　　　　  // 蓄積型。レベルが上がる
     public long soulPoint;      // 消費型。英傑のスキルレベル(ランク)を上げるのに必要。
     public int contactCount;    // 現在契約している英傑の数
-    public int clearQuestCount;
+    public int[] questClearCountsByArea; // エリア別のクエストクリア回数
     public long totalCount;
-    public int skillPoint;
+    public int skillPoint;      // 不要になりそう
 
     public int maxSp;
     public int physical;      // 武術
@@ -65,6 +65,12 @@ public class GameData : MonoBehaviour
 
     public List<PlayFabManager.SkillData> haveSkillDatas;　　// haveSkillNoListを参照してSkillDataから所持しているスキルリストを作る
 
+    public enum ABILITY_TYPE {
+        PHYSICAL,
+        MENTAL,
+        TECHNICAL
+    }
+
     void Awake() {
         if (instance == null) {
             instance = this;
@@ -110,5 +116,25 @@ public class GameData : MonoBehaviour
         } else {
             return "";
         }
+    }
+
+    public int GetSkillAmountCount(int cost, int skillAbilityNo) {
+        // スキルの参照する能力値を設定
+        ABILITY_TYPE abilityType = (ABILITY_TYPE)skillAbilityNo;
+        int baseAbility = 0;
+        switch (abilityType) {
+            case ABILITY_TYPE.PHYSICAL:
+                baseAbility = physical;
+                break;
+            case ABILITY_TYPE.MENTAL:
+                baseAbility = mental;
+                break;
+            case ABILITY_TYPE.TECHNICAL:
+                baseAbility = technical;
+                break;
+        }
+        int amountCount = 0;
+        
+        return amountCount = Mathf.FloorToInt(baseAbility / cost);
     }
 }

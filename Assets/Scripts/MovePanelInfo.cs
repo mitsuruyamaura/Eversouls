@@ -21,6 +21,8 @@ public class MovePanelInfo : MonoBehaviour
 
     public bool isSubmit = false;  // 重複タップ防止フラグ
 
+    public EVENT_TYPE eventType;
+
     // 配列かリストで選択可能なスキルを取得し、タップしたかどうかを監視する
 
     void Start() {
@@ -68,6 +70,7 @@ public class MovePanelInfo : MonoBehaviour
         for (int x = 0; x < eventTypesRate.Length; x++) {
             if (randomValue <= eventTypesRate[x]) {
                 imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + x);
+                eventType = (EVENT_TYPE)x;
                 break;
             } else {
                 randomValue -= eventTypesRate[x];
@@ -82,7 +85,9 @@ public class MovePanelInfo : MonoBehaviour
     private IEnumerator OnClickSubmit() {
         if (!isSubmit) {
             isSubmit = true;
-                
+
+            questManager.scrollViewMoveSkillCanvasGroup.DOFade(0, 0.5f);
+
             // 他の移動パネルは見た目もタップできないようにする
             for (int i = 0; i < questManager.moveList.Count; i++) {
                 if (!questManager.moveList[i].isSubmit) {
@@ -113,16 +118,10 @@ public class MovePanelInfo : MonoBehaviour
                 waitTime = 1.05f;
             }
             yield return new WaitForSeconds(waitTime);
+            questManager.scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
 
             // 移動後の処理
-            StartCoroutine(questManager.MoveJudgment(fieldData.cost, fieldData.progress, fieldData.imageNo, fieldData.criticalRate, fieldData.fieldType, ACTION_TYPE.通常移動, isLucky));
-
-            // Debug用 TODO メソッドにLucky引数をつけて分岐を消す？
-            //if (isLucky) {
-            //    questManager.UpdateMoveInfo(fieldData.imageNo);
-            //} else {
-            //    questManager.UpdateMoveInfo(fieldData.imageNo);
-            //}
+            StartCoroutine(questManager.MoveJudgment(fieldData, eventType, isLucky));
         }
     }
 

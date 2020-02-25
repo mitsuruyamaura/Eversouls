@@ -41,10 +41,10 @@ public class EventInfo : MonoBehaviour
     private float _progress;
     private int _fieldImageNo;
     private bool isClearEvent;
+    private bool _isLucky;
 
     public float succeseRate = 50;
     public float encountRate = 20;
-
 
     /// <summary>
     /// イベントの初期設定
@@ -53,16 +53,19 @@ public class EventInfo : MonoBehaviour
     /// <param name="eventType"></param>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    public void Init(EVENT_TYPE eventType, QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo) {
+    public void Init(EVENT_TYPE eventType, QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo, bool isLucky) {
         // イベントにかかわる値を取得
         _cost = cost;
         _progress = progress;
         _fieldImageNo = fieldImageNo;
+        _isLucky = isLucky;
 
         Sequence seq = DOTween.Sequence();
         seq.Append(gameObject.transform.DOScale(1.3f, 0.2f)).SetEase(Ease.Linear);
         seq.Append(gameObject.transform.DOScale(1.0f, 0.2f)).SetEase(Ease.Linear);
 
+        Debug.Log(eventType);
+        
         switch (eventType) {
             case EVENT_TYPE.敵:
                 CreateEnemy(questData, fieldType);
@@ -77,13 +80,19 @@ public class EventInfo : MonoBehaviour
                 CreateLandscape(questData, fieldType);
                 break;
         }
-        // 各ボタンの登録
-        btnField.onClick.AddListener(() => StartCoroutine(CheckOpenEvent()));
+        // 各ボタンの登録       
         btnSubmit.onClick.AddListener(HideEventInfo);
         btnSubmit.interactable = false;
 
-        // 探索対象の設定
-        SetupSearchTarget();
+        if (Random.Range(0, 100) > 50) {
+            // ランダム(？)な移動先
+            btnField.onClick.AddListener(() => StartCoroutine(CheckOpenEvent()));
+            // 探索対象の設定
+            SetupSearchTarget(); 
+        } else {
+            // 確定している移動先
+            btnField.onClick.AddListener(() => StartCoroutine(SuccessEvent()));
+        }
     }
 
     /// <summary>
@@ -105,7 +114,7 @@ public class EventInfo : MonoBehaviour
         if (isClearEvent) {
             QuestManager quest = GameObject.FindGameObjectWithTag("QuestManager").GetComponent<QuestManager>();
             quest.UpdateHeaderInfo(_cost, _progress);
-            quest.UpdateMoveInfo(_fieldImageNo);
+            quest.DestroyMovePanelsAndEventPanels(_fieldImageNo);
             return;
         }
         // TODO 行動パネル作成
@@ -189,7 +198,7 @@ public class EventInfo : MonoBehaviour
     }
 
     /// <summary>
-    /// イベントを隠す(破壊はQuestManagerで行う)
+    /// 終了したイベントを隠す(破壊はQuestManagerで行う)
     /// </summary>
     public void HideEventInfo() {
         canvasGroup.DOFade(0, 0.5f);

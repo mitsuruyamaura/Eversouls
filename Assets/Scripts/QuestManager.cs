@@ -16,19 +16,29 @@ public class QuestManager : MonoBehaviour
     public EventInfo eventInfoPrefab;
     [Header("移動用プレファブ")]
     public MovePanelInfo moveInfoPrefab;
+    [Header("スキル用プレファブ")]
+    public SkillInfo skillInfoPrefab;
 
     [Header("探索しているクエストのリスト")]
     public List<QuestData> questList = new List<QuestData>();
-    [Header("現在の行動リスト")]
-    public List<ActionInfo> actionList = new List<ActionInfo>();
-    [Header("現在の移動リスト")]
+    [Header("現在の行動用スキルのリスト")]
+    public List<ActionInfo> eventActionList = new List<ActionInfo>();
+    [Header("現在の移動用スキルのリスト")]
+    public List<SkillInfo> moveSkillsList = new List<SkillInfo>();
+    [Header("現在のイベント用スキルのリスト")]
+    public List<SkillInfo> eventSkillsList = new List<SkillInfo>();
+    [Header("現在の移動パネルのリスト")]
     public List<MovePanelInfo> moveList = new List<MovePanelInfo>();
 
-    [Header("クエスト用プレファブの生成位置")]
+    public List<PlayFabManager.SkillData> questSkillDatas = new List<PlayFabManager.SkillData>();
+
+    [Header("クエスト用パネルの生成位置")]
     public Transform questTran;
-    [Header("行動用プレファブの生成位置")]
+    [Header("行動用スキルパネルの生成位置")]
     public Transform actionTran;
-    [Header("イベント用プレファブの生成位置")]
+    [Header("移動用スキルパネルの生成位置")]
+    public Transform moveSkillTran;
+    [Header("イベント用パネルの生成位置")]
     public Transform eventTran;
     [Header("中央位置")]
     public Transform centerTran;
@@ -38,11 +48,13 @@ public class QuestManager : MonoBehaviour
     public int actionBaseCount;
 
     // UI関連
-    [Header("行動リストの表示/非表示切替用")]
-    public GameObject scrollViewAction;
-    [Header("行動リストの表示/非表示切替用")]
-    public GameObject uiMoveObj;
-
+    [Header("イベント用行動リストの表示/非表示切替用")]
+    public CanvasGroup scrollViewEventActionCanvasGroup;
+    [Header("移動用スキルリストの表示/非表示切替用")]
+    public CanvasGroup scrollViewMoveSkillCanvasGroup;
+    [Header("移動力Header関連の表示/非表示切替用")]
+    public GameObject headerApObj;
+    
     [Header("APの更新表示用")]
     public TMP_Text txtAp;
     [Header("進捗度の更新表示用")]
@@ -67,6 +79,7 @@ public class QuestManager : MonoBehaviour
 
     public bool isEvent;
     public int ap;
+    public bool isUpdateSkill;   // イベントなどでスキルに変更があった場合
 
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
@@ -89,7 +102,7 @@ public class QuestManager : MonoBehaviour
             quest.clearCount = 10;           
             questList.Add(quest);
         } else {
-            for (int i = 0; 0 < GameData.instance.clearQuestCount; i++) {
+            for (int i = 0; 0 < GameData.instance.questClearCountsByArea[0]; i++) {
                 QuestData quest = Instantiate(questDataPrefab, questTran, false);
                 int areaType = Random.Range(0, GameData.instance.areaDatas.areaDataList.Count);
                 quest.InitQuestData(areaType);
@@ -98,6 +111,49 @@ public class QuestManager : MonoBehaviour
                 questList.Add(quest);
             }
         }
+        // プレイヤーの所持しているスキルデータを取得
+        SetupSkillDatas();
+
+        // 移動用のスキルリストの作成
+        CreateSkillListOfEventType(EVENT_TYPE.移動, moveSkillsList, moveSkillTran);
+        scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Playerの所持しているスキルのデータを取得
+    /// </summary>
+    private void SetupSkillDatas() {
+        foreach (PlayFabManager.SkillData skillData in GameData.instance.haveSkillDatas) {
+            skillData.amountCount = GameData.instance.GetSkillAmountCount(skillData.cost, skillData.skillAbilityNo);
+            questSkillDatas.Add(skillData);          
+        }
+    }
+
+    /// <summary>
+    /// 指定されたタイプのスキルパネルを生成し、リストを作成
+    /// </summary>
+    private void CreateSkillListOfEventType(EVENT_TYPE eventType, List<SkillInfo> skillList, Transform tran) {
+        // 取得したスキルのリストから移動用のスキルを抽出してパネルを作る
+        foreach (PlayFabManager.SkillData skillData in questSkillDatas) {
+            for (int i =0; i < skillData.eventTypes.Length; i++) {
+                if (skillData.eventTypes[i] == eventType) {
+                    SkillInfo skillInfo = Instantiate(skillInfoPrefab, tran, false);
+                    skillInfo.questManager = this;
+                    skillInfo.InitSkillPanelInfo(skillData);
+                    skillList.Add(skillInfo);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 対象のスキルリストを破棄
+    /// </summary>
+    public void DestroySkillListOfEventType(List<SkillInfo> destroyList) {
+        for (int i = 0; i < destroyList.Count; i++) {
+            Destroy(destroyList[i].gameObject);
+        }
+        destroyList.Clear();
     }
 
     /// <summary>
@@ -142,84 +198,109 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 移動時のイベント発生判定
+    /// 使用したスキルの使用回数を更新(クエスト内で共用化)
     /// </summary>
-    /// <returns></returns>
-    public IEnumerator MoveJudgment(int cost, float progress, int fieldImageNo, float criticalRate, FIELD_TYPE field, ACTION_TYPE action, bool isLucky) {
-        yield return new WaitForSeconds(0.5f);
-
-        EVENT_TYPE eventType = new EVENT_TYPE();
-        // クリティカル以外はイベント判定を順番にチェックする
-        float[] amount = new float[4];
-        foreach (ActionDataList.ActionData data in GameData.instance.actionDataList.actionDataList) {
-            if (data.actionType == action) {
-                switch (action) {
-                    case ACTION_TYPE.警戒移動:
-                        // 敵の出現率と罠の出現率ダウン
-                        amount[0] = data.value;
-                        amount[2] = data.value;
-                        break;
-                    case ACTION_TYPE.探索:
-                        // 秘匿物と景勝地の出現率アップ
-                        amount[1] = data.value;
-                        amount[3] = data.value;
-                        break;
+    public void UpdateActiveSkillsAmountCount(List<SkillInfo> list) {      
+        for (int i = 0; i < list.Count; i++) {
+            foreach (PlayFabManager.SkillData skillData in questSkillDatas) {
+                if (skillData.skillNo == list[i].skillData.skillNo) {
+                    skillData.amountCount = list[i].skillData.amountCount;
+                    break;
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 移動時のイベント発生判定
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator MoveJudgment(FieldDataList.FieldData fieldData, EVENT_TYPE eventType, bool isLucky) {
+        // スキルの使用回数を更新して移動スキルのパネルを非表示にする       
+        UpdateActiveSkillsAmountCount(moveSkillsList);
+        scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
+        scrollViewMoveSkillCanvasGroup.DOFade(0f, 0.5f);
+        yield return new WaitForSeconds(0.5f);
+
+        //EVENT_TYPE eventType = new EVENT_TYPE();
+        //// クリティカル以外はイベント判定を順番にチェックする
+        //float[] amount = new float[4];
+        //foreach (ActionDataList.ActionData data in GameData.instance.actionDataList.actionDataList) {
+        //    if (data.actionType == action) {
+        //        switch (action) {
+        //            case ACTION_TYPE.警戒移動:
+        //                // 敵の出現率と罠の出現率ダウン
+        //                amount[0] = data.value;
+        //                amount[2] = data.value;
+        //                break;
+        //            case ACTION_TYPE.探索:
+        //                // 秘匿物と景勝地の出現率アップ
+        //                amount[1] = data.value;
+        //                amount[3] = data.value;
+        //                break;
+        //        }
+        //    }
+        //}
 
         // チェックする地形の番号を渡す
-        if (questList[0].CheckEncountEnemy(field, amount[0])) {
-            Debug.Log("敵が出現");
-            eventType = EVENT_TYPE.敵;
-        } else if (questList[0].CheckEncoutSecret(field, amount[1])) {
-            Debug.Log("秘匿物を発見");
-            eventType = EVENT_TYPE.秘匿物;
-        } else if (questList[0].CheckEncountTrap(field, amount[2])) {
-            Debug.Log("罠を発見");
-            eventType = EVENT_TYPE.罠;
-        } else if (questList[0].CheckEncountLandscape(field, amount[3])) {
-            Debug.Log("景勝地を発見");
-            eventType = EVENT_TYPE.景勝地;
-        } else {
-            Debug.Log("移動");
-            eventType = EVENT_TYPE.移動;
-        }
-        Debug.Log(eventType);
+        //if (questList[0].CheckEncountEnemy(field, amount[0])) {
+        //    Debug.Log("敵が出現");
+        //    eventType = EVENT_TYPE.敵;
+        //} else if (questList[0].CheckEncoutSecret(field, amount[1])) {
+        //    Debug.Log("秘匿物を発見");
+        //    eventType = EVENT_TYPE.秘匿物;
+        //} else if (questList[0].CheckEncountTrap(field, amount[2])) {
+        //    Debug.Log("罠を発見");
+        //    eventType = EVENT_TYPE.罠;
+        //} else if (questList[0].CheckEncountLandscape(field, amount[3])) {
+        //    Debug.Log("景勝地を発見");
+        //    eventType = EVENT_TYPE.景勝地;
+        //} else {
+        //    Debug.Log("移動");
+        //    eventType = EVENT_TYPE.移動;
+        //}
+        //Debug.Log(eventType);
         // もしもイベントが開いていたらそれを破壊
         if (eventList.Count > 0) {
             for (int i = 0; i < eventList.Count; i++) {
                 Destroy(eventList[i].gameObject);
             }
-            eventList.Clear();
-            isEvent = false;
+            eventList.Clear();           
         }
+        isEvent = false;
+        int cost = fieldData.cost;
+        float progress = fieldData.progress;
+
+        Debug.Log(eventType);
         // 上記の行動に合わせて分岐し、その中で行為判定を行う
         if (eventType == EVENT_TYPE.移動) {
             // 移動の場合
             // 最初にクリティカルかどうか判定
-            if (CheckActionCritical(criticalRate)) {
+            if (CheckActionCritical(fieldData.criticalRate)) {
                 Debug.Log("Critical!");
                 // クリティカルならボーナス授与
                 cost = 0;
                 progress *= 2;
             }
-            UpdateMoveInfo(fieldImageNo);
+            // 移動用パネルを破棄し、新しい移動用パネルを生成
+            DestroyMovePanelsAndEventPanels(fieldData.imageNo);
 
-            // その後、進捗度を更新し、次の行動を作成
+            // 進捗度を更新
             UpdateHeaderInfo(cost, progress);
         } else {
             isEvent = true;
             // 移動以外ならイベントを作成する
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.FIND);
             EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
-            eventInfo.Init(eventType, questList[0], field, cost, progress, fieldImageNo);
+            eventInfo.Init(eventType, questList[0], fieldData.fieldType, cost, progress, fieldData.imageNo, isLucky);
             eventList.Add(eventInfo);
 
-            // 前の移動用パネルを破棄
-            UpdateMoveInfo(fieldImageNo, false);
+            // 移動用パネルを破棄(イベント解決まで移動パネルは作らない)
+            DestroyMovePanelsAndEventPanels(fieldData.imageNo, false);
+
             // イベントの種類に応じた行動パネルを生成
             //eventInfo.ChooseActions();
+            CreateSkillListOfEventType(eventType, eventSkillsList, actionTran);
 
             UpdateHeaderInfo(cost, progress);
             CreateEventActions(eventType);
@@ -244,8 +325,10 @@ public class QuestManager : MonoBehaviour
                 isEvent = false;
             }
             //UpdateHeaderInfo(cost, progress);
-            UpdateMoveInfo(fieldImageNo);            
+            DestroyMovePanelsAndEventPanels(fieldImageNo);            
         }
+        scrollViewEventActionCanvasGroup.DOFade(0f, 0.5f);
+        scrollViewEventActionCanvasGroup.gameObject.SetActive(false);        
     }
 
     /// <summary>
@@ -253,17 +336,19 @@ public class QuestManager : MonoBehaviour
     /// </summary>
     /// <param name="eventType"></param>
     public void CreateEventActions(EVENT_TYPE eventType) {
-        actionList = new List<ActionInfo>();
+        scrollViewEventActionCanvasGroup.gameObject.SetActive(true);
+        scrollViewEventActionCanvasGroup.DOFade(1.0f, 0.5f);
+
+        eventActionList = new List<ActionInfo>();
 
         // 必ず「先を急ぐ(諦める)」パネルを表示する
         ActionInfo action = Instantiate(actionInfoPrefab, actionTran, false);
         action.questManager = this;
         //action.InitField(questList[0].fieldDatas[j], GameData.instance.actionDataList.actionDataList[Random.Range(0, GameData.instance.actionDataList.actionDataList.Count)]);
 
-        action.InitAction(GameData.instance.actionDataList.actionDataList[6]);
+        action.InitAction(GameData.instance.actionDataList.actionDataList[0]);
         
-        actionList.Add(action);
-
+        eventActionList.Add(action);
     }
 
     /// <summary>
@@ -281,25 +366,32 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 移動パネルを規定数だけ生成
+    /// 移動先パネルを規定数だけ生成
     /// </summary>
     /// <param name="iconNo"></param>
-    public void CreateMoveInfos(int fieldNo) {
-        // Eventイメージ表示(現在いる地形、敵、ワナなどのイベントなど)
-        //if (!imgEvent.gameObject.activeSelf) {
-        //    imgEvent.gameObject.SetActive(true);
-        //}
-        //imgEvent.sprite = Resources.Load<Sprite>("Fields/" + iconNo);
-        
+    public void CreateMovePanelInfos(int fieldNo) {
         // 移動用背景イメージをアニメ表示
         StartCoroutine(SetFieldImage(fieldNo));
 
         // 所持スキルのリストと移動力を表示
-        scrollViewAction.SetActive(true);
-        uiMoveObj.SetActive(true);
+        scrollViewMoveSkillCanvasGroup.gameObject.SetActive(true);
+        scrollViewMoveSkillCanvasGroup.DOFade(1.0f, 0.5f);
+        // 所持スキルに変更があった場合には移動用スキルを再度作成しなおす
+        if (isUpdateSkill) {
+            DestroySkillListOfEventType(moveSkillsList);
+            CreateSkillListOfEventType(EVENT_TYPE.移動, moveSkillsList, moveSkillTran);
+        }
+
+        for (int i = 0; i < moveSkillsList.Count; i++) {
+            moveSkillsList[i].UpdateActiveSkill();
+        }
+        // 移動力を表示する
+        if (!headerApObj.activeSelf) {
+            headerApObj.SetActive(true);
+        }       
         UpdateHeaderInfo(0, 0);
 
-        actionList = new List<ActionInfo>();
+        eventActionList = new List<ActionInfo>();
         moveList = new List<MovePanelInfo>();
 
         // エリアごとに生成可能な地形の出現割合を合計
@@ -327,16 +419,9 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 所持しているスキルのうちで使用可能なスキルをスイッチパネルとして生成
+    /// 移動パネルと各イベント用行動パネルを破棄し、新しい移動パネルの生成を呼び出す
     /// </summary>
-    public void CreateSkillPanels() {
-
-    }
-
-    /// <summary>
-    /// 移動パネルと行動パネルを破棄し、新しい移動パネルの生成を呼び出す
-    /// </summary>
-    public void UpdateMoveInfo(int fieldImageNo, bool isCreate = true) {
+    public void DestroyMovePanelsAndEventPanels(int fieldImageNo, bool isCreate = true) {
         if (moveList.Count > 0) {
             Sequence seq = DOTween.Sequence();
             for (int i = 0; i < moveList.Count; i++) {
@@ -348,15 +433,21 @@ public class QuestManager : MonoBehaviour
             }
             moveList.Clear();
         }
-        if (actionList.Count > 0) {
-            for (int i = 0; i < actionList.Count; i++) {
-                Destroy(actionList[i].gameObject);
+        if (eventActionList.Count > 0) {
+            for (int i = 0; i < eventActionList.Count; i++) {
+                Destroy(eventActionList[i].gameObject);
             }
-            actionList.Clear();
+            eventActionList.Clear();
+        }
+        if (eventSkillsList.Count > 0) {
+            for (int i = 0; i < eventSkillsList.Count; i++) {
+                Destroy(eventSkillsList[i].gameObject);
+            }
+            eventSkillsList.Clear();
         }
         if (isCreate) {
             // イベント発生の場合は始めはfalseなので移動パネルは生成しない
-            CreateMoveInfos(fieldImageNo);
+            CreateMovePanelInfos(fieldImageNo);
         }
     }
 

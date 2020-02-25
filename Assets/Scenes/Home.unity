@@ -1321,6 +1321,8 @@ MonoBehaviour:
     type: 3}
   canvasTran: {fileID: 2009948566}
   isSetting: 0
+  questSelectPopupPrefab: {fileID: 3394132411759674714, guid: 61df47e74814ef045a0e353fa5f18812,
+    type: 3}
 --- !u!4 &439907598
 Transform:
   m_ObjectHideFlags: 0
@@ -3516,7 +3518,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0.015269022}
-  m_AnchoredPosition: {x: -12.7, y: 201.70001}
+  m_AnchoredPosition: {x: -12.7, y: 201.69981}
   m_SizeDelta: {x: 241.8, y: 359.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1179292959

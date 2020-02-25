@@ -109,8 +109,6 @@ public class ActionInfo : MonoBehaviour
         txtActionName.text = actionType.ToString();
         txtActionInfo.text = data.info;
         txtCost.text = data.cost.ToString();
-
-        //txtAmountCount.text
     }
 
     public void InitRelicAction(ItemMasterData.ItemData data) {
@@ -119,7 +117,7 @@ public class ActionInfo : MonoBehaviour
         // 行動を設定
         actionType = data.actionType;
         cost = data.cost;
-        imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + data.imageNo);
+        //imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + data.imageNo);
 
         txtActionName.text = data.itemName.ToString();
         txtActionInfo.text = data.fravorTxt;

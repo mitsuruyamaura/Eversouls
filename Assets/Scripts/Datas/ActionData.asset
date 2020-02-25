@@ -13,52 +13,11 @@ MonoBehaviour:
   m_Name: ActionData
   m_EditorClassIdentifier: 
   actionDataList:
-  - actionType: 0
-    cost: 5
-    progress: 10
-    imageNo: 0
-    info: 
-    criticalRate: 10
-    value: 0
-  - actionType: 1
-    cost: 10
-    progress: 5
-    imageNo: 1
-    info: 
-    criticalRate: 15
-    value: 20
-  - actionType: 2
-    cost: 20
-    progress: 15
-    imageNo: 3
-    info: 
-    criticalRate: 5
-    value: 0
-  - actionType: 3
-    cost: 15
-    progress: 20
-    imageNo: 4
-    info: 
-    criticalRate: 10
-    value: 0
-  - actionType: 4
-    cost: 25
-    progress: 10
-    imageNo: 5
-    info: 
-    criticalRate: 10
-    value: -20
-  - actionType: 5
-    cost: 15
-    progress: 0
-    imageNo: 6
-    info: 
-    criticalRate: 10
-    value: 0
-  - actionType: 14
+  - eventTypes: 04000000
+    actionType: 14
     cost: 0
     progress: 0
-    imageNo: 6
+    imageNo: 0
     info: 
     criticalRate: 0
     value: 0

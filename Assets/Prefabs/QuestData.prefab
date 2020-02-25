@@ -70,7 +70,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.25
+  m_padding: 1.79
   m_canvasRenderer: {fileID: 2130138124002530154}
   m_TextComponent: {fileID: 145144305275381400}
   m_materialReferenceIndex: 1
@@ -246,6 +246,7 @@ GameObject:
   - component: {fileID: 6957427209082656496}
   - component: {fileID: 1203754140497380816}
   - component: {fileID: 4540783992270681183}
+  - component: {fileID: 103537122386274793}
   m_Layer: 5
   m_Name: QuestData
   m_TagString: Untagged
@@ -271,7 +272,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 650, y: 345}
+  m_SizeDelta: {x: 500, y: 345}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6957427209082656497
 CanvasRenderer:
@@ -294,7 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.53333336}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -330,13 +331,24 @@ MonoBehaviour:
   feildRates: 
   areaType: 19
   branchCount: 0
-  txtAreaName: {fileID: 145144305275381400}
+  txtAreaType: {fileID: 0}
+  txtUniqueAreaName: {fileID: 0}
   imgArea: {fileID: 6957427209082656496}
   btnSubmit: {fileID: 4540783992270681183}
   questManager: {fileID: 0}
   isSubmit: 0
   iconNo: 0
-  areaDataList: {fileID: 11400000, guid: 0137183a245eb50489ac7234ebbdb190, type: 2}
+  eventDataList: []
+  timeType: 0
+  areaRarelity: 0
+  tempratureType: 0
+  checkEventData:
+    eventsRates: 
+    enemyEncountRates: 
+    secretItemRates: 
+    landscapeRates: 
+    trapRates: 
+    field: 0
 --- !u!114 &4540783992270681183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,3 +394,29 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!61 &103537122386274793
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6957427209082656502}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.1920166, y: -2.2530365}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 437.26367, y: 312.9697}
+  m_EdgeRadius: 0

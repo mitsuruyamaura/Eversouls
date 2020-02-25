@@ -96,7 +96,6 @@ public class QuestData : MonoBehaviour
                     eventData.trapRates = fieldDatas[i].trap.Split(',').Select(int.Parse).ToArray();
 
                     eventData.field = fieldDatas[i].fieldType;
-
                     eventDataList.Add(eventData);
                 }
                 imgArea.sprite = Resources.Load<Sprite>("Areas/" + data.iconNo);
@@ -166,7 +165,7 @@ public class QuestData : MonoBehaviour
             
             // アクションを生成
             StartCoroutine(questManager.SetAreaImage(areaType));
-            questManager.CreateMoveInfos(iconNo);
+            questManager.CreateMovePanelInfos(iconNo);
 
             yield return new WaitForSeconds(0.15f);
             gameObject.SetActive(false);

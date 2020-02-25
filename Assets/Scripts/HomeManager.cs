@@ -22,6 +22,7 @@ public class HomeManager : MonoBehaviour
     public Transform canvasTran;
 
     public bool isSetting;   // 設定ボタン重複タップ防止用
+    public QuestSelectPopup questSelectPopupPrefab;
 
     void Start(){
         SoundManager.Instance.PlayBGM(GameData.instance.homeBgmType);
@@ -29,12 +30,22 @@ public class HomeManager : MonoBehaviour
         //StartCoroutine(TransitionManager.instance.EnterScene());
 
         // ボタンの登録
-        btnQuest.onClick.AddListener(() => StartCoroutine(OnClickQuestScene()));
+        btnQuest.onClick.AddListener(() => OnClickOpenQuestSelectPopup(0));
+        //btnQuest.onClick.AddListener(() => StartCoroutine(OnClickQuestScene()));
         btnBgm1.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_1));
         btnBgm2.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_2));
         btnSetting.onClick.AddListener(OnClickOpenSettingPopup);
 
         StartCoroutine(SetupHomeImage());
+
+        // Debug用
+        GameData.instance.questClearCountsByArea = new int[5];
+        GameData.instance.questClearCountsByArea[0] = 3;
+    }
+
+    private void OnClickOpenQuestSelectPopup(int areaNo) {
+        QuestSelectPopup questSelectPopup = Instantiate(questSelectPopupPrefab, canvasTran, false);
+        questSelectPopup.CreateQuestPanels(areaNo);
     }
 
     /// <summary>

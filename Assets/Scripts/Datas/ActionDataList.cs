@@ -9,6 +9,7 @@ public class ActionDataList : ScriptableObject
 
     [System.Serializable]
     public class ActionData {
+        public EVENT_TYPE[] eventTypes;  // 対応するイベントのタイプ
         public ACTION_TYPE actionType; // 行動タイプ
         public int cost;               // 移動するためのコスト
         public int progress;           // 成功時にプラスされる進捗度。失敗時は半分

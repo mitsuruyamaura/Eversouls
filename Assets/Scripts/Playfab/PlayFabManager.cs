@@ -18,10 +18,15 @@ public class PlayFabManager : MonoBehaviour {
 
     [System.Serializable]
     public class SkillData {
-        public int skillNo;   // 所持スキルの番号
-        public string skillName;  // 所持スキルの名前。イメージ設定にも使う
+        public int skillNo;       // 所持スキルの番号
+        public string skillName;  // 所持スキルの名前
         public int cost;
         public string skillType;
+        public int imageNo;
+        public int skillAbilityNo;    // スキルの使用回数や効果を適用する際に参照する能力値()
+        public string eventTypesString; 
+        public EVENT_TYPE[] eventTypes;
+        public int amountCount;
     }
     public List<SkillData> skillDatas;
 
@@ -133,7 +138,7 @@ public class PlayFabManager : MonoBehaviour {
                 GameData.instance.technical = 70;
 
                 GameData.instance.haveSkillNoList = new List<int>();
-                for (int i = 0; i < 3; i++) {      
+                for (int i = 0; i < 6; i++) {
                     GameData.instance.haveSkillNoList.Add(i);
                 }
 
@@ -158,9 +163,16 @@ public class PlayFabManager : MonoBehaviour {
                 GameData.instance.haveSkillNoListString = GetPlayfabUserDataString(result, "haveSkillNoList");
                 if (GameData.instance.haveSkillNoListString != "") {
                     // ストリング化されたリストがあれば、それを配列に入れてからリストに直す
-                    GameData.instance.haveSkillNoList = GameData.instance.haveSkillNoListString.Split(',').Select(Int32.Parse).ToList();
+                    GameData.instance.haveSkillNoList = GameData.instance.haveSkillNoListString.Split(',').Select(int.Parse).ToList();
                 }
-
+                // 所持リストにスキルデータの参照を取得
+                foreach (SkillData skillData in skillDatas) {
+                    for (int i = 0; i < GameData.instance.haveSkillNoList.Count; i++) {
+                        if (skillData.skillNo == GameData.instance.haveSkillNoList[i]) {
+                            GameData.instance.haveSkillDatas.Add(skillData);
+                        }
+                    }
+                }
                 Debug.Log("GetUserDataResult : Success!");
             }
             // 待機を終了
@@ -330,7 +342,16 @@ public class PlayFabManager : MonoBehaviour {
             // スキルデータ取得
             skillDatas = new List<SkillData>();
             skillDatas = JsonHelper.ListFromJson<SkillData>(result.Data["SkillData"]);
-            
+            // stringをEventTypeに変換
+            foreach (SkillData skillData in skillDatas) {
+                if (skillData.eventTypesString != "") {
+                    string[] data = skillData.eventTypesString.Split(',').ToArray();
+                    skillData.eventTypes = new EVENT_TYPE[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        skillData.eventTypes[i] = (EVENT_TYPE)Enum.Parse(typeof(EVENT_TYPE), data[i]);
+                    }               
+                }
+            }
             isWait = false;
         }
 

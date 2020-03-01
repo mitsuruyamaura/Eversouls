@@ -1017,7 +1017,7 @@ MonoBehaviour:
   exp: 0
   soulPoint: 0
   contactCount: 0
-  clearQuestCount: 0
+  questClearCountsByArea: 
   totalCount: 0
   skillPoint: 0
   maxSp: 0
@@ -1037,6 +1037,24 @@ MonoBehaviour:
   secretItemDataList: {fileID: 11400000, guid: 194e5406207f3f9438b8b86b11c6f540, type: 2}
   landscapeDataList: {fileID: 11400000, guid: fbd5dadb578eb844c85c01b7c428253f, type: 2}
   trapDataList: {fileID: 11400000, guid: 15ef1e3bd846ced418d3ef442c9dff6c, type: 2}
+  questDataList: []
+  questData:
+    eventsRates: 
+    enemyEncountRates: 
+    secretItemRates: 
+    landscapeRates: 
+    trapRates: 
+    field: 0
+    fieldDatas: []
+    fieldTypes: 
+    feildRates: 
+    areaType: 0
+    timeType: 0
+    areaRarelity: 0
+    tempratureType: 0
+    areaInfo: 
+    iconNo: 0
+  choiceAreaNo: 0
   charas: []
   actions: []
   areas: []
@@ -1044,7 +1062,6 @@ MonoBehaviour:
   volumeSE: 0
   homeBgmType: 0
   useDebugOn: 0
-  questManager: {fileID: 0}
   itemSO: {fileID: 11400000, guid: 8141deb7b9939ff4a88e050408bfb4fe, type: 2}
   isScriptableObjectLoad: 1
   isFirstAccess: 0
@@ -11403,7 +11420,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -235.00003, y: -12}
+  m_AnchoredPosition: {x: -235, y: -12}
   m_SizeDelta: {x: -469.6, y: 400.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2018353861

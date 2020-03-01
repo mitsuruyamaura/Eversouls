@@ -5,6 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
+/// <summary>
+/// Questシーンの管理クラス
+/// </summary>
 public class QuestManager : MonoBehaviour
 {
     // プレファブ関連
@@ -27,8 +30,10 @@ public class QuestManager : MonoBehaviour
     public List<SkillInfo> eventSkillsList = new List<SkillInfo>();
     [Header("現在の移動パネルのリスト")]
     public List<MovePanelInfo> moveList = new List<MovePanelInfo>();
-
+    [Header("クエスト内で使用可能スキルのリスト")] //GameDataの値が入り、クエスト中に変更が入り、クエスト後にGameDataに反映される
     public List<PlayFabManager.SkillData> questSkillDatas = new List<PlayFabManager.SkillData>();
+    [Header("獲得しているアイテムのリスト")]
+    public List<PlayFabManager.ItemData> haveItemDataList = new List<PlayFabManager.ItemData>();
 
     [Header("クエスト用パネルの生成位置")]
     public Transform questTran;
@@ -430,7 +435,16 @@ public class QuestManager : MonoBehaviour
         bool isRootSelection = moveCount >= branchCounts[currentQuestDataNo];
 
         if (isRootSelection) {
-            if (branchCounts.Length <= currentQuestDataNo) {
+            if (branchCounts.Length == (currentQuestDataNo + 1)) {
+                // ボス戦
+                MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
+                StartCoroutine(moveInfo.ChangePanelScale(0.5f));
+                // TODO ランダムでボスを選ぶ
+                moveInfo.InitBossPanel(bossType, 0);  // 現在は固定値
+                moveInfo.questManager = this;
+                moveList.Add(moveInfo);
+                Debug.Log("ボス出現");
+            } else {
                 // 祠と出口出現
                 for (int i = 0; i < 2; i++) {
                     MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
@@ -439,14 +453,6 @@ public class QuestManager : MonoBehaviour
                     moveInfo.questManager = this;
                     moveList.Add(moveInfo);
                 }
-            } else {
-                // ボス戦
-                MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
-                StartCoroutine(moveInfo.ChangePanelScale(0.5f));
-                moveInfo.InitBossPanel(bossType);
-                moveInfo.questManager = this;
-                moveList.Add(moveInfo);
-                Debug.Log("ボス出現");
             }
         } else {
             // エリアごとに生成可能な地形の出現割合を合計

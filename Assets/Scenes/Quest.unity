@@ -1269,6 +1269,7 @@ MonoBehaviour:
   moveCount: 0
   branchCounts: 
   maxProgress: 0
+  bossType: 0
 --- !u!4 &444253677
 Transform:
   m_ObjectHideFlags: 0
@@ -4839,7 +4840,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 20
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 1
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1

@@ -30,6 +30,37 @@ public class PlayFabManager : MonoBehaviour {
     }
     public List<SkillData> skillDatas;
 
+    [System.Serializable]
+    public class ItemData {
+        public int itrmNo;
+        public int itemCd;
+        public string itemName;
+        public string itemIcon;
+        public int itemType;                    // Conditionクラス生成時の参照(キャストしてITEM_TYPEにする)
+        public int exp;                         // リザルト画面で獲得できる経験値
+        public string info;
+        public string rarelityString;
+        public string appearanceString;
+        public string seasonTypeString;
+        public string levelTypeString;
+        public string levelBonusString;
+        public string abilityValueString;
+        public string abilityNameString;
+        public string effectString;
+
+        public RARE_TYPE[] rarelities;             // 希少度。敵のタイプによって変わる 0 - 4
+        public int[] appearances;                  // 出現率。敵のタイプによって変わる。
+        public SEASON_WIND_TYPE[] seasonTypes;     // 落とすエリア
+        public ENEMY_LEVEL_TYPE[] levelTypes;      // 落とす敵のタイプ
+        public float[] levelBonuses;               // レベルの分だけ加算される値と加算される能力（能力値以外も含む）
+        public float[] abilityValues;              // 能力値や他の値に加算される値群。levelBonusとセット 
+        public string[] abilityNames;
+        public string[] effects;
+
+        public int level;                       // アイテムのレベル(Masterではもたない)
+    }
+    public List<ItemData> itemDatas;
+
     private void Awake() {
         if (instance == null) {
             instance = this;
@@ -350,6 +381,68 @@ public class PlayFabManager : MonoBehaviour {
                     for (int i = 0; i < data.Length; i++) {
                         skillData.eventTypes[i] = (EVENT_TYPE)Enum.Parse(typeof(EVENT_TYPE), data[i]);
                     }               
+                }
+            }
+
+            itemDatas = new List<ItemData>();
+            itemDatas = JsonHelper.ListFromJson<ItemData>(result.Data["ItemData"]);
+            // stringを配列にして、各型に変換
+            foreach (ItemData itemData in itemDatas) {
+                if (itemData.rarelityString != "") {
+                    string[] data = itemData.rarelityString.Split(',').ToArray();
+                    itemData.rarelities = new RARE_TYPE[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        itemData.rarelities[i] = (RARE_TYPE)Enum.Parse(typeof(RARE_TYPE), data[i]);
+                    }
+                }
+                if (itemData.appearanceString != "") {
+                    string[] data = itemData.appearanceString.Split(',').ToArray();
+                    itemData.appearances = new int[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        itemData.appearances[i] = int.Parse(data[i]);
+                    }
+                }
+                if (itemData.seasonTypeString != "") {
+                    string[] data = itemData.seasonTypeString.Split(',').ToArray();
+                    itemData.seasonTypes = new SEASON_WIND_TYPE[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        itemData.seasonTypes[i] = (SEASON_WIND_TYPE)Enum.Parse(typeof(SEASON_WIND_TYPE), data[i]);
+                    }
+                }
+                if (itemData.levelTypeString != "") {
+                    string[] data = itemData.levelTypeString.Split(',').ToArray();
+                    itemData.levelTypes = new ENEMY_LEVEL_TYPE[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        itemData.levelTypes[i] = (ENEMY_LEVEL_TYPE)Enum.Parse(typeof(ENEMY_LEVEL_TYPE), data[i]);
+                    }
+                }
+                if (itemData.levelBonusString != "") {
+                    string[] data = itemData.levelBonusString.Split(',').ToArray();
+                    itemData.levelBonuses = new float[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        itemData.levelBonuses[i] = float.Parse(data[i]);
+                    }
+                }
+                if (itemData.abilityValueString != "") {
+                    string[] data = itemData.abilityValueString.Split(',').ToArray();
+                    itemData.abilityValues = new float[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        itemData.abilityValues[i] = float.Parse(data[i]);
+                    }
+                }
+                if (itemData.abilityNameString != "") {
+                    string[] data = itemData.abilityNameString.Split(',').ToArray();
+                    itemData.abilityNames = new string[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        itemData.abilityNames[i] = data[i];
+                    }
+                }
+                if (itemData.effectString != "") {
+                    string[] data = itemData.effectString.Split(',').ToArray();
+                    itemData.effects = new string[data.Length];
+                    for (int i = 0; i < data.Length; i++) {
+                        itemData.effects[i] = data[i];
+                    }
                 }
             }
             isWait = false;

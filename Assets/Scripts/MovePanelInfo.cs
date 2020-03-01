@@ -97,8 +97,13 @@ public class MovePanelInfo : MonoBehaviour
     /// <summary>
     /// ボスパネルを生成
     /// </summary>
-    public void InitBossPanel(ENEMY_LEVEL_TYPE bossType) {
-        Debug.Log("ボス 生成 : " + bossType); 
+    public void InitBossPanel(ENEMY_LEVEL_TYPE bossType, int bossNo) {
+        Debug.Log("ボス 生成 : " + bossType);
+
+        lblFieldName.text = bossType.ToString();
+        txtCost.text = 0.ToString();
+        imgField.sprite = Resources.Load<Sprite>("BossImages/" + bossNo);
+        imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + 0);
     }
 
     /// <summary>

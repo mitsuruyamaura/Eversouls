@@ -53,7 +53,7 @@ public class EventInfo : MonoBehaviour
     /// <param name="eventType"></param>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    public void Init(EVENT_TYPE eventType, QuestInfo questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo, bool isLucky) {
+    public void Init(EVENT_TYPE eventType, GameData.QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo, bool isLucky) {
         // イベントにかかわる値を取得
         _cost = cost;
         _progress = progress;
@@ -209,11 +209,11 @@ public class EventInfo : MonoBehaviour
     /// </summary>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    private void CreateEnemy(QuestInfo questData, FIELD_TYPE fieldType) {
+    private void CreateEnemy(GameData.QuestData questData, FIELD_TYPE fieldType) {
         // この地域に出現する敵の出現割合を合計する
         int total = 0;
-        for (int i = 0; i < questData.checkEventData.enemyEncountRates.Length; i++) {
-            total += questData.checkEventData.enemyEncountRates[i];
+        for (int i = 0; i < questData.enemyEncountRates.Length; i++) {
+            total += questData.enemyEncountRates[i];
         }
         Debug.Log(total);
 
@@ -229,8 +229,8 @@ public class EventInfo : MonoBehaviour
         // 重み付けしたレアリティの中からどのレアリティかを決定
         int value = Random.Range(0, total + 1);
         Debug.Log(value);
-        for (int x = 0; x < questData.checkEventData.enemyEncountRates.Length; x++) {
-            if (value <= questData.checkEventData.enemyEncountRates[x]) {
+        for (int x = 0; x < questData.enemyEncountRates.Length; x++) {
+            if (value <= questData.enemyEncountRates[x]) {
                 // 決定したレアリティ内から敵リストを作成し、出現する敵の重み付けを合計
                 int appears = 0;
                 List<EnemyDataList.EnemyData> enterEnemyList = new List<EnemyDataList.EnemyData>();
@@ -265,7 +265,7 @@ public class EventInfo : MonoBehaviour
                 }
                 break;
             } else {
-                value -= questData.checkEventData.enemyEncountRates[x];
+                value -= questData.enemyEncountRates[x];
                 Debug.Log(value);
             }           
         }
@@ -276,18 +276,18 @@ public class EventInfo : MonoBehaviour
     /// </summary>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    private void CreateSecretItem(QuestInfo questData, FIELD_TYPE fieldType) {
+    private void CreateSecretItem(GameData.QuestData questData, FIELD_TYPE fieldType) {
         // この地域に出現する秘匿物の出現割合を合計する
         int total = 0;
-        for (int i = 0; i < questData.checkEventData.secretItemRates.Length; i++) {
-            total += questData.checkEventData.secretItemRates[i];
+        for (int i = 0; i < questData.secretItemRates.Length; i++) {
+            total += questData.secretItemRates[i];
         }
         Debug.Log(total);
 
         // 重み付けしたレアリティの中からどのレアリティが排出されたか決定
         int value = Random.Range(0, total + 1);
-        for (int x =0; x < questData.checkEventData.secretItemRates.Length; x++) {
-            if (value <= questData.checkEventData.secretItemRates[x]) {
+        for (int x =0; x < questData.secretItemRates.Length; x++) {
+            if (value <= questData.secretItemRates[x]) {
                 int appears = 0;
                 List<SecretItemDataList.SecretItemData> enterSecretList = new List<SecretItemDataList.SecretItemData>();
                 for (int y = 0; y < GameData.instance.secretItemDataList.secretItemDatas.Count; y++) {
@@ -315,8 +315,8 @@ public class EventInfo : MonoBehaviour
                 }
                 break;
             } else {
-                value -= questData.checkEventData.secretItemRates[x];
-                Debug.Log(questData.checkEventData.secretItemRates[x]);
+                value -= questData.secretItemRates[x];
+                Debug.Log(questData.secretItemRates[x]);
             }
         }
     }
@@ -326,18 +326,18 @@ public class EventInfo : MonoBehaviour
     /// </summary>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    private void CreateTrap(QuestInfo questData, FIELD_TYPE fieldType) {
+    private void CreateTrap(GameData.QuestData questData, FIELD_TYPE fieldType) {
         // この地域に出現する罠の出現割合を合計する
         int total = 0;
-        for (int i = 0; i < questData.checkEventData.trapRates.Length; i++) {
-            total += questData.checkEventData.trapRates[i];
+        for (int i = 0; i < questData.trapRates.Length; i++) {
+            total += questData.trapRates[i];
         }
         Debug.Log(total);
 
         // 重み付けしたレアリティの中からどのレアリティが排出されたか決定
         int value = Random.Range(0, total + 1);
-        for (int x = 0; x < questData.checkEventData.trapRates.Length; x++) {
-            if (value <= questData.checkEventData.trapRates[x]) {
+        for (int x = 0; x < questData.trapRates.Length; x++) {
+            if (value <= questData.trapRates[x]) {
                 int appears = 0;
                 List<TrapDataList.TrapData> enterTrapList = new List<TrapDataList.TrapData>();
                 for (int y = 0; y < GameData.instance.trapDataList.trapDatas.Count; y++) {
@@ -364,8 +364,8 @@ public class EventInfo : MonoBehaviour
                 }
                 break;
             } else {
-                value -= questData.checkEventData.trapRates[x];
-                Debug.Log(questData.checkEventData.trapRates[x]);
+                value -= questData.trapRates[x];
+                Debug.Log(questData.trapRates[x]);
             }
         }
     }
@@ -375,18 +375,18 @@ public class EventInfo : MonoBehaviour
     /// </summary>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    private void CreateLandscape(QuestInfo questData, FIELD_TYPE fieldType) {
+    private void CreateLandscape(GameData.QuestData questData, FIELD_TYPE fieldType) {
         // この地域に出現する罠の出現割合を合計する
         int total = 0;
-        for (int i = 0; i < questData.checkEventData.landscapeRates.Length; i++) {
-            total += questData.checkEventData.landscapeRates[i];
+        for (int i = 0; i < questData.landscapeRates.Length; i++) {
+            total += questData.landscapeRates[i];
         }
         Debug.Log(total);
 
         // 重み付けしたレアリティの中からどのレアリティが排出されたか決定
         int value = Random.Range(0, total + 1);
-        for (int x = 0; x < questData.checkEventData.landscapeRates.Length; x++) {
-            if (value <= questData.checkEventData.landscapeRates[x]) {
+        for (int x = 0; x < questData.landscapeRates.Length; x++) {
+            if (value <= questData.landscapeRates[x]) {
                 int appears = 0;
                 List<LandscapeDataList.LandscapeData> enterLandscapeList = new List<LandscapeDataList.LandscapeData>();
                 for (int y = 0; y < GameData.instance.landscapeDataList.landscapeDatas.Count; y++) {
@@ -413,8 +413,8 @@ public class EventInfo : MonoBehaviour
                 }
                 break;
             } else {
-                value -= questData.checkEventData.landscapeRates[x];
-                Debug.Log(questData.checkEventData.landscapeRates[x]);
+                value -= questData.landscapeRates[x];
+                Debug.Log(questData.landscapeRates[x]);
             }
         }
     }

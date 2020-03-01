@@ -14,11 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   areaDataList:
   - areaType: 0
-    timeType: 1
-    tempType: 1
-    branchRate: 0
+    tempType: 0
     fieldRate: 20,10,10,10,10
     fieldType: 0,1,2,3,4
-    defaultName: 
+    areaName: "A\u8349\u539F"
     iconNo: 0
+    rareliry: 0
+    fieldTypeAllay: 
+    areaInfo: aaaaaaaaaaaaaaaaa\nasss
+  - areaType: 1
+    tempType: 0
+    fieldRate: 20,10,10,10,10
+    fieldType: 0,1,2,3,4
+    areaName: "A\u4E18\u9675"
+    iconNo: 1
+    rareliry: 0
+    fieldTypeAllay: 
+    areaInfo: bbbbbbbbbbbbbbbbbb
+  - areaType: 2
+    tempType: 2
+    fieldRate: 20,10,10,10,10
+    fieldType: 0,1,2,3,4
+    areaName: "A\u96EA\u539F"
+    iconNo: 2
     rareliry: 1
+    fieldTypeAllay: 
+    areaInfo: ccccccccccccccccccccccccc

@@ -23,5 +23,9 @@ public class EnemyDataList : ScriptableObject {
         public string skills;
         public string chestType;
         public int exp;
+        public SEASON_WIND_TYPE[] seasonType;      // 生息エリア
+        public ENEMY_LEVEL_TYPE levelType;         // ボスかどうか
+        public int[] skillAbilitys;          　　  // 能力値{武術、魔術、技術}の順番。戦闘時にランダムで選択され、目標値となる
+        public int[] levelBonus;                   // クエストの進行度によるレベルボーナス値{武術、魔術、技術}の順番でランダムにレベル回数だけ加算される
     }
 }

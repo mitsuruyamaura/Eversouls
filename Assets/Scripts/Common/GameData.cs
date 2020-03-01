@@ -27,7 +27,6 @@ public class GameData : MonoBehaviour
     public int search;        // 探索
 
     public bool endTutorial;
-
     public bool isGetPlayfabDatas;   // PlayfabからTitleとUserデータ取得確認
 
     // データ関連
@@ -65,9 +64,12 @@ public class GameData : MonoBehaviour
         public RARE_TYPE areaRarelity;
         [Header("温度")]
         public TEMPERATURE_TYPE tempratureType;
+        public string areaInfo;
+        public int iconNo;
     }
     public List<QuestData> questDataList = new List<QuestData>();
     public QuestData questData = new QuestData();
+    public int choiceAreaNo;   // Homeシーンで選択したエリアの番号(SEASON_TYPEにキャストする)
 
     [Header("現在のパーティキャラリスト")]
     public List<CharaDataList.CharaData> charas;

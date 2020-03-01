@@ -31,7 +31,7 @@ public class HomeManager : MonoBehaviour
 
         // ボタンの登録
         for (int i = 0; i < btnAreas.Length; i++) {
-            btnAreas[i].onClick.AddListener(() => OnClickOpenQuestSelectPopup(i));
+            btnAreas[i].onClick.AddListener(() => OnClickOpenQuestSelectPopup(i - 1));
         }      
         btnBgm1.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_1));
         btnBgm2.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_2));
@@ -49,6 +49,7 @@ public class HomeManager : MonoBehaviour
     /// </summary>
     /// <param name="areaNo"></param>
     private void OnClickOpenQuestSelectPopup(int areaNo) {
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
         QuestSelectPopup questSelectPopup = Instantiate(questSelectPopupPrefab, canvasTran, false);
         questSelectPopup.CreateQuestPanels(areaNo, this);
     }

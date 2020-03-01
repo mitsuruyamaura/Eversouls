@@ -18,6 +18,7 @@ public class QuestInfo : MonoBehaviour
     public int clearCount;   
     [Header("このクエストにおいてエリア分岐の発生する回数")]
     public int branchCount;
+    public string  areaInfo;
 
     // UI関連
     [Header("エリアのタイプ名表示")]
@@ -31,8 +32,6 @@ public class QuestInfo : MonoBehaviour
     public QuestSelectPopup questSelectPopup;
     [HideInInspector]
     public bool isSubmit;　　　          // 重複タップ防止用フラグ
-    [HideInInspector]
-    public int fieldImageNo;                   //地形のイメージ番号
 
     [Header("エンカウント判定イベントデータ")]
     public GameData.QuestData checkEventData;
@@ -47,39 +46,41 @@ public class QuestInfo : MonoBehaviour
         imgArea.DOFade(1, 0.5f);
         foreach (AreaDataList.AreaData data in GameData.instance.areaDatas.areaDataList) {
             if ((AREA_TYPE)areaNo == data.areaType) {
-                // 生成されたクエストのデータを設定
+                // 生成されたクエストのデータをエリアから設定
                 FIELD_TYPE[] fieldTypes = GetFieldTypes(data.fieldType);
                 List<FieldDataList.FieldData> fieldDatas = GetFieldDatas(fieldTypes);
 
+                // エリアに含まれるすべての地形データをQuestDataに入れてリスト化
                 for (int i = 0; i < fieldDatas.Count; i++) {
-                    GameData.QuestData eventData = new GameData.QuestData();
+                    GameData.QuestData questData = new GameData.QuestData();
                     // 各出現率を文字列からIntに変更し、配列に入れる
-                    eventData.eventsRates = new int[(int)EVENT_TYPE.COUNT];
-                    eventData.enemyEncountRates = new int[5];
-                    eventData.secretItemRates = new int[(int)SECRET_ITEM_TYPE.COUNT];                                       
-                    eventData.landscapeRates = new int[(int)LANDSCAPE_TYPE.COUNT];
-                    eventData.trapRates = new int[(int)TRAP_TYPE.COUNT];
+                    questData.eventsRates = new int[(int)EVENT_TYPE.COUNT];
+                    questData.enemyEncountRates = new int[5];
+                    questData.secretItemRates = new int[(int)SECRET_ITEM_TYPE.COUNT];                                       
+                    questData.landscapeRates = new int[(int)LANDSCAPE_TYPE.COUNT];
+                    questData.trapRates = new int[(int)TRAP_TYPE.COUNT];
 
-                    eventData.eventsRates = fieldDatas[i].events.Split(',').Select(int.Parse).ToArray();
-                    eventData.enemyEncountRates = fieldDatas[i].enemyEncount.Split(',').Select(int.Parse).ToArray();
-                    eventData.secretItemRates = fieldDatas[i].secretItem.Split(',').Select(int.Parse).ToArray();
-                    eventData.landscapeRates = fieldDatas[i].landscape.Split(',').Select(int.Parse).ToArray();
-                    eventData.trapRates = fieldDatas[i].trap.Split(',').Select(int.Parse).ToArray();
+                    questData.eventsRates = fieldDatas[i].events.Split(',').Select(int.Parse).ToArray();
+                    questData.enemyEncountRates = fieldDatas[i].enemyEncount.Split(',').Select(int.Parse).ToArray();
+                    questData.secretItemRates = fieldDatas[i].secretItem.Split(',').Select(int.Parse).ToArray();
+                    questData.landscapeRates = fieldDatas[i].landscape.Split(',').Select(int.Parse).ToArray();
+                    questData.trapRates = fieldDatas[i].trap.Split(',').Select(int.Parse).ToArray();
 
-                    eventData.field = fieldDatas[i].fieldType;
-                    eventData.fieldDatas = fieldDatas;
+                    questData.field = fieldDatas[i].fieldType;
+                    questData.fieldDatas = fieldDatas;
 
-                    eventData.timeType = data.timeType;
-                    eventData.areaRarelity = data.rareliry;
-                    eventData.tempratureType = data.tempType;               
-                    eventData.feildRates = GetFieldRates(data.fieldRate);
-                    eventData.areaType = data.areaType;
+                    questData.areaRarelity = data.rareliry;
+                    questData.tempratureType = data.tempType;               
+                    questData.feildRates = GetFieldRates(data.fieldRate);
+                    questData.areaType = data.areaType;
+                    questData.areaInfo = data.areaInfo;
+                    questData.iconNo = data.iconNo;
 
-                    questDataList.Add(eventData);
+                    questDataList.Add(questData);                 
                 }
                 // UI設定
                 imgArea.sprite = Resources.Load<Sprite>("Areas/" + data.iconNo);
-                fieldImageNo = data.iconNo;
+                areaInfo = data.areaInfo;
                 branchCount = 0;
             }
         }

@@ -4,6 +4,8 @@
 /// 探索すると設定されている秘匿物が発見できる
 /// </summary>
 public enum LANDSCAPE_TYPE {
+    出口,
+    交霊の祠,　　// Sacred place
     果樹林,
     野草の群生地,
     採石場跡,

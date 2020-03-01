@@ -69,7 +69,7 @@ public class QuestManager : MonoBehaviour
     public Image imgAreaFront;
 
     [Header("クエストの進捗度")]
-    public float progressPoint;
+    public int progressPoint;
     [Header("宝箱の天井値")]
     public int ceilChestPoint;
     [Header("出現したイベント")]
@@ -78,6 +78,12 @@ public class QuestManager : MonoBehaviour
     public bool isEvent;
     public int ap;
     public bool isUpdateSkill;   // イベントなどでスキルに変更があった場合
+
+    public int currentQuestDataNo;
+    public int moveCount;
+    public int[] branchCounts;     // moveCountがbranchCountを超えるときに祠の分岐発生 move > 5(branch)なら6回目の移動時
+    public int maxProgress = 0;    // 最大移動回数
+    public ENEMY_LEVEL_TYPE bossType;   // ボスのタイプ。中ボスかエリアボスか
 
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
@@ -90,11 +96,20 @@ public class QuestManager : MonoBehaviour
     /// </summary>
     public void InitQuestData() {
         ap = 100;
-        //questList.Add(GameData.instance.questData);
+        txtAp.text = ap.ToString();
+        txtProgress.text = 0.ToString("P1");
+        currentQuestDataNo = 0;
+        bossType = ENEMY_LEVEL_TYPE.GATE_KEEPER;
 
-        int value = Random.Range(0, GameData.instance.questDataList.Count);
+        // 各クエスト２回分岐発生。合計３エリアを探索する
+        branchCounts = new int[3];
+        for (int i = 0; i < branchCounts.Length; i++) {
+            branchCounts[i] = GetBranchCount();
+            maxProgress += branchCounts[i];
+        }
+      
         // 移動用パネルの生成
-        CreateMovePanelInfos(0, value);
+        CreateMovePanelInfos(0, currentQuestDataNo);
        
         // プレイヤーの所持しているスキルデータを取得
         SetupSkillDatas();
@@ -102,6 +117,32 @@ public class QuestManager : MonoBehaviour
         // 移動用のスキルリストの作成
         CreateSkillListOfEventType(EVENT_TYPE.移動, moveSkillsList, moveSkillTran);
         scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 選択したエリアに応じたbranchConutを設定
+    /// </summary>
+    /// <returns></returns>
+    private int GetBranchCount() {
+        int branchNo = 0;
+        switch ((SEASON_WIND_TYPE)GameData.instance.choiceAreaNo) {
+            case SEASON_WIND_TYPE.EUROS:
+                branchNo = Random.Range(3, 6);
+                break;
+            case SEASON_WIND_TYPE.ZEPHYROS:
+                branchNo = Random.Range(4, 7);
+                break;
+            case SEASON_WIND_TYPE.NOTOS:
+                branchNo = Random.Range(5, 8);
+                break;
+            case SEASON_WIND_TYPE.BOREAS:
+                branchNo = Random.Range(6, 9);
+                break;
+            case SEASON_WIND_TYPE.AURORA:
+                branchNo = Random.Range(7, 10);
+                break;
+        }
+        return branchNo;
     }
 
     /// <summary>
@@ -158,27 +199,33 @@ public class QuestManager : MonoBehaviour
             1.0f);
         ap = updateAp;
 
-        // Progressをアニメ更新
-        float currentProgress = progressPoint;
-        float updataProgress = currentProgress + progress;
-        if (updataProgress > 100) {
-            updataProgress = 100;
+        // Progressが最大値でなければ数字アニメしながら更新
+        if (progressPoint > maxProgress) {
+            progressPoint = maxProgress;
         }
+        int baseProgress = progressPoint;
+        float currentProgress = (float)baseProgress / maxProgress;
+        Debug.Log(currentProgress);
+        float updataProgress = (float)(baseProgress + 1) / maxProgress;
+        Debug.Log(updataProgress);
+        
         DOTween.To(
             () => currentProgress,
             (x) => {
                 currentProgress = x;
-                txtProgress.text = x.ToString("F0");
+                txtProgress.text = x.ToString("P1");
             },
             updataProgress,
             1.0f);
-        progressPoint = updataProgress;
+        progressPoint++;
 
         //txtAp.text = GameData.instance.ap.ToString();
         //txtProgress.text = progressPoint.ToString();
-        //slider.value = (progressPoint / 100);
+        //slider.value = (float)progressPoint / maxProgress;
+        
         // 進捗バーをアニメ表示
-        imgProgress.fillAmount = (progressPoint / 100);
+        imgProgress.fillAmount = (float)progressPoint / maxProgress;
+        Debug.Log((float)progressPoint / maxProgress);
         slider.DOValue(imgProgress.fillAmount, 0.5f).SetEase(Ease.Linear);
     }
 
@@ -277,7 +324,7 @@ public class QuestManager : MonoBehaviour
             // 移動以外ならイベントを作成する
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.FIND);
             EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
-            eventInfo.Init(eventType, questList[0], fieldData.fieldType, cost, progress, fieldData.imageNo, isLucky);
+            eventInfo.Init(eventType, GameData.instance.questDataList[currentQuestDataNo], fieldData.fieldType, cost, progress, fieldData.imageNo, isLucky);
             eventList.Add(eventInfo);
 
             // 移動用パネルを破棄(イベント解決まで移動パネルは作らない)
@@ -354,7 +401,7 @@ public class QuestManager : MonoBehaviour
     /// 移動先パネルを規定数だけ生成
     /// </summary>
     /// <param name="iconNo"></param>
-    public void CreateMovePanelInfos(int fieldImageNo, int fieldNo) {
+    public void CreateMovePanelInfos(int fieldImageNo, int fieldNo) {   // fieldNo = currentQuestDataNoなので引数なしにできるかも
         // 移動用背景イメージをアニメ表示
         StartCoroutine(SetFieldImage(fieldImageNo));
 
@@ -374,30 +421,54 @@ public class QuestManager : MonoBehaviour
         if (!headerApObj.activeSelf) {
             headerApObj.SetActive(true);
         }       
-        UpdateHeaderInfo(0, 0);
+        //UpdateHeaderInfo(0, 0);
 
         eventActionList = new List<ActionInfo>();
         moveList = new List<MovePanelInfo>();
 
-        // エリアごとに生成可能な地形の出現割合を合計
-        int total = 0;
-        for (int i = 0; i < GameData.instance.questDataList[fieldNo].feildRates.Length; i++) {
-            total += GameData.instance.questDataList[fieldNo].feildRates[i];
-        }
+        // 移動回数によるルート変更有無の確認
+        bool isRootSelection = moveCount >= branchCounts[currentQuestDataNo];
 
-        // 移動可能な地形をランダムに生成する
-        for (int i = 0; i < actionBaseCount; i++) {
-            int value = Random.Range(0, total + 1);
-            for (int j = 0; j < GameData.instance.questDataList[fieldNo].feildRates.Length; j++) {
-                if (value <= GameData.instance.questDataList[fieldNo].feildRates[j]) {
+        if (isRootSelection) {
+            if (branchCounts.Length <= currentQuestDataNo) {
+                // 祠と出口出現
+                for (int i = 0; i < 2; i++) {
                     MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
                     StartCoroutine(moveInfo.ChangePanelScale(0.5f + (i * 0.5f)));
-                    moveInfo.InitMovePanel(GameData.instance.questDataList[fieldNo].fieldDatas[j]);
+                    moveInfo.InitSacredPlacePanel(GameData.instance.landscapeDataList.landscapeDatas[i], i + 3);
                     moveInfo.questManager = this;
                     moveList.Add(moveInfo);
-                    break;
-                } else {
-                    value -= GameData.instance.questDataList[fieldNo].feildRates[j];
+                }
+            } else {
+                // ボス戦
+                MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
+                StartCoroutine(moveInfo.ChangePanelScale(0.5f));
+                moveInfo.InitBossPanel(bossType);
+                moveInfo.questManager = this;
+                moveList.Add(moveInfo);
+                Debug.Log("ボス出現");
+            }
+        } else {
+            // エリアごとに生成可能な地形の出現割合を合計
+            int total = 0;
+            for (int i = 0; i < GameData.instance.questDataList[fieldNo].feildRates.Length; i++) {
+                total += GameData.instance.questDataList[fieldNo].feildRates[i];
+            }
+
+            // 移動可能な地形をランダムに生成する
+            for (int i = 0; i < actionBaseCount; i++) {
+                int value = Random.Range(0, total + 1);
+                for (int j = 0; j < GameData.instance.questDataList[fieldNo].feildRates.Length; j++) {
+                    if (value <= GameData.instance.questDataList[fieldNo].feildRates[j]) {
+                        MovePanelInfo moveInfo = Instantiate(moveInfoPrefab, moveInfoTran, false);
+                        StartCoroutine(moveInfo.ChangePanelScale(0.5f + (i * 0.5f)));
+                        moveInfo.InitMovePanel(GameData.instance.questDataList[fieldNo].fieldDatas[j]);
+                        moveInfo.questManager = this;
+                        moveList.Add(moveInfo);
+                        break;
+                    } else {
+                        value -= GameData.instance.questDataList[fieldNo].feildRates[j];
+                    }
                 }
             }
         }
@@ -432,8 +503,34 @@ public class QuestManager : MonoBehaviour
         }
         if (isCreate) {
             // イベント発生の場合は始めはfalseなので移動パネルは生成しない
-            CreateMovePanelInfos(fieldImageNo, Random.Range(0, GameData.instance.questDataList.Count));
+            CreateMovePanelInfos(fieldImageNo, currentQuestDataNo);
         }
+    }
+
+    /// <summary>
+    /// 出口
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator ExitQuest() {
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("脱出 : リザルト処理へ");
+
+        DestroyMovePanelsAndEventPanels(0, false);
+    }
+
+    /// <summary>
+    /// スピリットの生成
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator CreateSpiritualityPlace() {
+        moveCount = 0;
+        currentQuestDataNo++;
+
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("交霊 : スピリットをランダムに１体選んでスキルパネルを３つ生成させるポップアップを開く");
+        Debug.Log("Closeすると移動パネル表示");
+
+        DestroyMovePanelsAndEventPanels(0);
     }
 
     /// <summary>

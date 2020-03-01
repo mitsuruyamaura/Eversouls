@@ -18,8 +18,10 @@ public class MovePanelInfo : MonoBehaviour
 
     public QuestManager questManager;
     public FieldDataList.FieldData fieldData = new FieldDataList.FieldData();
+    public LandscapeDataList.LandscapeData landscapeData = new LandscapeDataList.LandscapeData();
 
     public bool isSubmit = false;  // 重複タップ防止フラグ
+    public bool isSecretPlace = false;
 
     public EVENT_TYPE eventType;
 
@@ -79,6 +81,27 @@ public class MovePanelInfo : MonoBehaviour
     }
 
     /// <summary>
+    /// 出口パネルと交霊の祠パネルを生成
+    /// </summary>
+    /// <param name="landscapeData"></param>
+    public void InitSacredPlacePanel(LandscapeDataList.LandscapeData landscapeData, int eventNo) {
+        isSecretPlace = true;
+        this.landscapeData = landscapeData;
+
+        lblFieldName.text = this.landscapeData.landscapeType.ToString();
+        txtCost.text = 0.ToString();
+        imgField.sprite = Resources.Load<Sprite>("Landscapes/" + this.fieldData.imageNo);
+        imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + eventNo);
+    }
+
+    /// <summary>
+    /// ボスパネルを生成
+    /// </summary>
+    public void InitBossPanel(ENEMY_LEVEL_TYPE bossType) {
+        Debug.Log("ボス 生成 : " + bossType); 
+    }
+
+    /// <summary>
     /// 移動パネルをアニメさせて非表示にする
     /// </summary>
     /// <returns></returns>
@@ -86,6 +109,8 @@ public class MovePanelInfo : MonoBehaviour
         if (!isSubmit) {
             isSubmit = true;
 
+            // 移動回数を加算
+            questManager.moveCount++;
             questManager.scrollViewMoveSkillCanvasGroup.DOFade(0, 0.5f);
 
             // 他の移動パネルは見た目もタップできないようにする
@@ -120,8 +145,18 @@ public class MovePanelInfo : MonoBehaviour
             yield return new WaitForSeconds(waitTime);
             questManager.scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
 
-            // 移動後の処理
-            StartCoroutine(questManager.MoveJudgment(fieldData, eventType, isLucky));
+            if (isSecretPlace) {
+                if (landscapeData.landscapeType == LANDSCAPE_TYPE.出口) {
+                    // 脱出処理へ
+                    StartCoroutine(questManager.ExitQuest());
+                } else {
+                    // ゲーム続行し、スピリットの生成処理へ
+                    StartCoroutine(questManager.CreateSpiritualityPlace());
+                }
+            } else {
+                // 移動後の処理
+                StartCoroutine(questManager.MoveJudgment(fieldData, eventType, isLucky));
+            }
         }
     }
 

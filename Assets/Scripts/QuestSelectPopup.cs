@@ -9,6 +9,7 @@ public class QuestSelectPopup : PopupBase {
 
     public QuestInfo questDataPrefab;
     public List<QuestInfo> questList = new List<QuestInfo>();
+    public List<GameData.QuestData> choiceQuestDataList;
 
     public Transform questTran;
     public Button btnRightArrow;
@@ -20,9 +21,8 @@ public class QuestSelectPopup : PopupBase {
     //現在のボタンリストの番号
     private int currentButtonNo = 0;
 
+    [Header("クエスト単位でスクロールビューを移動させるためのクラス")]
     public PageScrollRect page;
-    [Header("ScrollViewで選択中のQuestDataをObjectCencerAreaよりもらう")]
-    public QuestInfo selectQuestData;
     [Header("生成時にHomeManagerよりもらう")]
     public HomeManager homeManager;
 
@@ -43,6 +43,7 @@ public class QuestSelectPopup : PopupBase {
     /// <param name="areaNo"></param>
     public void CreateQuestPanels(int areaNo, HomeManager homeManager) {
         this.homeManager = homeManager;
+        GameData.instance.choiceAreaNo = areaNo;
 
         // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
         if (!GameData.instance.endTutorial) {
@@ -51,13 +52,29 @@ public class QuestSelectPopup : PopupBase {
             quest.InitQuestData(0, this);
             questList.Add(quest);
         } else {
+            Debug.Log(areaNo);
             for (int i = 0; i < GameData.instance.questClearCountsByArea[areaNo]; i++) {
                 QuestInfo quest = Instantiate(questDataPrefab, questTran, false);
+                // TODO　固定にする？
                 int areaType = Random.Range(0, GameData.instance.areaDatas.areaDataList.Count);
                 quest.InitQuestData(areaType, this);
                 questList.Add(quest);
             }
         }
+        if (questList.Count == 1) {
+            btnLeftArrow.gameObject.SetActive(false);
+            btnRightArrow.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 選択中のクエストインフォを表示
+    /// ObjectCencerAreaより呼ばれる
+    /// </summary>
+    /// <param name="questInfo"></param>
+    public void DisplaySelectQuestInfo(QuestInfo questInfo) {
+        choiceQuestDataList = questInfo.questDataList;
+        txtQuestInfo.text = questInfo.areaInfo;
     }
 
     /// <summary>
@@ -155,6 +172,13 @@ public class QuestSelectPopup : PopupBase {
     /// クエスト決定時に呼ばれる
     /// </summary>
     public void LoadQuestScene() {
+        GameData.instance.questDataList = new List<GameData.QuestData>();
+
+        foreach (GameData.QuestData questData in choiceQuestDataList) {
+            GameData.instance.questDataList.Add(questData);
+        }
+
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
         canvasGroup.DOFade(0, 0.5f);
         StartCoroutine(homeManager.OnClickQuestScene());
     }

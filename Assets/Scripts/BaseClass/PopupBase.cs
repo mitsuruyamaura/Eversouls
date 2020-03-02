@@ -12,7 +12,7 @@ public class PopupBase : MonoBehaviour
     public Button btnFilter;
 
     public CanvasGroup canvasGroup;
-    private bool isSubmit;   // 重複タップ防止
+    protected bool isSubmit;   // 重複タップ防止
 
     protected virtual void Start() {
         // フェイドイン処理

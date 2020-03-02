@@ -14,12 +14,16 @@ public class HomeManager : MonoBehaviour
     public Button btnBgm2;
     [Header("設定ボタン")]
     public Button btnSetting;
+    [Header("幻視ボタン")]
+    public Button btnVisionPopup;
 
     public Image imgHome;
     [Header("設定用ポップアップのプレファブ")]
     public SettingPopup settingPopupPrefab;
     [Header("設定用ポップアップの生成位置")]
     public Transform canvasTran;
+    [Header("幻視ポップアップのプレファブ")]
+    public VisionPopup visionPopupPrefab;
 
     public bool isSetting;   // 設定ボタン重複タップ防止用
     public QuestSelectPopup questSelectPopupPrefab;
@@ -36,12 +40,21 @@ public class HomeManager : MonoBehaviour
         btnBgm1.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_1));
         btnBgm2.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_2));
         btnSetting.onClick.AddListener(OnClickOpenSettingPopup);
+        btnVisionPopup.onClick.AddListener(OnClickOpenVisionPopup);
 
         StartCoroutine(SetupHomeImage());
 
         // Debug用
         GameData.instance.questClearCountsByArea = new int[btnAreas.Length];
         GameData.instance.questClearCountsByArea[0] = 3;
+    }
+
+    /// <summary>
+    /// 幻視ポップアップを生成
+    /// </summary>
+    private void OnClickOpenVisionPopup() {
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+        Instantiate(visionPopupPrefab, canvasTran, false);
     }
 
     /// <summary>

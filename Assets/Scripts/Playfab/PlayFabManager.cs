@@ -7,14 +7,17 @@ using System;
 using System.Linq;
 
 public class PlayFabManager : MonoBehaviour {
+
     public static PlayFabManager instance;
 
-    string loginMessage;
-
-    // PlayFab
+    // PlayFab Login or Error
+    string loginMessage;  
     public bool isLogin;
     public bool isError;
     public string conErrorReport;
+
+    public int rewordCurrencyPoint;
+    public int subtractCurrencyPoint;
 
     [System.Serializable]
     public class SkillData {
@@ -190,6 +193,9 @@ public class PlayFabManager : MonoBehaviour {
                 GameData.instance.mental = GetPlayfabUserDataInt(result, "mental");
                 GameData.instance.technical = GetPlayfabUserDataInt(result, "technical");
 
+                GameData.instance.rewordOn = GetPlayfabUserDataBoolean(result, "rewordOn", false);
+                GameData.instance.currency = GetPlayfabUserDataInt(result, "currency");
+
                 // 所持しているスキルリストを取得
                 GameData.instance.haveSkillNoListString = GetPlayfabUserDataString(result, "haveSkillNoList");
                 if (GameData.instance.haveSkillNoListString != "") {
@@ -306,7 +312,7 @@ public class PlayFabManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// PlayFabの環境設定データを更新（オプション画面）
+    /// PlayFabにある、ユーザーの環境設定データを更新（オプション画面）
     /// </summary>
     /// <returns></returns>
     public IEnumerator UpdataUserDataInOptions() {
@@ -344,6 +350,43 @@ public class PlayFabManager : MonoBehaviour {
     }
 
     /// <summary>
+    /// PlayFabにある、ユーザーの動画リワードの視聴状態を更新
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator UpdataUserReword() {
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
+            // 取得できない場合の処理
+        }
+
+        bool isWait = true;
+
+        // 保存したいデータをStringでリクエストを作る
+        UpdateUserDataRequest request = new UpdateUserDataRequest() {
+            Data = new Dictionary<string, string> {
+                { "rewordOn", GameData.instance.rewordOn.ToString()},
+                { "currency", GameData.instance.currency.ToString()}
+            }
+        };
+        // PlayFabへ送り、結果で分岐
+        PlayFabClientAPI.UpdateUserData(request, OnSuccess, OnError);
+
+        while (isWait) {
+            yield return null;
+        }
+
+        void OnSuccess(UpdateUserDataResult result) {
+            Debug.Log("UpdateUserRewordResult : OnSuccess");
+            isWait = false;
+        }
+
+        void OnError(PlayFabError error) {
+            Debug.Log("UpdataUserRewordResult : OnError");
+            Debug.Log(error.GenerateErrorReport());
+            isWait = false;
+        }
+    }
+
+    /// <summary>
     /// ゲーム設定データをPlayfabから取得
     /// 取得時ログが発生するのでwhileで取得するまで待機
     /// </summary>
@@ -369,6 +412,9 @@ public class PlayFabManager : MonoBehaviour {
 
             loginMessage = result.Data["LoginMessage"];
             Debug.Log(loginMessage);
+
+            rewordCurrencyPoint = int.Parse(result.Data["rewordCurrencyPoint"]);
+            subtractCurrencyPoint = int.Parse(result.Data["subtractCurrencyPoint"]);
 
             // スキルデータ取得
             skillDatas = new List<SkillData>();

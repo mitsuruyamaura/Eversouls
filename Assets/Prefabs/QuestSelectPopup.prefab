@@ -564,7 +564,7 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3394132411759674715}
-  m_CullTransparentMesh: 0
+  m_CullTransparentMesh: 1
 --- !u!225 &2941647818466349453
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -595,6 +595,7 @@ MonoBehaviour:
   questDataPrefab: {fileID: 1203754140497380816, guid: 6f2247dcae5c1cb45b815dd61e73b545,
     type: 3}
   questList: []
+  choiceQuestDataList: []
   questTran: {fileID: 5449725996473569813}
   btnRightArrow: {fileID: 5449725996452256392}
   btnLeftArrow: {fileID: 5449725994494377432}

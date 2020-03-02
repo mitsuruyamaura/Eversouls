@@ -6,6 +6,8 @@ public class GameData : MonoBehaviour
 {
     public static GameData instance;
 
+    public int currency;
+    public bool rewordOn;
     public int level;
     public int ap = 100;
     public string playerName;

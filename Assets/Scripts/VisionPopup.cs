@@ -19,8 +19,8 @@ public class VisionPopup : PopupBase
         btnVision.onClick.AddListener(()=> StartCoroutine(OnClickVision()));
         btnReword.onClick.AddListener(()=> StartCoroutine(OnClickAd()));
         // カレンシー表示設定
-        txtSubtractCurrencyPoint.text = PlayFabManager.instance.subtractCurrencyPoint.ToString();
-        txtRewordCurrencyPoint.text = PlayFabManager.instance.rewordCurrencyPoint.ToString();
+        txtSubtractCurrencyPoint.text = "-" + PlayFabManager.instance.subtractCurrencyPoint.ToString();
+        txtRewordCurrencyPoint.text = "+" + PlayFabManager.instance.rewordCurrencyPoint.ToString();
 
         // 動画を視聴済で待機時間経過していないなら押せないようにする
         if (GameData.instance.rewordOn) {

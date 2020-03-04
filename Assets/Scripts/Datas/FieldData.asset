@@ -24,6 +24,7 @@ MonoBehaviour:
     secretItem: 5,5,5,5,5
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
+    firstActionRates: 50,40,30,20
   - fieldType: 1
     cost: 5
     progress: 5
@@ -35,6 +36,7 @@ MonoBehaviour:
     secretItem: 5,5,5,5,5
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
+    firstActionRates: 40,40,40,40
   - fieldType: 2
     cost: 5
     progress: 5
@@ -46,6 +48,7 @@ MonoBehaviour:
     secretItem: 5,5,5,5,5
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
+    firstActionRates: 40,30,20,10
   - fieldType: 3
     cost: 5
     progress: 5
@@ -57,6 +60,7 @@ MonoBehaviour:
     secretItem: 5,5,5,5,5
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
+    firstActionRates: 20,20,10,10
   - fieldType: 4
     cost: 5
     progress: 5
@@ -68,3 +72,4 @@ MonoBehaviour:
     secretItem: 5,5,5,5,5
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
+    firstActionRates: 60,50,40,30

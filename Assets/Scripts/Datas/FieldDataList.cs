@@ -16,9 +16,10 @@ public class FieldDataList : ScriptableObject {//31415
         public string info;            // 地形の情報
         public float criticalRate;     // クリティカル発生確率。クリティカルするとコスト0で進捗2倍
         public string events;          // 敵/秘匿物/罠/景勝地の出現率。順番にチェックされて、入ったところで抜ける
-        public string enemyEncount;    // 出現する敵の種類と割合
+        public string enemyEncount;    // レアリティごとの、出現する敵の種類と割合[0] => [4]の順に高くなる
         public string secretItem;      // 出現する秘匿物の種類の割合
         public string landscape;       // 出現する景勝地の種類と割合
-        public string trap;            // 出現する罠の種類と割合       
+        public string trap;            // 出現する罠の種類と割合
+        public string firstActionRates;  // 敵/秘匿物/罠/景勝地の検出率。検出できると先制攻撃、罠解除などをできる。（反撃なしで１回多い行動）
     }
 }

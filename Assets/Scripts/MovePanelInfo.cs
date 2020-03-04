@@ -12,6 +12,7 @@ public class MovePanelInfo : MonoBehaviour
     public Button btnSubmit;
     public TMP_Text lblFieldName;
     public TMP_Text txtCost;
+    public TMP_Text txtFirstActionRate;
     public Image imgField;
     public Image imgEventIcon;
     public CanvasGroup canvasGroup;
@@ -22,6 +23,7 @@ public class MovePanelInfo : MonoBehaviour
 
     public bool isSubmit = false;  // 重複タップ防止フラグ
     public bool isSecretPlace = false;
+    public int firstActionRate;    // 検出率。成功すると先制行動が可能
 
     public EVENT_TYPE eventType;
 
@@ -62,8 +64,11 @@ public class MovePanelInfo : MonoBehaviour
         imgField.sprite = Resources.Load<Sprite>("Fields/" + this.fieldData.imageNo);
 
         // イベントアイコンをイベント出現率から抽出して設定
-        int[] eventTypesRate = new int[(int)EVENT_TYPE.COUNT];
-        eventTypesRate = GetFieldRates(this.fieldData.events);
+        int[] eventTypesRate = GetFieldEventRates(this.fieldData.events);
+        
+        // イベントタイプに応じた検出率(先制/発見)を表示
+        int[] tempFirstActionRates = GetFieldEventRates(this.fieldData.firstActionRates);
+
         int totalRate = 0;
         for (int i = 0; i < eventTypesRate.Length; i++) {
             totalRate += eventTypesRate[i];
@@ -73,6 +78,8 @@ public class MovePanelInfo : MonoBehaviour
             if (randomValue <= eventTypesRate[x]) {
                 imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + x);
                 eventType = (EVENT_TYPE)x;
+                firstActionRate = tempFirstActionRates[x];
+                txtFirstActionRate.text = firstActionRate.ToString();
                 break;
             } else {
                 randomValue -= eventTypesRate[x];
@@ -92,6 +99,7 @@ public class MovePanelInfo : MonoBehaviour
         txtCost.text = 0.ToString();
         imgField.sprite = Resources.Load<Sprite>("Landscapes/" + this.fieldData.imageNo);
         imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + eventNo);
+        txtFirstActionRate.text = 0.ToString();
     }
 
     /// <summary>
@@ -104,6 +112,10 @@ public class MovePanelInfo : MonoBehaviour
         txtCost.text = 0.ToString();
         imgField.sprite = Resources.Load<Sprite>("BossImages/" + bossNo);
         imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + 0);
+
+        // ボスに対しての先制行動の成功率
+        firstActionRate = Random.Range(0, 40);
+        txtFirstActionRate.text = firstActionRate.ToString();
     }
 
     /// <summary>
@@ -126,11 +138,11 @@ public class MovePanelInfo : MonoBehaviour
                 }
             }
 
-            // 抽選
+            // 先制行動が可能かどうかの判定
             float waitTime = 0f;
             bool isLucky = false;
             Sequence seq = DOTween.Sequence();
-            if (Random.Range(0, 100) <= 50) {
+            if (Random.Range(0, 100) <= firstActionRate) {
                 SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_LUKCY);
                 // 当たり
                 seq.Append(transform.DOScale(1.5f, 0.5f));
@@ -171,11 +183,11 @@ public class MovePanelInfo : MonoBehaviour
 
 
     /// <summary>
-    /// エリアの地形の出現割合を算出
+    /// エリアのイベントの出現割合を算出
     /// </summary>
     /// <param name="fieldData"></param>
     /// <returns></returns>
-    public int[] GetFieldRates(string fieldEventData) {
+    public int[] GetFieldEventRates(string fieldEventData) {
         int[] rates = fieldEventData.Split(',').Select(int.Parse).ToArray();
         return rates;
     }

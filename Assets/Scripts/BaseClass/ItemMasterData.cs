@@ -48,5 +48,7 @@ public class ItemMasterData {
         public ACTION_TYPE actionType;
         // イメージ
         public int imageNo;
+
+        public EVENT_TYPE eventType;
     }
 }

@@ -13,7 +13,7 @@ public class CharaDataList : ScriptableObject
         public RARE_TYPE rarelity;
         public ROLL_TYPE rollType;
         public WEAPON_TYPE weaponType;
-        public MAGIC_TYPE magicType;
+        public ELEMENT_TYPE magicType;
         public int imageNo;
     }
 }

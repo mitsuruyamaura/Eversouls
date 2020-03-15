@@ -16,11 +16,11 @@ MonoBehaviour:
   - areaType: 0
     tempType: 0
     fieldRate: 20,10,10,10,10
-    fieldType: 0,1,2,3,4
+    fieldType: 4,5,10,12,24,26,27,29
     areaName: "A\u8349\u539F"
     iconNo: 0
     rareliry: 0
-    fieldTypeAllay: 
+    fieldTypeAllay: 04000000050000000a0000000c0000001b0000001d000000
     areaInfo: aaaaaaaaaaaaaaaaa\nasss
   - areaType: 1
     tempType: 0

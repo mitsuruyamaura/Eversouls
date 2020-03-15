@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System;
 
 public class ActionInfo : MonoBehaviour
 {
@@ -51,6 +52,9 @@ public class ActionInfo : MonoBehaviour
     private bool isRelicFix;
 
     Dictionary<int, int> eventOccurrenceRates = new Dictionary<int, int>();
+    EVENT_TYPE eventType;
+    PlayFabManager.SkillData skillData;
+
 
     private void Start() {
         if (cost > GameData.instance.ap) {
@@ -92,7 +96,8 @@ public class ActionInfo : MonoBehaviour
         txtCost.text = fieldData.cost.ToString();
     }
 
-    public void InitAction(ActionDataList.ActionData data) {
+    public void InitAction(ActionDataList.ActionData data, EVENT_TYPE eventType) {
+        this.eventType = eventType;
         btnActionInfo.onClick.AddListener(OnClickCheckChooseAction);
         isAction = true;
 
@@ -130,6 +135,16 @@ public class ActionInfo : MonoBehaviour
         if (questManager.isEvent) {
             EventInfo eventInfo = questManager.eventList[0];
             if (eventInfo != null) {
+                // eventTypeを見て、対象となる行動か確認する
+                foreach (EVENT_TYPE type in Enum.GetValues(typeof(EVENT_TYPE))) {
+
+                    //string name = Enum.GetName(typeof(EVENT_TYPE), type);
+                    if (type == eventType) {
+                        // WeaponTypeやElementTypeを見て、修正できるか確認する
+
+                    }
+                }
+
                 // イベントに修正値を渡す
                 if (isRelicFix) {
                     isRelicFix = false;

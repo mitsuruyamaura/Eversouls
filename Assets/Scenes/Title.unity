@@ -837,7 +837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.8666667}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9607843}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1009,6 +1009,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf89a49c953395b458f838d66998b475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currency: 0
+  rewordOn: 0
   level: 0
   ap: 0
   playerName: 
@@ -1068,6 +1070,8 @@ MonoBehaviour:
   haveSkillNoListString: 
   haveSkillNoList: 
   haveSkillDatas: []
+  abilityType: 0
+  temperatureType: 0
 --- !u!4 &1024907771
 Transform:
   m_ObjectHideFlags: 0
@@ -11554,6 +11558,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2060334707}
   - component: {fileID: 2060334706}
+  - component: {fileID: 2060334708}
   m_Layer: 0
   m_Name: GameBase
   m_TagString: Untagged
@@ -11589,6 +11594,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2060334708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060334705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc7aec874e7c3b45a0564bb6503fc07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeType: 0
+  dayType: 0
+  seriesType: 0
+  timeTypeArray: 
 --- !u!4 &2364045531139120196
 Transform:
   m_ObjectHideFlags: 0

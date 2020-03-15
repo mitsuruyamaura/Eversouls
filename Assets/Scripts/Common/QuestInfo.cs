@@ -16,15 +16,13 @@ public class QuestInfo : MonoBehaviour
     public long no;
     [Header("クリアまでの必要なポイント(未使用)")]
     public int clearCount;   
-    [Header("このクエストにおいてエリア分岐の発生する回数")]
+    [Header("このクエストにおいてエリア分岐の発生する回数(未使用)")]
     public int branchCount;
     public string  areaInfo;
 
     // UI関連
     [Header("エリアのタイプ名表示")]
     public TMP_Text txtAreaType;
-    [Header("エリアの任意名称表示")]
-    public TMP_Text txtUniqueAreaName;
     public Image imgArea;
     public Button btnSubmit;
 
@@ -49,6 +47,8 @@ public class QuestInfo : MonoBehaviour
                 // 生成されたクエストのデータをエリアから設定
                 FIELD_TYPE[] fieldTypes = GetFieldTypes(data.fieldType);
                 List<FieldDataList.FieldData> fieldDatas = GetFieldDatas(fieldTypes);
+                Debug.Log(fieldTypes.Length);
+                Debug.Log(fieldDatas.Count);
 
                 // エリアに含まれるすべての地形データをQuestDataに入れてリスト化
                 for (int i = 0; i < fieldDatas.Count; i++) {

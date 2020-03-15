@@ -11,7 +11,7 @@ public class PlayFabManager : MonoBehaviour {
     public static PlayFabManager instance;
 
     // PlayFab Login or Error
-    string loginMessage;  
+    string loginMessage;
     public bool isLogin;
     public bool isError;
     public string conErrorReport;
@@ -27,11 +27,11 @@ public class PlayFabManager : MonoBehaviour {
         public string skillType;
         public int imageNo;
         public int skillAbilityNo;    // スキルの使用回数や効果を適用する際に参照する能力値()
-        public string eventTypesString; 
+        public string eventTypesString;
         public EVENT_TYPE[] eventTypes;
         public int amountCount;
     }
-    public List<SkillData> skillDatas;
+    public List<SkillData> skillDataList;
 
     [System.Serializable]
     public class ItemData {
@@ -62,7 +62,37 @@ public class PlayFabManager : MonoBehaviour {
 
         public int level;                       // アイテムのレベル(Masterではもたない)
     }
-    public List<ItemData> itemDatas;
+    public List<ItemData> itemDataList;
+
+    [System.Serializable]
+    public class EnemyData {                       // expはシーズンとレアリティにより決定（あるいはアイテム）
+        public int no;                             // 管理番号
+        public string name;                        // 名前
+        public int hp;
+        public int vigilance;                      // 警戒。先制攻撃発生のペナルティになる
+        public int appearance;                     // 出現割合  
+        public string rarelityString;              // 変換用
+        public string timeTypeString;
+        public string seasonTypeString;
+        public string lebelTypeString;
+        public string skillAbilitiesString;
+        public string lebelBonusString;
+        public string habitatsString;
+
+        public RARE_TYPE rarelity;                 // 希少度
+        public TIME_TYPE timeType;                 // 出現時間帯。ALLなら常時出現        
+        public WEAPON_TYPE weaponType;             // ランダムそのまま弱点属性になる
+        public ELEMENT_TYPE elementType;           // ランダム
+        public SEASON_WIND_TYPE seasonType;        // 生息エリア
+        public ENEMY_LEVEL_TYPE levelType;         // ボスかどうか
+        public int[] skillAbilities;          　　 // 能力値{武術、魔術、技術}の順番。戦闘時にランダムで選択され、目標値となる。差分がダメージになる
+        public int[] levelBonus;                   // クエストの進行度によるレベルボーナス値{武術、魔術、技術}の順番でランダムにレベル回数だけ加算される
+        public FIELD_TYPE[] habitats;              // 生息エリア
+        public int level;
+        public string chestType;                   // ENEMY_LEVEL_TYPE,SEASON_WIND_TYPE,RARE_TYPEから参照して作る。会話イベントはスキルがあれば発生。ランダム
+    }
+    public List<EnemyData> enemyDataList;
+
 
     private void Awake() {
         if (instance == null) {
@@ -150,7 +180,7 @@ public class PlayFabManager : MonoBehaviour {
         }
 
         void OnSuccess(GetUserDataResult result) {
-            
+
             // 初回起動か、それ以外かで分岐
             GameData.instance.isFirstAccess = GetPlayfabUserDataBoolean(result, "isFirstAccess");
             if (!GameData.instance.isFirstAccess) {
@@ -163,7 +193,7 @@ public class PlayFabManager : MonoBehaviour {
                 GameData.instance.volumeSE = 0.5f;
 
                 // ユーザー情報設定
-                GameData.instance.playerName = "everSouls"; 
+                GameData.instance.playerName = "everSouls";
                 GameData.instance.level = 10;
                 GameData.instance.exp = 1000;
                 GameData.instance.maxHp = 300;
@@ -199,11 +229,11 @@ public class PlayFabManager : MonoBehaviour {
                 // 所持しているスキルリストを取得
                 GameData.instance.haveSkillNoListString = GetPlayfabUserDataString(result, "haveSkillNoList");
                 if (GameData.instance.haveSkillNoListString != "") {
-                    // ストリング化されたリストがあれば、それを配列に入れてからリストに直す
+                    // ストリング化されたListがあれば、それを配列に入れてからintのListに直す
                     GameData.instance.haveSkillNoList = GameData.instance.haveSkillNoListString.Split(',').Select(int.Parse).ToList();
                 }
                 // 所持リストにスキルデータの参照を取得
-                foreach (SkillData skillData in skillDatas) {
+                foreach (SkillData skillData in skillDataList) {
                     for (int i = 0; i < GameData.instance.haveSkillNoList.Count; i++) {
                         if (skillData.skillNo == GameData.instance.haveSkillNoList[i]) {
                             GameData.instance.haveSkillDatas.Add(skillData);
@@ -417,80 +447,69 @@ public class PlayFabManager : MonoBehaviour {
             subtractCurrencyPoint = int.Parse(result.Data["subtractCurrencyPoint"]);
 
             // スキルデータ取得
-            skillDatas = new List<SkillData>();
-            skillDatas = JsonHelper.ListFromJson<SkillData>(result.Data["SkillData"]);
-            // stringをEventTypeに変換
-            foreach (SkillData skillData in skillDatas) {
+            skillDataList = new List<SkillData>();
+            skillDataList = JsonHelper.ListFromJson<SkillData>(result.Data["SkillData"]);
+
+            // stringを配列にしてEventTypeに変換
+            foreach (SkillData skillData in skillDataList) {
                 if (skillData.eventTypesString != "") {
-                    string[] data = skillData.eventTypesString.Split(',').ToArray();
-                    skillData.eventTypes = new EVENT_TYPE[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        skillData.eventTypes[i] = (EVENT_TYPE)Enum.Parse(typeof(EVENT_TYPE), data[i]);
-                    }               
+                    skillData.eventTypes = skillData.eventTypesString.Split(',').Select(GetEnumTypeFromString<EVENT_TYPE>).ToArray();
                 }
             }
 
-            itemDatas = new List<ItemData>();
-            itemDatas = JsonHelper.ListFromJson<ItemData>(result.Data["ItemData"]);
-            // stringを配列にして、各型に変換
-            foreach (ItemData itemData in itemDatas) {
+            // itemDataを取得
+            itemDataList = new List<ItemData>();
+            itemDataList = JsonHelper.ListFromJson<ItemData>(result.Data["ItemData"]);
+
+            // 各stringを配列にして、Enumや型に合った値に変換
+            foreach (ItemData itemData in itemDataList) {
                 if (itemData.rarelityString != "") {
-                    string[] data = itemData.rarelityString.Split(',').ToArray();
-                    itemData.rarelities = new RARE_TYPE[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        itemData.rarelities[i] = (RARE_TYPE)Enum.Parse(typeof(RARE_TYPE), data[i]);
-                    }
+                    itemData.rarelities = itemData.rarelityString.Split(',').Select(GetEnumTypeFromString<RARE_TYPE>).ToArray();
                 }
                 if (itemData.appearanceString != "") {
-                    string[] data = itemData.appearanceString.Split(',').ToArray();
-                    itemData.appearances = new int[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        itemData.appearances[i] = int.Parse(data[i]);
-                    }
+                    itemData.appearances = itemData.appearanceString.Split(',').Select(int.Parse).ToArray();
                 }
                 if (itemData.seasonTypeString != "") {
-                    string[] data = itemData.seasonTypeString.Split(',').ToArray();
-                    itemData.seasonTypes = new SEASON_WIND_TYPE[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        itemData.seasonTypes[i] = (SEASON_WIND_TYPE)Enum.Parse(typeof(SEASON_WIND_TYPE), data[i]);
-                    }
+                    itemData.seasonTypes = itemData.seasonTypeString.Split(',').Select(GetEnumTypeFromString<SEASON_WIND_TYPE>).ToArray();
                 }
                 if (itemData.levelTypeString != "") {
-                    string[] data = itemData.levelTypeString.Split(',').ToArray();
-                    itemData.levelTypes = new ENEMY_LEVEL_TYPE[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        itemData.levelTypes[i] = (ENEMY_LEVEL_TYPE)Enum.Parse(typeof(ENEMY_LEVEL_TYPE), data[i]);
-                    }
+                    itemData.levelTypes = itemData.levelTypeString.Split(',').Select(GetEnumTypeFromString<ENEMY_LEVEL_TYPE>).ToArray();
                 }
                 if (itemData.levelBonusString != "") {
-                    string[] data = itemData.levelBonusString.Split(',').ToArray();
-                    itemData.levelBonuses = new float[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        itemData.levelBonuses[i] = float.Parse(data[i]);
-                    }
+                    itemData.levelBonuses = itemData.levelBonusString.Split(',').Select(float.Parse).ToArray();
                 }
                 if (itemData.abilityValueString != "") {
-                    string[] data = itemData.abilityValueString.Split(',').ToArray();
-                    itemData.abilityValues = new float[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        itemData.abilityValues[i] = float.Parse(data[i]);
-                    }
+                    itemData.abilityValues = itemData.abilityValueString.Split(',').Select(float.Parse).ToArray();
                 }
                 if (itemData.abilityNameString != "") {
-                    string[] data = itemData.abilityNameString.Split(',').ToArray();
-                    itemData.abilityNames = new string[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        itemData.abilityNames[i] = data[i];
-                    }
+                    itemData.abilityNames = itemData.abilityNameString.Split(',').ToArray();
                 }
                 if (itemData.effectString != "") {
-                    string[] data = itemData.effectString.Split(',').ToArray();
-                    itemData.effects = new string[data.Length];
-                    for (int i = 0; i < data.Length; i++) {
-                        itemData.effects[i] = data[i];
-                    }
+                    itemData.effects = itemData.effectString.Split(',').ToArray();
                 }
             }
+
+            // EnemyDataを取得
+            enemyDataList = new List<EnemyData>();
+            enemyDataList = JsonHelper.ListFromJson<EnemyData>(result.Data["EnemyData"]);
+
+            // 各stringを配列にして、Enumや型に合った値に変換
+            foreach (EnemyData enemyData in enemyDataList) {
+                enemyData.rarelity = GetEnumTypeFromString<RARE_TYPE>(enemyData.rarelityString);
+                enemyData.timeType = GetEnumTypeFromString<TIME_TYPE>(enemyData.timeTypeString);
+                enemyData.seasonType = GetEnumTypeFromString<SEASON_WIND_TYPE>(enemyData.seasonTypeString);
+                enemyData.levelType = GetEnumTypeFromString<ENEMY_LEVEL_TYPE>(enemyData.lebelTypeString);
+                if (enemyData.skillAbilitiesString != "") {
+                    enemyData.skillAbilities = enemyData.skillAbilitiesString.Split(',').Select(int.Parse).ToArray();
+                }
+                if (enemyData.lebelBonusString != "") {
+                    enemyData.levelBonus = enemyData.lebelBonusString.Split(',').Select(int.Parse).ToArray();
+                }
+                if (enemyData.habitatsString != "") {  // Select(x => GetEnumTypeFromString<FIELD_TYPE>(x))が正式
+                    enemyData.habitats = enemyData.habitatsString.Split(',').Select(GetEnumTypeFromString<FIELD_TYPE>).ToArray();
+                }
+            }
+            // 取得完了したのでwhileを抜ける
             isWait = false;
         }
 
@@ -541,5 +560,12 @@ public class PlayFabManager : MonoBehaviour {
         } else {
             return defaultRet;
         }
+    }
+
+    /// <summary>
+    /// stringとEnumのタイプをもらい、文字列をそのタイプのEnumにする
+    /// </summary>
+    public IEnum GetEnumTypeFromString<IEnum>(string str) where IEnum : struct {
+        return (IEnum)Enum.Parse(typeof(IEnum), str, true);
     }
 }

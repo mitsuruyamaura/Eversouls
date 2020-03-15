@@ -36,7 +36,6 @@ public class GameData : MonoBehaviour
     public CharaDataList charaDatas;
     public ActionDataList actionDataList;
     public FieldDataList fieldDataList;
-    public EnemyDataList enemyDataList;
     public SecretItemDataList secretItemDataList;
     public LandscapeDataList landscapeDataList;
     public TrapDataList trapDataList;
@@ -103,6 +102,8 @@ public class GameData : MonoBehaviour
         MENTAL,
         TECHNICAL
     }
+    public ABILITY_TYPE abilityType;
+    public TEMPERATURE_TYPE temperatureType;
 
     void Awake() {
         if (instance == null) {

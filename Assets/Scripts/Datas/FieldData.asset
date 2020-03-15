@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FieldData
   m_EditorClassIdentifier: 
   fieldDataList:
-  - fieldType: 0
+  - fieldType: 4
     cost: 5
     progress: 5
     imageNo: 0
@@ -25,7 +25,7 @@ MonoBehaviour:
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
     firstActionRates: 50,40,30,20
-  - fieldType: 1
+  - fieldType: 10
     cost: 5
     progress: 5
     imageNo: 1
@@ -37,7 +37,7 @@ MonoBehaviour:
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
     firstActionRates: 40,40,40,40
-  - fieldType: 2
+  - fieldType: 5
     cost: 5
     progress: 5
     imageNo: 3
@@ -49,7 +49,7 @@ MonoBehaviour:
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
     firstActionRates: 40,30,20,10
-  - fieldType: 3
+  - fieldType: 26
     cost: 5
     progress: 5
     imageNo: 5
@@ -61,7 +61,31 @@ MonoBehaviour:
     landscape: 5,5,5,5,5
     trap: 5,5,5,5,5
     firstActionRates: 20,20,10,10
-  - fieldType: 4
+  - fieldType: 12
+    cost: 5
+    progress: 5
+    imageNo: 7
+    info: 
+    criticalRate: 10
+    events: 30,30,30,10
+    enemyEncount: 50,20,10,10,5
+    secretItem: 5,5,5,5,5
+    landscape: 5,5,5,5,5
+    trap: 5,5,5,5,5
+    firstActionRates: 60,50,40,30
+  - fieldType: 29
+    cost: 5
+    progress: 5
+    imageNo: 7
+    info: 
+    criticalRate: 10
+    events: 30,30,30,10
+    enemyEncount: 50,20,10,10,5
+    secretItem: 5,5,5,5,5
+    landscape: 5,5,5,5,5
+    trap: 5,5,5,5,5
+    firstActionRates: 60,50,40,30
+  - fieldType: 27
     cost: 5
     progress: 5
     imageNo: 7

@@ -210,9 +210,7 @@ public class QuestManager : MonoBehaviour
         }
         int baseProgress = progressPoint;
         float currentProgress = (float)baseProgress / maxProgress;
-        Debug.Log(currentProgress);
         float updataProgress = (float)(baseProgress + 1) / maxProgress;
-        Debug.Log(updataProgress);
         
         DOTween.To(
             () => currentProgress,
@@ -223,14 +221,9 @@ public class QuestManager : MonoBehaviour
             updataProgress,
             1.0f);
         progressPoint++;
-
-        //txtAp.text = GameData.instance.ap.ToString();
-        //txtProgress.text = progressPoint.ToString();
-        //slider.value = (float)progressPoint / maxProgress;
-        
+                
         // 進捗バーをアニメ表示
         imgProgress.fillAmount = (float)progressPoint / maxProgress;
-        Debug.Log((float)progressPoint / maxProgress);
         slider.DOValue(imgProgress.fillAmount, 0.5f).SetEase(Ease.Linear);
     }
 
@@ -315,6 +308,8 @@ public class QuestManager : MonoBehaviour
             // 最初にクリティカルかどうか判定
             if (CheckActionCritical(fieldData.criticalRate)) {
                 Debug.Log("Critical!");
+                // エフェクト入れる
+
                 // クリティカルならボーナス授与
                 cost = 0;
                 progress *= 2;
@@ -329,7 +324,7 @@ public class QuestManager : MonoBehaviour
             // 移動以外ならイベントを作成する
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.FIND);
             EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
-            eventInfo.Init(eventType, GameData.instance.questDataList[currentQuestDataNo], fieldData.fieldType, cost, progress, fieldData.imageNo, isLucky);
+            eventInfo.SetupEventInfo(eventType, GameData.instance.questDataList[currentQuestDataNo], fieldData.fieldType, cost, progress, fieldData.imageNo, isLucky, this);
             eventList.Add(eventInfo);
 
             // 移動用パネルを破棄(イベント解決まで移動パネルは作らない)
@@ -383,9 +378,11 @@ public class QuestManager : MonoBehaviour
         action.questManager = this;
         //action.InitField(questList[0].fieldDatas[j], GameData.instance.actionDataList.actionDataList[Random.Range(0, GameData.instance.actionDataList.actionDataList.Count)]);
 
-        action.InitAction(GameData.instance.actionDataList.actionDataList[0]);
+        action.InitAction(GameData.instance.actionDataList.actionDataList[0], eventType);
         
         eventActionList.Add(action);
+
+        // TODO そのほかの行動パネルを作成？
     }
 
     /// <summary>

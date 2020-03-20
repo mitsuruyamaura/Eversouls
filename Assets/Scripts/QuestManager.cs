@@ -245,7 +245,7 @@ public class QuestManager : MonoBehaviour
     /// 移動時のイベント発生判定
     /// </summary>
     /// <returns></returns>
-    public IEnumerator MoveJudgment(FieldDataList.FieldData fieldData, EVENT_TYPE eventType, bool isLucky) {
+    public IEnumerator MoveJudgment(FieldDataList.FieldData fieldData, EVENT_TYPE eventType, bool isLucky, bool isSearchEvent) {
         // スキルの使用回数を更新して移動スキルのパネルを非表示にする       
         UpdateActiveSkillsAmountCount(moveSkillsList);
         scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
@@ -324,7 +324,7 @@ public class QuestManager : MonoBehaviour
             // 移動以外ならイベントを作成する
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.FIND);
             EventInfo eventInfo = Instantiate(eventInfoPrefab, eventTran, false);
-            eventInfo.SetupEventInfo(eventType, GameData.instance.questDataList[currentQuestDataNo], fieldData.fieldType, cost, progress, fieldData.imageNo, isLucky, this);
+            eventInfo.SetupEventInfo(eventType, GameData.instance.questDataList[currentQuestDataNo], fieldData.fieldType, cost, progress, fieldData.imageNo, isLucky, this, isSearchEvent);
             eventList.Add(eventInfo);
 
             // 移動用パネルを破棄(イベント解決まで移動パネルは作らない)

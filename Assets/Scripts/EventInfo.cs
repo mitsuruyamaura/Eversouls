@@ -21,6 +21,9 @@ public class EventInfo : MonoBehaviour {
     public Image imgSearchTarget;
     public Image imgSearchTitle;
     public CanvasGroup canvasGroup;
+    public CanvasGroup targetGroup;
+    public CanvasGroup eventGroup;
+    public CanvasGroup frameGroup;
     public Image imgHeader;
     public Image imgElementalType;   // 相性
     public Image imgAbilityType;     // 攻撃方法(武術、魔術、技術)
@@ -36,14 +39,13 @@ public class EventInfo : MonoBehaviour {
     [Header("最大探索回数")]
     public int maxCheckCount;
     private int currentCount;   // 現在の探索回数    
-    private bool isCheckable;   // 重複タップ防止用
+    private bool isClickable;   // 重複タップ防止用
 
     private int _cost;
     private float _progress;
     private int _fieldImageNo;
     private bool isClearEvent;
     private bool _isLucky;
-    private bool isRandomEvent;
 
     public float succeseRate = 50;
     public float encountRate = 20;
@@ -57,7 +59,7 @@ public class EventInfo : MonoBehaviour {
     /// <param name="eventType"></param>
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
-    public void SetupEventInfo(EVENT_TYPE eventType, GameData.QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo, bool isLucky, QuestManager questManager) {
+    public void SetupEventInfo(EVENT_TYPE eventType, GameData.QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo, bool isLucky, QuestManager questManager, bool isSearchEvent) {
         // イベントにかかわる値を取得      
         _cost = cost;
         _progress = progress;
@@ -71,12 +73,6 @@ public class EventInfo : MonoBehaviour {
         seq.Append(gameObject.transform.DOScale(1.0f, 0.2f)).SetEase(Ease.Linear);
 
         Debug.Log(eventType);
-
-        // ランダムの場合、どのイベントが隠れているか設定
-        if (eventType == EVENT_TYPE.COUNT) {
-            eventType = (EVENT_TYPE)Random.Range(0, 4);
-            isRandomEvent = true;
-        }
 
         switch (eventType) {
             case EVENT_TYPE.敵:
@@ -97,21 +93,30 @@ public class EventInfo : MonoBehaviour {
         btnSubmit.onClick.AddListener(OnClickActionJudgment);
         btnSubmit.interactable = false;
 
-        if (isRandomEvent) {
-            // ランダムなイベント
+        if (isSearchEvent) {
+            // 探索イベント
             btnField.onClick.AddListener(() => StartCoroutine(CheckOpenEvent()));
-            // 探索対象の設定
+            // 探索設定
             SetupSearchTarget(); 
         } else {
             // 確定しているイベント
-            btnField.onClick.AddListener(() => StartCoroutine(SuccessEvent()));
+            btnField.gameObject.SetActive(false);
+            eventGroup.gameObject.SetActive(true);
+            frameGroup.gameObject.SetActive(true);
+            btnSubmit.interactable = true;
+            Debug.Log("確定イベント");
         }
+        // タップ可能
+        isClickable = false;
     }
 
     /// <summary>
     /// 探索対象を設定し表示する
     /// </summary>
     private void SetupSearchTarget() {
+        Debug.Log("Search");
+        targetGroup.gameObject.SetActive(true);
+        objEvent.SetActive(false);
         int value = Random.Range(0, (int)SEARCH_TARGET_TYPE.COUNT);
         searchType = (SEARCH_TARGET_TYPE)value;
         txtSearchTargetName.text = searchType.ToString();
@@ -138,28 +143,29 @@ public class EventInfo : MonoBehaviour {
     /// ランダム探索の成否チェック
     /// </summary>
     public IEnumerator CheckOpenEvent(int successRate = 50) {
-        if (!isCheckable) {
-            isCheckable = true;
-            currentCount--;
-            txtCurrentCount.text = currentCount.ToString();
+        if (isClickable) {
+            yield break;
+        }
+        isClickable = true;
+        currentCount--;
+        txtCurrentCount.text = currentCount.ToString();
 
-            // 判定待ち時間
-            Sequence seq = DOTween.Sequence();
-            seq.Append(objEvent.transform.DOScale(0.75f, 0.75f)).SetEase(Ease.Linear);
-            seq.Join(btnField.gameObject.transform.DOScale(0.75f, 0.75f)).SetEase(Ease.Linear);
-            //gameObject.transform.DOScale(0.75f, 0.75f);
-            yield return new WaitForSeconds(0.75f);
+        // 判定待ち時間
+        Sequence seq = DOTween.Sequence();
+        seq.Append(objEvent.transform.DOScale(0.75f, 0.75f)).SetEase(Ease.Linear);
+        seq.Join(btnField.gameObject.transform.DOScale(0.75f, 0.75f)).SetEase(Ease.Linear);
+        //gameObject.transform.DOScale(0.75f, 0.75f);
+        yield return new WaitForSeconds(0.75f);
 
-            // TODO 成功判定を行う。
-            // 今は50％で判定。クリティカルなし
-            int value = Random.Range(0, 100);
-            if (value < successRate) {
-                // 成功した場合
-                StartCoroutine(SuccessEvent());
-            } else {
-                // 失敗した場合               
-                StartCoroutine(FailureEvent());
-            }
+        // TODO 成功判定を行う。
+        // 今は50％で判定。クリティカルなし
+        int value = Random.Range(0, 100);
+        if (value < successRate) {
+            // 成功した場合
+            StartCoroutine(SuccessEvent());
+        } else {
+            // 失敗した場合               
+            StartCoroutine(FailureEvent());
         }
     }
 
@@ -180,12 +186,17 @@ public class EventInfo : MonoBehaviour {
 
         // 下に隠れていたイベントを表示し、他のイメージを隠す
         objEvent.SetActive(true);
+        eventGroup.gameObject.SetActive(true);
+        frameGroup.gameObject.SetActive(true);
         btnField.gameObject.SetActive(false);
         imgSearchTitle.gameObject.SetActive(false);
         imgHeader.gameObject.SetActive(false);
+        targetGroup.gameObject.SetActive(false);
 
         // TODO イベントの種類にあわせてHeaderを表示
         btnSubmit.interactable = true;
+        // タップ可能
+        isClickable = false;
     }
 
     /// <summary>
@@ -206,18 +217,20 @@ public class EventInfo : MonoBehaviour {
             seq.Join(btnField.gameObject.transform.DOScale(1.0f, 0.25f)).SetEase(Ease.Linear);
             yield return new WaitForSeconds(0.25f);
             // 再度タップできるようにする
-            isCheckable = false;
+            isClickable = false;
         }
     }
 
     private void OnClickActionJudgment() {
-        if (!isCheckable) {
-            isCheckable = true;
-
-            //StartCoroutine(questManager.ActionJudgment());
-            HideEventInfo();
-            isCheckable = false;
+        if (isClickable) {
+            return;
         }
+        isClickable = true;
+        
+        HideEventInfo();
+
+        // イベントに対しての判定を行う
+        //StartCoroutine(questManager.ActionJudgment());
     }
 
     /// <summary>

@@ -19,6 +19,7 @@ MonoBehaviour:
     imageNo: 0
     info: 
     criticalRate: 10
+    searchRate: 25
     events: 30,30,30,10
     enemyEncount: 50,20,10,10,5
     secretItem: 5,5,5,5,5
@@ -31,6 +32,7 @@ MonoBehaviour:
     imageNo: 1
     info: 
     criticalRate: 10
+    searchRate: 35
     events: 30,30,30,10
     enemyEncount: 50,20,10,10,5
     secretItem: 5,5,5,5,5
@@ -43,6 +45,7 @@ MonoBehaviour:
     imageNo: 3
     info: 
     criticalRate: 10
+    searchRate: 30
     events: 30,30,30,10
     enemyEncount: 50,20,10,10,5
     secretItem: 5,5,5,5,5
@@ -55,6 +58,7 @@ MonoBehaviour:
     imageNo: 5
     info: 
     criticalRate: 10
+    searchRate: 25
     events: 30,30,30,10
     enemyEncount: 50,20,10,10,5
     secretItem: 5,5,5,5,5
@@ -67,6 +71,7 @@ MonoBehaviour:
     imageNo: 7
     info: 
     criticalRate: 10
+    searchRate: 30
     events: 30,30,30,10
     enemyEncount: 50,20,10,10,5
     secretItem: 5,5,5,5,5
@@ -79,6 +84,7 @@ MonoBehaviour:
     imageNo: 7
     info: 
     criticalRate: 10
+    searchRate: 50
     events: 30,30,30,10
     enemyEncount: 50,20,10,10,5
     secretItem: 5,5,5,5,5
@@ -91,6 +97,7 @@ MonoBehaviour:
     imageNo: 7
     info: 
     criticalRate: 10
+    searchRate: 20
     events: 30,30,30,10
     enemyEncount: 50,20,10,10,5
     secretItem: 5,5,5,5,5

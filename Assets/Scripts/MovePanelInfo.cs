@@ -24,6 +24,7 @@ public class MovePanelInfo : MonoBehaviour
     public bool isSubmit = false;  // 重複タップ防止フラグ
     public bool isSecretPlace = false;
     public int firstActionRate;    // 検出率。成功すると先制行動が可能
+    bool isSearchEvent = false;    // 探索型イベントか確定イベントか
 
     public EVENT_TYPE eventType;
 
@@ -68,6 +69,11 @@ public class MovePanelInfo : MonoBehaviour
         
         // イベントタイプに応じた検出率(先制/発見)を表示
         int[] tempFirstActionRates = GetFieldEventRates(this.fieldData.firstActionRates);
+       
+        // 各フィールドの持つ確率で探索型にする
+        if (Random.Range(0, 100) < fieldData.searchRate) {
+            isSearchEvent = true;
+        }
 
         int totalRate = 0;
         for (int i = 0; i < eventTypesRate.Length; i++) {
@@ -76,7 +82,10 @@ public class MovePanelInfo : MonoBehaviour
         int randomValue = Random.Range(0, totalRate + 1);
         for (int x = 0; x < eventTypesRate.Length; x++) {
             if (randomValue <= eventTypesRate[x]) {
-                imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + x);
+                // 探索型の場合【?】表示にするのでそのまま。それ以外はイベントに応じて差し替え
+                if (!isSearchEvent) {
+                    imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + x);
+                }
                 eventType = (EVENT_TYPE)x;
                 firstActionRate = tempFirstActionRates[x];
                 txtFirstActionRate.text = firstActionRate.ToString();
@@ -172,7 +181,7 @@ public class MovePanelInfo : MonoBehaviour
                 }
             } else {
                 // 移動後の処理
-                StartCoroutine(questManager.MoveJudgment(fieldData, eventType, isLucky));
+                StartCoroutine(questManager.MoveJudgment(fieldData, eventType, isLucky, isSearchEvent));
             }
         }
     }

@@ -65,7 +65,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 52b1ddcd93cf75d46b6687e67fc2a1ea, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c0ba7cfbeb2a9b24c9583372a81eb91b, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -622,6 +622,7 @@ MonoBehaviour:
     imageNo: 0
     info: 
     criticalRate: 0
+    searchRate: 0
     events: 
     enemyEncount: 
     secretItem: 

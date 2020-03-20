@@ -15,6 +15,7 @@ public class FieldDataList : ScriptableObject {//31415
         public int imageNo;            // 地形のイメージ。Resourcesから読み込むので番号で管理
         public string info;            // 地形の情報
         public float criticalRate;     // クリティカル発生確率。クリティカルするとコスト0で進捗2倍
+        public int searchRate;         // [?]の発生確率。探索に成功しないとイベントが発生しない 25%基準
         public string events;          // 敵/秘匿物/罠/景勝地の出現率。順番にチェックされて、入ったところで抜ける
         public string enemyEncount;    // レアリティごとの、出現する敵の種類と割合[0] => [4]の順に高くなる
         public string secretItem;      // 出現する秘匿物の種類の割合

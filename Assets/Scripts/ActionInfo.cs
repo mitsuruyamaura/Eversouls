@@ -151,12 +151,18 @@ public class ActionInfo : MonoBehaviour
                     questManager.eventList[0].succeseRate += data.successFix;
                     questManager.eventList[0].encountRate += data.encountFix;
 
+                    // コストを減らす
+                    questManager.UpdateHeaderInfo(cost, progress);
+
                     // 選択中のアイコン出す 
 
                 } else {
                     isRelicFix = true;
                     questManager.eventList[0].succeseRate -= data.successFix;
                     questManager.eventList[0].encountRate -= data.encountFix;
+
+                    // コストを戻す
+                    questManager.UpdateHeaderInfo(-cost, progress);
                 }
                 Debug.Log(isRelicFix);
             }

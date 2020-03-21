@@ -16,14 +16,12 @@ public class SceneStateManager : MonoBehaviour
         }
     }
 
-    public IEnumerator MoveScene(SCENE_TYPE sceneType) {
-        StartCoroutine(TransitionManager.instance.ExitScene());
-        yield return new WaitForSeconds(0.7f);
-        SceneManager.LoadScene(sceneType.ToString());
-    }
-
-    public IEnumerator MoveHome(SCENE_TYPE sceneType) {
-        yield return new WaitForSeconds(1.0f);
+    public IEnumerator MoveScene(SCENE_TYPE sceneType, float waitTime) {
+        // Title => Homeのときはページのトランジションを通さない
+        if (sceneType != SCENE_TYPE.HOME) {
+            StartCoroutine(TransitionManager.instance.ExitScene());
+        }
+        yield return new WaitForSeconds(waitTime);
         SceneManager.LoadScene(sceneType.ToString());
     }
 }

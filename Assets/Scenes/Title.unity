@@ -1035,7 +1035,6 @@ MonoBehaviour:
   charaDatas: {fileID: 11400000, guid: 2c63350afce2d9c4fab2fb2e9eaac91a, type: 2}
   actionDataList: {fileID: 11400000, guid: 8fe4ba5a2dbbf1645a9254d6a6f21973, type: 2}
   fieldDataList: {fileID: 11400000, guid: 36c696ed4dcc21f4eb17867130c9b123, type: 2}
-  enemyDataList: {fileID: 11400000, guid: a1417e4e15170e3489326c1541d57390, type: 2}
   secretItemDataList: {fileID: 11400000, guid: 194e5406207f3f9438b8b86b11c6f540, type: 2}
   landscapeDataList: {fileID: 11400000, guid: fbd5dadb578eb844c85c01b7c428253f, type: 2}
   trapDataList: {fileID: 11400000, guid: 15ef1e3bd846ced418d3ef442c9dff6c, type: 2}
@@ -11606,10 +11605,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cc7aec874e7c3b45a0564bb6503fc07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeType: 0
   dayType: 0
-  seriesType: 0
   timeTypeArray: 
+  seasonTypeList: 
 --- !u!4 &2364045531139120196
 Transform:
   m_ObjectHideFlags: 0

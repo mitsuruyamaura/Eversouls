@@ -76,7 +76,7 @@ public class HomeManager : MonoBehaviour
         //seq.Append(btnAreas.transform.DOScale(1.2f, 0.15f));
         //seq.Append(btnAreas.transform.DOScale(1.0f, 0.15f));
         yield return new WaitForSeconds(0.3f);
-        StartCoroutine(SceneStateManager.instance.MoveScene(SCENE_TYPE.QUEST));
+        StartCoroutine(SceneStateManager.instance.MoveScene(SCENE_TYPE.QUEST, 0.7f));
     }
 
     /// <summary>

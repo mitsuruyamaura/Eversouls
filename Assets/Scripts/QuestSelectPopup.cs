@@ -178,8 +178,7 @@ public class QuestSelectPopup : PopupBase {
             GameData.instance.questDataList.Add(questData);
         }
 
-        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
         canvasGroup.DOFade(0, 0.5f);
-        StartCoroutine(homeManager.OnClickQuestScene());
+        StartCoroutine(homeManager.StartQuestScene());
     }
 }

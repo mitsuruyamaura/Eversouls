@@ -121,7 +121,6 @@ public class QuestManager : MonoBehaviour
 
         // 移動用のスキルリストの作成
         CreateSkillListOfEventType(EVENT_TYPE.移動, moveSkillsList, moveSkillTran);
-        scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -163,14 +162,16 @@ public class QuestManager : MonoBehaviour
     /// <summary>
     /// 指定されたタイプのスキルパネルを生成し、リストを作成
     /// </summary>
+    /// <param name="eventType"></param>
+    /// <param name="skillList">moveSkillList,eventSkillList</param>
     private void CreateSkillListOfEventType(EVENT_TYPE eventType, List<SkillInfo> skillList, Transform tran) {
-        // 取得したスキルのリストから移動用のスキルを抽出してパネルを作る
+        // 取得したスキルのリストから指定されたタイプのスキルを抽出してパネルを作る
         foreach (PlayFabManager.SkillData skillData in questSkillDatas) {
             for (int i =0; i < skillData.eventTypes.Length; i++) {
                 if (skillData.eventTypes[i] == eventType) {
                     SkillInfo skillInfo = Instantiate(skillInfoPrefab, tran, false);
                     skillInfo.questManager = this;
-                    skillInfo.InitSkillPanelInfo(skillData);
+                    skillInfo.InitSkillPanelInfo(skillData, eventType);
                     skillList.Add(skillInfo);
                 }
             }
@@ -178,8 +179,26 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 対象のスキルリストの各スキルのコストを確認して使用可否を更新
+    /// </summary>
+    /// <param name="eventType"></param>
+    /// <param name="updateSkillList">moveSkillList,eventSkillList</param>
+    public void UpdateSkillListByCost(List<SkillInfo> updateSkillList) {
+        for (int i = 0; i < updateSkillList.Count; i++) {
+            if (updateSkillList[i].skillData.cost > ap) {
+                // コストが足りない場合には非アクティブにする
+                updateSkillList[i].btnSkillInfo.interactable = false;
+            } else {
+                // コストが足りている場合、残りの使用回数を再度確認してからアクティブにするか判定
+                updateSkillList[i].UpdateActiveSkill();
+            }
+        }
+    }
+
+    /// <summary>
     /// 対象のスキルリストを破棄
     /// </summary>
+    /// <param name="skillList">moveSkillList,eventSkillList</param>
     public void DestroySkillListOfEventType(List<SkillInfo> destroyList) {
         for (int i = 0; i < destroyList.Count; i++) {
             Destroy(destroyList[i].gameObject);
@@ -204,6 +223,10 @@ public class QuestManager : MonoBehaviour
             1.0f);
         ap = updateAp;
 
+        // progress 0なら更新しない
+        if (progress == 0) {
+            return;
+        }
         // Progressが最大値でなければ数字アニメしながら更新
         if (progressPoint > maxProgress) {
             progressPoint = maxProgress;
@@ -250,6 +273,7 @@ public class QuestManager : MonoBehaviour
         UpdateActiveSkillsAmountCount(moveSkillsList);
         scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
         scrollViewMoveSkillCanvasGroup.DOFade(0f, 0.5f);
+       
         yield return new WaitForSeconds(0.5f);
 
         //EVENT_TYPE eventType = new EVENT_TYPE();
@@ -334,8 +358,12 @@ public class QuestManager : MonoBehaviour
             //eventInfo.ChooseActions();
             CreateSkillListOfEventType(eventType, eventSkillsList, actionTran);
 
+            // APを更新
             UpdateHeaderInfo(cost, progress);
             CreateEventActions(eventType);
+
+            // イベントスキルのリストをAPに合わせて使用可否を更新
+            UpdateSkillListByCost(eventSkillsList);
         }     
     }
 
@@ -356,6 +384,16 @@ public class QuestManager : MonoBehaviour
                 eventList.Clear();
                 isEvent = false;
             }
+            // 選択中のスキルがある場合にはそれをキャンセル
+            for (int i = 0; i < eventSkillsList.Count; i++) {
+                if (eventSkillsList[i].isActive) {
+                    Debug.Log("スキル 解除");
+                    eventSkillsList[i].skillData.amountCount++;
+                    // コストを戻す
+                    UpdateHeaderInfo(-eventSkillsList[i].skillData.cost, 0);
+                }
+            }
+
             //UpdateHeaderInfo(cost, progress);
             DestroyMovePanelsAndEventPanels(fieldImageNo);            
         }

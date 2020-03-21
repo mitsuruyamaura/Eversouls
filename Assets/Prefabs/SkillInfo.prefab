@@ -483,13 +483,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394efa5cbf687c247808b16812e0c16c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amountCount: 0
   txtSkillName: {fileID: 5861153451596175681}
   txtAmountCount: {fileID: 8067700655947354876}
   imgCharaIcon: {fileID: 0}
   imgMainAction: {fileID: 1040115752192076547}
   btnSkillInfo: {fileID: 7385246977457979394}
-  btnOnColor: {r: 0, g: 0, b: 0, a: 1}
+  btnOnColor: {r: 0, g: 0.09340906, b: 1, a: 1}
   btnOffColor: {r: 1, g: 1, b: 1, a: 1}
   skillData:
     skillNo: 0
@@ -500,10 +499,11 @@ MonoBehaviour:
     skillAbilityNo: 0
     eventTypesString: 
     eventTypes: 
+    amountCount: 0
   questManager: {fileID: 0}
-  isSubmit: 0
+  eventType: 0
+  isClickable: 0
   isActive: 0
-  abilityType: 0
 --- !u!114 &7385246977457979394
 MonoBehaviour:
   m_ObjectHideFlags: 0

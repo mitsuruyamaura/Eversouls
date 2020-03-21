@@ -71,8 +71,7 @@ public class HomeManager : MonoBehaviour
     /// Questシーンへ遷移(QuestSelectPopupから呼び出される)
     /// </summary>
     /// <returns></returns>
-    public IEnumerator OnClickQuestScene() {
-        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+    public IEnumerator StartQuestScene() {
         //Sequence seq = DOTween.Sequence();
         //seq.Append(btnAreas.transform.DOScale(1.2f, 0.15f));
         //seq.Append(btnAreas.transform.DOScale(1.0f, 0.15f));

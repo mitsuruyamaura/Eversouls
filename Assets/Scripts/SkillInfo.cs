@@ -18,16 +18,17 @@ public class SkillInfo : MonoBehaviour
     public Image imgMainAction;
     [Header("ボタン用")]
     public Button btnSkillInfo;
-    [Header("ボタン・オンの色")]
+    [Header("スキル使用中のボタンの色")]
     public Color btnOnColor;
-    [Header("ボタン・オフの色")]
+    [Header("使用可能スキルの未使用時のボタンの色")]
     public Color btnOffColor;
 
     public PlayFabManager.SkillData skillData;
     public QuestManager questManager;
+    public EVENT_TYPE eventType;
 
     [Header("重複タップ防止フラグ")]
-    public bool isSubmit;
+    public bool isClickable;
 
     [Header("スキル適用状態フラグ")]
     public bool isActive;
@@ -39,8 +40,9 @@ public class SkillInfo : MonoBehaviour
     /// スキルの情報でパネルを設定
     /// </summary>
     /// <param name="data"></param>
-    public void InitSkillPanelInfo(PlayFabManager.SkillData data) {
+    public void InitSkillPanelInfo(PlayFabManager.SkillData data, EVENT_TYPE eventType) {
         skillData = data;
+        this.eventType = eventType;
 
         // 設定
         imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + skillData.imageNo);
@@ -57,28 +59,44 @@ public class SkillInfo : MonoBehaviour
     /// スキルの選択／解除
     /// </summary>
     private void OnClickChooseSkill() {
-        if (!isSubmit) {
-            isSubmit = true;
-            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-            isActive = !isActive;
-            if (isActive) {
-                Debug.Log("スキル 使用");
-                skillData.amountCount--;
-                btnSkillInfo.image.color = btnOnColor;
-            } else {
-                Debug.Log("スキル 解除");
-                skillData.amountCount++;
-                btnSkillInfo.image.color = btnOffColor;
-            }
-            txtAmountCount.text = skillData.amountCount.ToString();
-            isSubmit = false;
+        if (isClickable) {
+            return;
         }
+        isClickable = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+
+        // アクティブ/非アクティブの切り替え
+        isActive = !isActive;
+        // ボタンの色をアクティブ/非アクティブで変更
+        btnSkillInfo.image.color = isActive ? btnOnColor : btnOffColor;
+
+        if (isActive) {
+            Debug.Log("スキル 使用");
+            skillData.amountCount--;
+            // コストを減らす
+            questManager.UpdateHeaderInfo(skillData.cost, 0);
+        } else {
+            Debug.Log("スキル 解除");
+            skillData.amountCount++;
+            // コストを戻す
+            questManager.UpdateHeaderInfo(-skillData.cost, 0);
+        }
+        txtAmountCount.text = skillData.amountCount.ToString();
+
+        // スキルリスト全体の使用可否をチェックしてボタンのアクティブ状態を更新
+        questManager.UpdateSkillListByCost(eventType == EVENT_TYPE.移動 ? questManager.moveSkillsList : questManager.eventSkillsList);
+        if (isActive) {
+            // 使用している(アクティブ状態)スキルのみ、もう一度押すとキャンセルできるようにする            
+            btnSkillInfo.interactable = true;
+        }
+        isClickable = false;
     }
 
     /// <summary>
     /// 移動後にスキルの残り回数を確認して使用の有無を更新
     /// </summary>
     public void UpdateActiveSkill() {
+        btnSkillInfo.interactable = true;
         if (skillData.amountCount <= 0) {
             btnSkillInfo.interactable = false;
         }

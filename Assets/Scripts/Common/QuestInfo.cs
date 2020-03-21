@@ -29,7 +29,7 @@ public class QuestInfo : MonoBehaviour
     [HideInInspector]
     public QuestSelectPopup questSelectPopup;
     [HideInInspector]
-    public bool isSubmit;　　　          // 重複タップ防止用フラグ
+    public bool isClickable;　　　          // 重複タップ防止用フラグ
 
     [Header("エンカウント判定イベントデータ")]
     public GameData.QuestData checkEventData;
@@ -40,6 +40,7 @@ public class QuestInfo : MonoBehaviour
     /// </summary>
     /// <param name="areaNo"></param>
     public void InitQuestData(int areaNo, QuestSelectPopup questSelectPopup) {
+        isClickable = true;
         this.questSelectPopup = questSelectPopup;
         imgArea.DOFade(1, 0.5f);
         foreach (AreaDataList.AreaData data in GameData.instance.areaDatas.areaDataList) {
@@ -85,6 +86,7 @@ public class QuestInfo : MonoBehaviour
             }
         }
         btnSubmit.onClick.AddListener(() => StartCoroutine(OnClickSubmit()));
+        isClickable = false;
     }
 
     /// <summary>
@@ -131,80 +133,83 @@ public class QuestInfo : MonoBehaviour
     /// 選択したQuestDataをGameDataに渡し、ポップアップを閉じる
     /// </summary>
     public IEnumerator OnClickSubmit() {
-        if (!isSubmit) {
-            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-            isSubmit = true;
-
-            // アニメさせながら隠す
-            //Sequence seq = DOTween.Sequence();
-            //seq.Append(transform.DOMove(questManager.centerTran.position, 1.0f));
-            //seq.Append(transform.DOScale(0f, 0.5f));
-            //yield return new WaitForSeconds(1.35f);
-
-            // GameDataにQuestDataの参照を保存
-            GameData.instance.questDataList = new List<GameData.QuestData>();
-            for (int i = 0; i < questDataList.Count; i++) {
-                GameData.instance.questDataList.Add(questDataList[i]);
-            }
-
-            //StartCoroutine(questManager.SetAreaImage(areaType));
-            //questManager.CreateMovePanelInfos(fieldImageNo);
-
-            yield return new WaitForSeconds(0.15f);
-            //gameObject.SetActive(false);
-            questSelectPopup.LoadQuestScene();
+        if (isClickable) {
+            yield break;
         }
+        isClickable = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+        
+        // アニメさせながら隠す
+        //Sequence seq = DOTween.Sequence();
+        //seq.Append(transform.DOMove(questManager.centerTran.position, 1.0f));
+        //seq.Append(transform.DOScale(0f, 0.5f));
+        //yield return new WaitForSeconds(1.35f);
+
+        // GameDataにQuestDataの参照を保存
+        GameData.instance.questDataList = new List<GameData.QuestData>();
+        for (int i = 0; i < questDataList.Count; i++) {
+            GameData.instance.questDataList.Add(questDataList[i]);
+        }
+
+        //StartCoroutine(questManager.SetAreaImage(areaType));
+        //questManager.CreateMovePanelInfos(fieldImageNo);
+
+        yield return new WaitForSeconds(0.15f);
+        //gameObject.SetActive(false);
+        questSelectPopup.LoadQuestScene();
     }
+
+    /***************************未使用******************************/
 
     /// <summary>
     /// エリアに任意の名前を付ける
     /// </summary>
-    public void GiveUniqueAreaName() {
+    //public void GiveUniqueAreaName() {
 
-    }
+    //}
 
     /// <summary>
     /// 移動開始前に敵が出現するかチェック
     /// </summary>
-    public bool CheckEncountEnemy(FIELD_TYPE fieldType, float amount) {  // 地形情報をもらって判断する
-        bool isEncount = false;
-        float value = UnityEngine.Random.Range(0, 100);
-        Debug.Log(value);
-        foreach (GameData.QuestData data in GameData.instance.questDataList) {
-            if (data.field == fieldType) {
-                checkEventData = data;
-                if (value <= data.eventsRates[0] + amount) {
-                    isEncount = true;
-                }
-            }      
-        }
-        return isEncount;
-    }
+    //public bool CheckEncountEnemy(FIELD_TYPE fieldType, float amount) {  // 地形情報をもらって判断する
+    //    bool isEncount = false;
+    //    float value = UnityEngine.Random.Range(0, 100);
+    //    Debug.Log(value);
+    //    foreach (GameData.QuestData data in GameData.instance.questDataList) {
+    //        if (data.field == fieldType) {
+    //            checkEventData = data;
+    //            if (value <= data.eventsRates[0] + amount) {
+    //                isEncount = true;
+    //            }
+    //        }      
+    //    }
+    //    return isEncount;
+    //}
 
-    public bool CheckEncoutSecret(FIELD_TYPE fieldType, float amount) {
-        bool isEncount = false;
-        float value = UnityEngine.Random.Range(0, 100);
-        if (value <= checkEventData.eventsRates[1] + amount) {
-            isEncount = true;
-        }
-        return isEncount;
-    }
+    //public bool CheckEncoutSecret(FIELD_TYPE fieldType, float amount) {
+    //    bool isEncount = false;
+    //    float value = UnityEngine.Random.Range(0, 100);
+    //    if (value <= checkEventData.eventsRates[1] + amount) {
+    //        isEncount = true;
+    //    }
+    //    return isEncount;
+    //}
 
-    public bool CheckEncountTrap(FIELD_TYPE fieldType, float amount) {
-        bool isEncount = false;
-        float value = UnityEngine.Random.Range(0, 100);
-        if (value <= checkEventData.eventsRates[2] + amount) {
-            isEncount = true;
-        }
-        return isEncount;
-    }
+    //public bool CheckEncountTrap(FIELD_TYPE fieldType, float amount) {
+    //    bool isEncount = false;
+    //    float value = UnityEngine.Random.Range(0, 100);
+    //    if (value <= checkEventData.eventsRates[2] + amount) {
+    //        isEncount = true;
+    //    }
+    //    return isEncount;
+    //}
 
-    public bool CheckEncountLandscape(FIELD_TYPE fieldType, float amount) {
-        bool isEncount = false;
-        float value = UnityEngine.Random.Range(0, 100);
-        if (value <= checkEventData.eventsRates[3] + amount) {
-            isEncount = true;
-        }
-        return isEncount;
-    }
+    //public bool CheckEncountLandscape(FIELD_TYPE fieldType, float amount) {
+    //    bool isEncount = false;
+    //    float value = UnityEngine.Random.Range(0, 100);
+    //    if (value <= checkEventData.eventsRates[3] + amount) {
+    //        isEncount = true;
+    //    }
+    //    return isEncount;
+    //}
 }

@@ -17,7 +17,7 @@ public class QuestSelectPopup : PopupBase {
     public TMP_Text txtQuestInfo;
 
     //重複タップ防止用フラグ
-    private bool isMoveButton;
+    private bool isClickable;
     //現在のボタンリストの番号
     private int currentButtonNo = 0;
 
@@ -42,6 +42,8 @@ public class QuestSelectPopup : PopupBase {
     /// </summary>
     /// <param name="areaNo"></param>
     public void CreateQuestPanels(int areaNo, HomeManager homeManager) {
+        isClickable = true;
+
         this.homeManager = homeManager;
         GameData.instance.choiceAreaNo = areaNo;
 
@@ -65,6 +67,7 @@ public class QuestSelectPopup : PopupBase {
             btnLeftArrow.gameObject.SetActive(false);
             btnRightArrow.gameObject.SetActive(false);
         }
+        isClickable = false;
     }
 
     /// <summary>
@@ -81,32 +84,33 @@ public class QuestSelectPopup : PopupBase {
     /// クエストリストを１つ進める
     /// </summary>
     private void OnClickNextButtonList(bool isSwipe = false) {
-        if (!isMoveButton) {
-            //ボタンの重複防止用のフラグを立てる
-            isMoveButton = true;
-
-            //左矢印ボタンを表示する
-            btnLeftArrow.gameObject.SetActive(true);
-
-            //ボタンリストの番号を１つ(ページ進める)
-            currentButtonNo++;
-            Debug.Log(currentButtonNo);
-
-            //ボタンリストが最終ページなら右矢印ボタンを非表示にする
-            if (currentButtonNo >= questList.Count - 1) {
-                btnRightArrow.gameObject.SetActive(false);
-            }
-
-            //スワイプでボタンリストを移動させていたら無視
-            if (!isSwipe) {
-                //スワイプしていない（ボタンを押していない）なら、1ページ進めたボタンリストを表示
-                float destX = -currentButtonNo * page.pageWidth;
-                page.content.anchoredPosition = new Vector2(destX, page.content.anchoredPosition.y);
-                page.tempIndex = -currentButtonNo;
-            }
-            //再度ボタンを押せるようにする
-            isMoveButton = false;
+        if (isClickable) {
+            return;
         }
+        //ボタンの重複防止用のフラグを立てる
+        isClickable = true;
+
+        //左矢印ボタンを表示する
+        btnLeftArrow.gameObject.SetActive(true);
+
+        //ボタンリストの番号を１つ(ページ進める)
+        currentButtonNo++;
+        Debug.Log(currentButtonNo);
+
+        //ボタンリストが最終ページなら右矢印ボタンを非表示にする
+        if (currentButtonNo >= questList.Count - 1) {
+            btnRightArrow.gameObject.SetActive(false);
+        }
+
+        //スワイプでボタンリストを移動させていたら無視
+        if (!isSwipe) {
+            //スワイプしていない（ボタンを押していない）なら、1ページ進めたボタンリストを表示
+            float destX = -currentButtonNo * page.pageWidth;
+            page.content.anchoredPosition = new Vector2(destX, page.content.anchoredPosition.y);
+            page.tempIndex = -currentButtonNo;
+        }
+        //再度ボタンを押せるようにする
+        isClickable = false;
     }
 
 
@@ -114,34 +118,36 @@ public class QuestSelectPopup : PopupBase {
     /// クエストリストを１つ戻す
     /// </summary>
     private void OnClickPrevButtonList(bool isSwipe = false) {
-        if (!isMoveButton) {
-            //ボタンの重複防止用のフラグを立てる
-            isMoveButton = true;
-
-            //右矢印ボタンを表示する
-            btnRightArrow.gameObject.SetActive(true);
-
-            //ボタンリストの番号を一つページを戻す
-            currentButtonNo--;
-            Debug.Log(currentButtonNo);
-
-            //すでにリストが最初のページなら左矢印ボタンを非表示にする
-            if (currentButtonNo <= 0) {
-                btnLeftArrow.gameObject.SetActive(false);
-            }
-
-            //スワイプでボタンリストを移動させていたら無視
-            if (!isSwipe) {
-                //スワイプしていない（ボタンを押した）なら、1ページ戻したボタンリストを表示
-                float destX = currentButtonNo * page.pageWidth;
-                page.content.anchoredPosition = new Vector2(-destX, page.content.anchoredPosition.y);
-                page.tempIndex = currentButtonNo;
-            }
-
-            //再度ボタンを押せるようにする
-            isMoveButton = false;
+        if (isClickable) {
+            return;
         }
+        //ボタンの重複防止用のフラグを立てる
+        isClickable = true;
+
+        //右矢印ボタンを表示する
+        btnRightArrow.gameObject.SetActive(true);
+
+        //ボタンリストの番号を一つページを戻す
+        currentButtonNo--;
+        Debug.Log(currentButtonNo);
+
+        //すでにリストが最初のページなら左矢印ボタンを非表示にする
+        if (currentButtonNo <= 0) {
+            btnLeftArrow.gameObject.SetActive(false);
+        }
+
+        //スワイプでボタンリストを移動させていたら無視
+        if (!isSwipe) {
+            //スワイプしていない（ボタンを押した）なら、1ページ戻したボタンリストを表示
+            float destX = currentButtonNo * page.pageWidth;
+            page.content.anchoredPosition = new Vector2(-destX, page.content.anchoredPosition.y);
+            page.tempIndex = currentButtonNo;
+        }
+
+        //再度ボタンを押せるようにする
+        isClickable = false;
     }
+
     /// <summary>
     /// スワイプに合わせてボタンの左右矢印ボタンの表示/非表示を切り替え
     /// </summary>
@@ -169,9 +175,10 @@ public class QuestSelectPopup : PopupBase {
     }
 
     /// <summary>
+    /// ポップアップを隠してクエストシーンを呼ぶ準備
     /// クエスト決定時に呼ばれる
     /// </summary>
-    public void LoadQuestScene() {
+    public void PreparateQuestScene() {
         GameData.instance.questDataList = new List<GameData.QuestData>();
 
         foreach (GameData.QuestData questData in choiceQuestDataList) {

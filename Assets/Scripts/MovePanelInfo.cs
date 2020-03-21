@@ -21,7 +21,7 @@ public class MovePanelInfo : MonoBehaviour
     public FieldDataList.FieldData fieldData = new FieldDataList.FieldData();
     public LandscapeDataList.LandscapeData landscapeData = new LandscapeDataList.LandscapeData();
 
-    public bool isSubmit = false;  // 重複タップ防止フラグ
+    private bool isClickable;      // 重複タップ防止フラグ(外部クラス経由でもこのクラス内で処理する場合はprivateでOK)
     public bool isSecretPlace = false;
     public int firstActionRate;    // 検出率。成功すると先制行動が可能
     bool isSearchEvent = false;    // 探索型イベントか確定イベントか
@@ -58,6 +58,8 @@ public class MovePanelInfo : MonoBehaviour
     /// </summary>
     /// <param name="fieldData"></param>
     public void InitMovePanel(FieldDataList.FieldData fieldData) {
+        isClickable = true;
+
         this.fieldData = fieldData;
 
         lblFieldName.text = this.fieldData.fieldType.ToString();
@@ -94,6 +96,7 @@ public class MovePanelInfo : MonoBehaviour
                 randomValue -= eventTypesRate[x];
             }
         }
+        isClickable = false;
     }
 
     /// <summary>
@@ -101,6 +104,8 @@ public class MovePanelInfo : MonoBehaviour
     /// </summary>
     /// <param name="landscapeData"></param>
     public void InitSacredPlacePanel(LandscapeDataList.LandscapeData landscapeData, int eventNo) {
+        isClickable = true;
+
         isSecretPlace = true;
         this.landscapeData = landscapeData;
 
@@ -109,12 +114,16 @@ public class MovePanelInfo : MonoBehaviour
         imgField.sprite = Resources.Load<Sprite>("Landscapes/" + this.fieldData.imageNo);
         imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + eventNo);
         txtFirstActionRate.text = 0.ToString();
+
+        isClickable = false;
     }
 
     /// <summary>
     /// ボスパネルを生成
     /// </summary>
     public void InitBossPanel(ENEMY_LEVEL_TYPE bossType, int bossNo) {
+        isClickable = true;
+
         Debug.Log("ボス 生成 : " + bossType);
 
         lblFieldName.text = bossType.ToString();
@@ -125,6 +134,8 @@ public class MovePanelInfo : MonoBehaviour
         // ボスに対しての先制行動の成功率
         firstActionRate = Random.Range(0, 40);
         txtFirstActionRate.text = firstActionRate.ToString();
+
+        isClickable = false;
     }
 
     /// <summary>
@@ -132,57 +143,58 @@ public class MovePanelInfo : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     private IEnumerator OnClickSubmit() {
-        if (!isSubmit) {
-            isSubmit = true;
+        if (isClickable) {
+            yield break;
+        }
+        isClickable = true;
 
-            // 移動回数を加算
-            questManager.moveCount++;
-            questManager.scrollViewMoveSkillCanvasGroup.DOFade(0, 0.5f);
+        // 移動回数を加算
+        questManager.moveCount++;
+        questManager.scrollViewMoveSkillCanvasGroup.DOFade(0, 0.5f);
 
-            // 他の移動パネルは見た目もタップできないようにする
-            for (int i = 0; i < questManager.moveList.Count; i++) {
-                if (!questManager.moveList[i].isSubmit) {
-                    questManager.moveList[i].isSubmit = true;
-                    questManager.moveList[i].btnSubmit.interactable = false;
-                }
+        // 他の移動パネルは見た目もタップできないようにする
+        for (int i = 0; i < questManager.moveList.Count; i++) {
+            if (!questManager.moveList[i].isClickable) {
+                questManager.moveList[i].isClickable = true;
+                questManager.moveList[i].btnSubmit.interactable = false;
             }
+        }
 
-            // 先制行動が可能かどうかの判定
-            float waitTime = 0f;
-            bool isLucky = false;
-            Sequence seq = DOTween.Sequence();
-            if (Random.Range(0, 100) <= firstActionRate) {
-                SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_LUKCY);
-                // 当たり
-                seq.Append(transform.DOScale(1.5f, 0.5f));
-                seq.Append(transform.DORotate(new Vector3(0, 720, 0), 1.0f, RotateMode.FastBeyond360));
-                seq.Append(transform.DORotate(new Vector3(0, 360, 0), 0.5f, RotateMode.FastBeyond360));
-                seq.Join(transform.DOScale(0, 0.5f));
-                waitTime = 2.0f;
-                isLucky = true;
+        // ファーストアクションが可能かどうかの判定
+        float waitTime = 0f;
+        bool isLucky = false;
+        Sequence seq = DOTween.Sequence();
+        if (Random.Range(0, 100) <= firstActionRate) {
+            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_LUKCY);
+            // ファーストアクション可能
+            seq.Append(transform.DOScale(1.5f, 0.5f));
+            seq.Append(transform.DORotate(new Vector3(0, 720, 0), 1.0f, RotateMode.FastBeyond360));
+            seq.Append(transform.DORotate(new Vector3(0, 360, 0), 0.5f, RotateMode.FastBeyond360));
+            seq.Join(transform.DOScale(0, 0.5f));
+            waitTime = 2.0f;
+            isLucky = true;
+        } else {
+            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+            // 通常
+            seq.Append(transform.DOScale(1.2f, 0.3f));
+            seq.Append(transform.DORotate(new Vector3(0, 360, 0), 0.75f, RotateMode.FastBeyond360));
+            seq.Join(transform.DOScale(0, 0.75f));
+            waitTime = 1.05f;
+        }
+        yield return new WaitForSeconds(waitTime);
+        questManager.scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
+
+        if (isSecretPlace) {
+            if (landscapeData.landscapeType == LANDSCAPE_TYPE.出口) {
+                // 脱出処理へ
+                StartCoroutine(questManager.ExitQuest());
             } else {
-                SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-                // 通常
-                seq.Append(transform.DOScale(1.2f, 0.3f));
-                seq.Append(transform.DORotate(new Vector3(0, 360, 0), 0.75f, RotateMode.FastBeyond360));
-                seq.Join(transform.DOScale(0, 0.75f));
-                waitTime = 1.05f;
+                // ゲーム続行し、スピリットの生成処理へ
+                StartCoroutine(questManager.CreateSpiritualityPlace());
             }
-            yield return new WaitForSeconds(waitTime);
-            questManager.scrollViewMoveSkillCanvasGroup.gameObject.SetActive(false);
-
-            if (isSecretPlace) {
-                if (landscapeData.landscapeType == LANDSCAPE_TYPE.出口) {
-                    // 脱出処理へ
-                    StartCoroutine(questManager.ExitQuest());
-                } else {
-                    // ゲーム続行し、スピリットの生成処理へ
-                    StartCoroutine(questManager.CreateSpiritualityPlace());
-                }
-            } else {
-                // 移動後の処理
-                StartCoroutine(questManager.MoveJudgment(fieldData, eventType, isLucky, isSearchEvent));
-            }
+        } else {
+            // 移動後の処理
+            StartCoroutine(questManager.MoveJudgment(fieldData, eventType, isLucky, isSearchEvent));
         }
     }
 

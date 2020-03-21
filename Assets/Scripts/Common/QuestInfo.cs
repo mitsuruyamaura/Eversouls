@@ -55,21 +55,15 @@ public class QuestInfo : MonoBehaviour
                 for (int i = 0; i < fieldDatas.Count; i++) {
                     GameData.QuestData questData = new GameData.QuestData();
                     // 各出現率を文字列からIntに変更し、配列に入れる
-                    questData.eventsRates = new int[(int)EVENT_TYPE.COUNT];
-                    questData.enemyEncountRates = new int[5];
-                    questData.secretItemRates = new int[(int)SECRET_ITEM_TYPE.COUNT];                                       
-                    questData.landscapeRates = new int[(int)LANDSCAPE_TYPE.COUNT];
-                    questData.trapRates = new int[(int)TRAP_TYPE.COUNT];
-
                     questData.eventsRates = fieldDatas[i].events.Split(',').Select(int.Parse).ToArray();
                     questData.enemyEncountRates = fieldDatas[i].enemyEncount.Split(',').Select(int.Parse).ToArray();
                     questData.secretItemRates = fieldDatas[i].secretItem.Split(',').Select(int.Parse).ToArray();
                     questData.landscapeRates = fieldDatas[i].landscape.Split(',').Select(int.Parse).ToArray();
                     questData.trapRates = fieldDatas[i].trap.Split(',').Select(int.Parse).ToArray();
 
+                    // 他のデータを設定
                     questData.field = fieldDatas[i].fieldType;
                     questData.fieldDatas = fieldDatas;
-
                     questData.areaRarelity = data.rareliry;
                     questData.tempratureType = data.tempType;               
                     questData.feildRates = GetFieldRates(data.fieldRate);
@@ -138,25 +132,15 @@ public class QuestInfo : MonoBehaviour
         }
         isClickable = true;
         SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-        
-        // アニメさせながら隠す
-        //Sequence seq = DOTween.Sequence();
-        //seq.Append(transform.DOMove(questManager.centerTran.position, 1.0f));
-        //seq.Append(transform.DOScale(0f, 0.5f));
-        //yield return new WaitForSeconds(1.35f);
 
         // GameDataにQuestDataの参照を保存
         GameData.instance.questDataList = new List<GameData.QuestData>();
         for (int i = 0; i < questDataList.Count; i++) {
             GameData.instance.questDataList.Add(questDataList[i]);
         }
-
-        //StartCoroutine(questManager.SetAreaImage(areaType));
-        //questManager.CreateMovePanelInfos(fieldImageNo);
-
         yield return new WaitForSeconds(0.15f);
-        //gameObject.SetActive(false);
-        questSelectPopup.LoadQuestScene();
+        // ポップアップを閉じる準備
+        questSelectPopup.PreparateQuestScene();
     }
 
     /***************************未使用******************************/

@@ -41,8 +41,7 @@ public class ActionInfo : MonoBehaviour
     public QuestManager questManager;
     public ItemMasterData.ItemData itemData;
 
-    [Header("重複タップ防止フラグ")]
-    public bool isSubmit;
+    private bool isClickable;   // 重複タップ防止フラグ
     [Header("行為判定が必要か不要かのフラグ")]
     private bool isAction = false;
     [Header("地形/行動の表示用番号")]
@@ -65,6 +64,8 @@ public class ActionInfo : MonoBehaviour
     }
 
     public void InitField(FieldDataList.FieldData fieldData, ActionDataList.ActionData actionData) {
+        isClickable = true;
+
         // 行動を設定
         fieldType = fieldData.fieldType;
         cost = fieldData.cost + actionData.cost;
@@ -94,9 +95,13 @@ public class ActionInfo : MonoBehaviour
         txtActionName.text = fieldType.ToString();
         txtActionInfo.text = fieldData.info;
         txtCost.text = fieldData.cost.ToString();
+
+        isClickable = false;
     }
 
     public void InitAction(ActionDataList.ActionData data, EVENT_TYPE eventType) {
+        isClickable = true;
+
         this.eventType = eventType;
         btnActionInfo.onClick.AddListener(OnClickCheckChooseAction);
         isAction = true;
@@ -114,6 +119,8 @@ public class ActionInfo : MonoBehaviour
         txtActionName.text = actionType.ToString();
         txtActionInfo.text = data.info;
         txtCost.text = data.cost.ToString();
+
+        isClickable = false;
     }
 
     public void InitRelicAction(ItemMasterData.ItemData data) {
@@ -173,28 +180,32 @@ public class ActionInfo : MonoBehaviour
     /// 移動時のイベント発生を確認
     /// </summary>
     public void OnClickCheckMove() {
-        if (!isSubmit) {
-            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-            isSubmit = true;
-            Sequence seq = DOTween.Sequence();
-            seq.Append(transform.DOScale(1.2f, 0.2f));
-            seq.Append(transform.DOScale(1.0f, 0.2f));
-            //StartCoroutine(questManager.MoveJudgment(cost, progress, imageNo, critical, fieldType, actionType));
+        if (isClickable) {
+            return;
         }
+        isClickable = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(transform.DOScale(1.2f, 0.2f));
+        seq.Append(transform.DOScale(1.0f, 0.2f));
+        //StartCoroutine(questManager.MoveJudgment(cost, progress, imageNo, critical, fieldType, actionType));
     }
 
     /// <summary>
     /// イベント時の行動の成否チェック TODO　使わないかも
     /// </summary>
     public void OnClickCheckChooseAction() {
-        if (!isSubmit) {
-            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-            isSubmit = true;
-            Sequence seq = DOTween.Sequence();
-            seq.Append(transform.DOScale(1.2f, 0.2f));
-            seq.Append(transform.DOScale(1.0f, 0.2f));
-                       
-            StartCoroutine(questManager.ActionJudgment(cost, progress, imageNo, actionType));
+        if (isClickable) {
+            return;
         }
+        isClickable = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(transform.DOScale(1.2f, 0.2f));
+        seq.Append(transform.DOScale(1.0f, 0.2f));
+
+        StartCoroutine(questManager.ActionJudgment(cost, progress, imageNo, actionType));
     }
 }

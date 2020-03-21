@@ -27,10 +27,9 @@ public class SkillInfo : MonoBehaviour
     public QuestManager questManager;
     public EVENT_TYPE eventType;
 
-    [Header("重複タップ防止フラグ")]
-    public bool isClickable;
+    private bool isClickable;  // 重複タップ防止フラグ
 
-    [Header("スキル適用状態フラグ")]
+    [Header("スキル使用中フラグ。trueなら使用中")]
     public bool isActive;
 
     // レリックによる修正があり/なし
@@ -41,6 +40,8 @@ public class SkillInfo : MonoBehaviour
     /// </summary>
     /// <param name="data"></param>
     public void InitSkillPanelInfo(PlayFabManager.SkillData data, EVENT_TYPE eventType) {
+        isClickable = true;
+
         skillData = data;
         this.eventType = eventType;
 
@@ -53,10 +54,13 @@ public class SkillInfo : MonoBehaviour
         UpdateActiveSkill();
 
         btnSkillInfo.onClick.AddListener(() => OnClickChooseSkill());
+        isClickable = false;
     }
 
     /// <summary>
     /// スキルの選択／解除
+    /// スキルが未使用であってもコストオーバーの場合は押せない
+    /// スキルの残り回数が残っていてもコストオーバーの場合は押せない
     /// </summary>
     private void OnClickChooseSkill() {
         if (isClickable) {
@@ -94,6 +98,7 @@ public class SkillInfo : MonoBehaviour
 
     /// <summary>
     /// 移動後にスキルの残り回数を確認して使用の有無を更新
+    /// この前にAPとコストによるチェックを行っている
     /// </summary>
     public void UpdateActiveSkill() {
         btnSkillInfo.interactable = true;

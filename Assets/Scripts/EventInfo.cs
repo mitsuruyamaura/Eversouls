@@ -60,6 +60,8 @@ public class EventInfo : MonoBehaviour {
     /// <param name="questData"></param>
     /// <param name="fieldType"></param>
     public void SetupEventInfo(EVENT_TYPE eventType, GameData.QuestData questData, FIELD_TYPE fieldType, int cost, float progress, int fieldImageNo, bool isLucky, QuestManager questManager, bool isSearchEvent) {
+        isClickable = true;
+
         // イベントにかかわる値を取得      
         _cost = cost;
         _progress = progress;
@@ -226,7 +228,8 @@ public class EventInfo : MonoBehaviour {
             return;
         }
         isClickable = true;
-        
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+
         HideEventInfo();
 
         // イベントに対しての判定を行う

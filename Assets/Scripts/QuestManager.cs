@@ -130,6 +130,9 @@ public class QuestManager : MonoBehaviour
     private int GetBranchCount() {
         int branchNo = 0;
         switch ((SEASON_WIND_TYPE)GameData.instance.choiceAreaNo) {
+            case SEASON_WIND_TYPE.DAWN:        // チュートリアル
+                branchNo = 3;
+                break;
             case SEASON_WIND_TYPE.EUROS:
                 branchNo = Random.Range(3, 6);
                 break;

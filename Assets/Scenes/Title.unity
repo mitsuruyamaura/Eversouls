@@ -384,6 +384,7 @@ MonoBehaviour:
   lblTapStart: {fileID: 1370251073}
   loadMasterDataFrom: {fileID: 1024907772}
   isPlayFabOn: 1
+  txtDebug: {fileID: 0}
 --- !u!4 &439907598
 Transform:
   m_ObjectHideFlags: 0

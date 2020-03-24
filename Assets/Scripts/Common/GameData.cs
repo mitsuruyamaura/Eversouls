@@ -92,9 +92,9 @@ public class GameData : MonoBehaviour
     public string haveSkillNoListString;   // 所持しているスキルを１つの文字列として受け取ったり送ったりするための変数
 
     [Header("所持しているスキル番号リスト")]
-    public List<int> haveSkillNoList;　　　// haveSkillNoListStringを元にリスト化し、これを元にhaveSkillNoListStringを作る
+    public List<int> haveSkillNoList = new List<int>();　　　// haveSkillNoListStringを元にリスト化し、これを元にhaveSkillNoListStringを作る
     [Header("所持しているスキルのデータリスト")]
-    public List<PlayFabManager.SkillData> haveSkillDatas;　　// haveSkillNoListを参照してSkillDataから所持しているスキルリストを作る
+    public List<PlayFabManager.SkillData> haveSkillDatas = new List<PlayFabManager.SkillData>();　　// haveSkillNoListを参照してSkillDataから所持しているスキルリストを作る
     
 
     public enum ABILITY_TYPE {

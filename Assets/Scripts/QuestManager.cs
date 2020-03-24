@@ -90,10 +90,16 @@ public class QuestManager : MonoBehaviour
     public int maxProgress = 0;    // 最大移動回数
     public ENEMY_LEVEL_TYPE bossType;   // ボスのタイプ。中ボスかエリアボスか
 
+    public Text txtDebug;
+
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
         StartCoroutine(TransitionManager.instance.EnterScene());
         InitQuestData();
+        txtDebug.text = "EnemyDataCount : " + PlayFabManager.instance.enemyDataList.Count.ToString();
+        txtDebug.text += "\nSkillDataCount : " + PlayFabManager.instance.skillDataList.Count.ToString();
+        txtDebug.text += "\nhaveSkillDataCount : " + GameData.instance.haveSkillDatas.Count.ToString();
+        txtDebug.text += "\nPlayFabSkillDataCount : " + PlayFabManager.instance.skillDataList.Count.ToString();
     }
 
     /// <summary>
@@ -166,7 +172,7 @@ public class QuestManager : MonoBehaviour
     /// 指定されたタイプのスキルパネルを生成し、リストを作成
     /// </summary>
     /// <param name="eventType"></param>
-    /// <param name="skillList">moveSkillList,eventSkillList</param>
+    /// <param name="skillList"> => moveSkillList,eventSkillList</param>
     private void CreateSkillListOfEventType(EVENT_TYPE eventType, List<SkillInfo> skillList, Transform tran) {
         // 取得したスキルのリストから指定されたタイプのスキルを抽出してパネルを作る
         foreach (PlayFabManager.SkillData skillData in questSkillDatas) {
@@ -179,6 +185,7 @@ public class QuestManager : MonoBehaviour
                 }
             }
         }
+        txtDebug.text += "\nMoveSkillInfoCount : " + skillList.Count.ToString();
     }
 
     /// <summary>
@@ -529,7 +536,7 @@ public class QuestManager : MonoBehaviour
                     seq.Append(moveList[i].canvasGroup.DOFade(0, 0.25f));
                     seq.Join(moveList[i].transform.DOScale(0, 0.25f));
                 }
-                Destroy(moveList[i].gameObject, 0.8f);
+                Destroy(moveList[i].gameObject, 0.5f);
             }
             moveList.Clear();
         }

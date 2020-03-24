@@ -167,7 +167,7 @@ public class MovePanelInfo : MonoBehaviour
         if (Random.Range(0, 100) <= firstActionRate) {
             SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_LUKCY);
             // ファーストアクション可能
-            seq.Append(transform.DOScale(1.5f, 0.5f));
+            seq.Append(transform.DOScale(1.2f, 0.5f));
             seq.Append(transform.DORotate(new Vector3(0, 720, 0), 1.0f, RotateMode.FastBeyond360));
             seq.Append(transform.DORotate(new Vector3(0, 360, 0), 0.5f, RotateMode.FastBeyond360));
             seq.Join(transform.DOScale(0, 0.5f));

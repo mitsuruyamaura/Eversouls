@@ -201,9 +201,20 @@ public class PlayFabManager : MonoBehaviour {
                 GameData.instance.mental = 50;
                 GameData.instance.technical = 70;
 
+                // 初期スキルデータの番号を取得
+                // TODO　(チュートリアルでタイプを選択した際に決めるようにする)
                 GameData.instance.haveSkillNoList = new List<int>();
                 for (int i = 0; i < 6; i++) {
                     GameData.instance.haveSkillNoList.Add(i);
+                }
+
+                // 初期スキルデータの番号から、初期所持スキルリストに初期のスキルデータを取得
+                foreach (SkillData skillData in skillDataList) {
+                    for (int i = 0; i < GameData.instance.haveSkillNoList.Count; i++) {
+                        if (skillData.skillNo == GameData.instance.haveSkillNoList[i]) {
+                            GameData.instance.haveSkillDatas.Add(skillData);
+                        }
+                    }
                 }
 
                 // PlayFabを更新

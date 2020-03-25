@@ -74,7 +74,7 @@ public class QuestInfo : MonoBehaviour
                     questDataList.Add(questData);                 
                 }
                 // UI設定
-                imgArea.sprite = Resources.Load<Sprite>("Areas/" + data.iconNo);
+                imgArea.sprite = GameData.instance.spriteAtlas.GetSprite("Area_" + data.iconNo.ToString());
                 areaInfo = data.areaInfo;
                 branchCount = 0;
             }

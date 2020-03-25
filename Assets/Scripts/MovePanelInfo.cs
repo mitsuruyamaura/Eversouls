@@ -64,7 +64,7 @@ public class MovePanelInfo : MonoBehaviour
 
         lblFieldName.text = this.fieldData.fieldType.ToString();
         txtCost.text = fieldData.cost.ToString();
-        imgField.sprite = Resources.Load<Sprite>("Fields/" + this.fieldData.imageNo);
+        imgField.sprite = GameData.instance.spriteAtlas.GetSprite("Field_" + this.fieldData.imageNo.ToString());//Resources.Load<Sprite>("Fields/" + this.fieldData.imageNo);
 
         // イベントアイコンをイベント出現率から抽出して設定
         int[] eventTypesRate = GetFieldEventRates(this.fieldData.events);
@@ -86,7 +86,8 @@ public class MovePanelInfo : MonoBehaviour
             if (randomValue <= eventTypesRate[x]) {
                 // 探索型の場合【?】表示にするのでそのまま。それ以外はイベントに応じて差し替え
                 if (!isSearchEvent) {
-                    imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + x);
+                    Debug.Log(x);
+                    imgEventIcon.sprite = GameData.instance.spriteAtlas.GetSprite("Event_" + x.ToString());//Resources.Load<Sprite>("Events/" + x);
                 }
                 eventType = (EVENT_TYPE)x;
                 firstActionRate = tempFirstActionRates[x];
@@ -111,8 +112,8 @@ public class MovePanelInfo : MonoBehaviour
 
         lblFieldName.text = this.landscapeData.landscapeType.ToString();
         txtCost.text = 0.ToString();
-        imgField.sprite = Resources.Load<Sprite>("Landscapes/" + this.fieldData.imageNo);
-        imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + eventNo);
+        imgField.sprite = GameData.instance.spriteAtlas.GetSprite("Landscape_" + this.fieldData.imageNo.ToString());//Resources.Load<Sprite>("Landscapes/" + this.fieldData.imageNo);
+        imgEventIcon.sprite = GameData.instance.spriteAtlas.GetSprite("Event_" + eventNo.ToString());//Resources.Load<Sprite>("Events/" + eventNo);
         txtFirstActionRate.text = 0.ToString();
 
         isClickable = false;
@@ -128,8 +129,8 @@ public class MovePanelInfo : MonoBehaviour
 
         lblFieldName.text = bossType.ToString();
         txtCost.text = 0.ToString();
-        imgField.sprite = Resources.Load<Sprite>("BossImages/" + bossNo);
-        imgEventIcon.sprite = Resources.Load<Sprite>("Events/" + 0);
+        imgField.sprite = GameData.instance.spriteAtlas.GetSprite("Boss_" + bossNo.ToString());//Resources.Load<Sprite>("BossImages/" + bossNo);
+        imgEventIcon.sprite = GameData.instance.spriteAtlas.GetSprite("Event_" + 0.ToString());//Resources.Load<Sprite>("Events/" + 0);
 
         // ボスに対しての先制行動の成功率
         firstActionRate = Random.Range(0, 40);

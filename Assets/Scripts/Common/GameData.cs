@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class GameData : MonoBehaviour
 {
@@ -104,6 +105,8 @@ public class GameData : MonoBehaviour
     }
     public ABILITY_TYPE abilityType;
     public TEMPERATURE_TYPE temperatureType;
+
+    public SpriteAtlas spriteAtlas;
 
     void Awake() {
         if (instance == null) {

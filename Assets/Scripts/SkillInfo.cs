@@ -46,7 +46,7 @@ public class SkillInfo : MonoBehaviour
         this.eventType = eventType;
 
         // 設定
-        imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + skillData.imageNo);
+        imgMainAction.sprite = GameData.instance.spriteAtlas.GetSprite("Action_" + skillData.imageNo.ToString());//Resources.Load<Sprite>("Actions/" + skillData.imageNo);
         txtSkillName.text = skillData.skillName;
 
         // スキルの使用回数を設定。使用回数0の場合はタップできないようにする

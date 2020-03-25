@@ -583,7 +583,7 @@ public class QuestManager : MonoBehaviour
     /// <param name="areaType"></param>
     public IEnumerator SetAreaImage(AREA_TYPE areaType) {
         // 背景用の後ろのイメージを変更しておく
-        imgAreaBack.sprite = Resources.Load<Sprite>("Areas/" + (int)areaType);
+        imgAreaBack.sprite = GameData.instance.spriteAtlas.GetSprite("Area_" + ((int)areaType).ToString());//Resources.Load<Sprite>("Areas/" + (int)areaType);
 
         // 手前側のイメージをフェイドアウトさせる
         Sequence seq = DOTween.Sequence();
@@ -593,14 +593,14 @@ public class QuestManager : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
 
         // 次のために手前側のイメージも変更しておく
-        imgAreaFront.sprite = Resources.Load<Sprite>("Areas/" + (int)areaType);
+        imgAreaFront.sprite = GameData.instance.spriteAtlas.GetSprite("Area_" + ((int)areaType).ToString()); //Resources.Load<Sprite>("Areas/" + (int)areaType);
         seq.Append(imgAreaFront.DOFade(0.75f, 1.0f));
         seq.Join(imgAreaBack.DOFade(0f, 1.0f));
     }
 
     public IEnumerator SetFieldImage(int fieldNo) {
         // 背景用の後ろのイメージを変更しておく
-        imgAreaBack.sprite = Resources.Load<Sprite>("Fields/" + fieldNo);
+        imgAreaBack.sprite = GameData.instance.spriteAtlas.GetSprite("Field_" + fieldNo.ToString()); //Resources.Load<Sprite>("Fields/" + fieldNo);
 
         // 手前側のイメージをフェイドアウトさせる
         Sequence seq = DOTween.Sequence();
@@ -610,7 +610,7 @@ public class QuestManager : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
 
         // 次のために手前側のイメージも変更しておく
-        imgAreaFront.sprite = Resources.Load<Sprite>("Fields/" + fieldNo);
+        imgAreaFront.sprite = GameData.instance.spriteAtlas.GetSprite("Field_" + fieldNo.ToString()); //Resources.Load<Sprite>("Fields/" + fieldNo);
         seq.Append(imgAreaBack.DOFade(0f, 0.01f));       
         seq.Join(imgAreaFront.DOFade(0.75f, 0.01f));
     }

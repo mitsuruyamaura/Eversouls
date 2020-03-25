@@ -75,10 +75,10 @@ public class ActionInfo : MonoBehaviour
         actionType = actionData.actionType;
 
         // 行動のイメージ設定
-        imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + (int)actionData.actionType);
+        imgMainAction.sprite = GameData.instance.spriteAtlas.GetSprite("Action_" + ((int)actionData.actionType).ToString()); //Resources.Load<Sprite>("Actions/" + (int)actionData.actionType);
 
         // 行動対象となる地形のイメージ設定
-        imgField.sprite = Resources.Load<Sprite>("Fields/" + fieldData.imageNo);
+        imgField.sprite = GameData.instance.spriteAtlas.GetSprite("Field_" + fieldData.imageNo.ToString());//Resources.Load<Sprite>("Fields/" + fieldData.imageNo);
         imageNo = fieldData.imageNo;
 
         // 発生するイベントをシルエットで表示
@@ -110,7 +110,7 @@ public class ActionInfo : MonoBehaviour
         actionType = data.actionType;
         cost = data.cost;
         progress = data.progress;
-        imgMainAction.sprite = Resources.Load<Sprite>("Actions/" + data.imageNo);
+        imgMainAction.sprite = GameData.instance.spriteAtlas.GetSprite("Action_" + data.imageNo.ToString());//Resources.Load<Sprite>("Actions/" + data.imageNo);
         imageNo = data.imageNo;
 
         //imgCharaIcon.gameObject.SetActive(true);

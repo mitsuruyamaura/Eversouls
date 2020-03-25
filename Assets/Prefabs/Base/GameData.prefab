@@ -98,7 +98,7 @@ MonoBehaviour:
   volumeSE: 0
   homeBgmType: 0
   useDebugOn: 0
-  itemSO: {fileID: 11400000, guid: 8141deb7b9939ff4a88e050408bfb4fe, type: 2}
+  itemSO: {fileID: 0}
   isScriptableObjectLoad: 1
   isFirstAccess: 0
   haveSkillNoListString: 
@@ -106,6 +106,8 @@ MonoBehaviour:
   haveSkillDatas: []
   abilityType: 0
   temperatureType: 0
+  spriteAtlas: {fileID: 4343727234628468602, guid: 4cbaa4c2c4d90da43bfda1ac8eeeae63,
+    type: 2}
 --- !u!114 &5277108615212167296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,4 +120,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cfa7158bc407644988af1a875282e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSO: {fileID: 11400000, guid: 8141deb7b9939ff4a88e050408bfb4fe, type: 2}
+  itemSO: {fileID: 0}

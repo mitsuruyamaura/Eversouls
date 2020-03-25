@@ -182,7 +182,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 58110923}
   m_TextComponent: {fileID: 2018353861}
   m_materialReferenceIndex: 1
@@ -412,7 +412,7 @@ GameObject:
   - component: {fileID: 547242557}
   - component: {fileID: 547242556}
   m_Layer: 5
-  m_Name: Tex_VersionInfo
+  m_Name: Text_VersionInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1124,7 +1124,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 1480340687}
   m_TextComponent: {fileID: 1370251073}
   m_materialReferenceIndex: 1

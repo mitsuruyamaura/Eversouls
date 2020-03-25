@@ -122,7 +122,7 @@ public class EventInfo : MonoBehaviour {
         int value = Random.Range(0, (int)SEARCH_TARGET_TYPE.COUNT);
         searchType = (SEARCH_TARGET_TYPE)value;
         txtSearchTargetName.text = searchType.ToString();
-        imgSearchTarget.sprite = Resources.Load<Sprite>("SearchTargets/" + value);
+        imgSearchTarget.sprite = GameData.instance.spriteAtlas.GetSprite("Search_" + value.ToString());//Resources.Load<Sprite>("SearchTargets/" + value);
         currentCount = maxCheckCount;
         txtCurrentCount.text = currentCount.ToString();
     }
@@ -302,7 +302,7 @@ public class EventInfo : MonoBehaviour {
                         enemyData.name = enterEnemyDataList[count].name;
                         txtEventName.text = enemyData.name;
 
-                        imgMain.sprite = Resources.Load<Sprite>("Enemys/" + enemyData.no);
+                        imgMain.sprite = GameData.instance.spriteAtlas.GetSprite("Enemy_" + enemyData.no.ToString());//Resources.Load<Sprite>("Enemys/" + enemyData.no);
 
                         // TODO level補正
                         enemyData.level = GameData.instance.level;
@@ -329,7 +329,7 @@ public class EventInfo : MonoBehaviour {
                             if (attackRate <= enemyData.skillAbilities[attackNo]) {
                                 // 攻撃方法のイメージを表示
                                 enemyData.weaponType = (WEAPON_TYPE)attackNo; 
-                                imgAbilityType.sprite = Resources.Load<Sprite>("WeaponTypes/" + enemyData.weaponType.ToString());
+                                imgAbilityType.sprite = GameData.instance.spriteAtlas.GetSprite(enemyData.weaponType.ToString());//Resources.Load<Sprite>("WeaponTypes/" + enemyData.weaponType.ToString());
 
                                 // 成功率を入れて、画面に表示
                                 succeseRate = enemyData.skillAbilities[attackNo];
@@ -338,7 +338,7 @@ public class EventInfo : MonoBehaviour {
                                 // 相性のイメージを表示(毎回ランダム)
                                 ELEMENT_TYPE elementalType = (ELEMENT_TYPE)Random.Range(0, (int)ELEMENT_TYPE.COUNT);
                                 enemyData.elementType = elementalType;
-                                imgElementalType.sprite = Resources.Load<Sprite>("ElementalTypes/" + elementalType.ToString());
+                                imgElementalType.sprite = GameData.instance.spriteAtlas.GetSprite(enemyData.elementType.ToString());//Resources.Load<Sprite>("ElementalTypes/" + elementalType.ToString());
                                 break;
                             } else {
                                 attackRate -= enemyData.skillAbilities[attackNo];
@@ -396,7 +396,7 @@ public class EventInfo : MonoBehaviour {
                         secretItemData.secretItemType = enterSecretDataList[count].secretItemType;
                         txtEventName.text = secretItemData.secretItemType.ToString();
 
-                        imgMain.sprite = Resources.Load<Sprite>("SecretItems/" + secretItemData.no);
+                        imgMain.sprite = GameData.instance.spriteAtlas.GetSprite("SecretItem_" + secretItemData.no.ToString());//Resources.Load<Sprite>("SecretItems/" + secretItemData.no);
                         break;
                     } else {
                         randomAppear -= enterSecretDataList[count].appearance;
@@ -448,7 +448,7 @@ public class EventInfo : MonoBehaviour {
                         trapData.trapType = enterTrapDataList[count].trapType;
                         txtEventName.text = trapData.trapType.ToString();
 
-                        imgMain.sprite = Resources.Load<Sprite>("Traps/" + (int)trapData.trapType);
+                        imgMain.sprite = GameData.instance.spriteAtlas.GetSprite("Trap_" + ((int)trapData.trapType).ToString());//Resources.Load<Sprite>("Traps/" + (int)trapData.trapType);
                         break;
                     } else {
                         randomAppear -= enterTrapDataList[count].appearance;
@@ -500,7 +500,7 @@ public class EventInfo : MonoBehaviour {
                         landscapeData.landscapeType = enterLandscapeDataList[count].landscapeType;
                         txtEventName.text = landscapeData.landscapeType.ToString();
 
-                        imgMain.sprite = Resources.Load<Sprite>("Landscapes/" + (int)landscapeData.landscapeType);
+                        imgMain.sprite = GameData.instance.spriteAtlas.GetSprite("Landscape_" + ((int)landscapeData.landscapeType).ToString());//Resources.Load<Sprite>("Landscapes/" + (int)landscapeData.landscapeType);
                         break;
                     } else {
                         randomAppear -= enterLandscapeDataList[count].appearance;

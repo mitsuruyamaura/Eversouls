@@ -90,16 +90,10 @@ public class QuestManager : MonoBehaviour
     public int maxProgress = 0;    // 最大移動回数
     public ENEMY_LEVEL_TYPE bossType;   // ボスのタイプ。中ボスかエリアボスか
 
-    public Text txtDebug;
-
     private void Start() {
         SoundManager.Instance.PlayBGM(SoundManager.ENUM_BGM.QUEST);
         StartCoroutine(TransitionManager.instance.EnterScene());
         InitQuestData();
-        txtDebug.text = "EnemyDataCount : " + PlayFabManager.instance.enemyDataList.Count.ToString();
-        txtDebug.text += "\nSkillDataCount : " + PlayFabManager.instance.skillDataList.Count.ToString();
-        txtDebug.text += "\nhaveSkillDataCount : " + GameData.instance.haveSkillDatas.Count.ToString();
-        txtDebug.text += "\nPlayFabSkillDataCount : " + PlayFabManager.instance.skillDataList.Count.ToString();
     }
 
     /// <summary>
@@ -185,7 +179,6 @@ public class QuestManager : MonoBehaviour
                 }
             }
         }
-        txtDebug.text += "\nMoveSkillInfoCount : " + skillList.Count.ToString();
     }
 
     /// <summary>

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
-public class TitleManager : MonoBehaviour
+public class Title : MonoBehaviour
 {
     [Header("スタートボタン(画面全体)")]
     public Button btnStart;
@@ -22,13 +22,16 @@ public class TitleManager : MonoBehaviour
         isClickable = true;
 
         if (isPlayFabOn) {
+            // PlayFabへ接続
             PlayFabManager.instance.ConnectPlayfab();
         }
 
+        // ボタン設定
         btnStart.onClick.AddListener(OnClickStart);
         btnStart.interactable = false;
-        
+
         // スタートテキストの点滅アニメ再生
+        lblTapStart.text = "Loading...";
         lblTapStart.DOFade(1f, 1.5f).SetLoops(-1, LoopType.Yoyo);
 
         isClickable = false;
@@ -58,7 +61,17 @@ public class TitleManager : MonoBehaviour
     void Update() {
         // Playfabのデータ取得が終わったら画面タップ許可
         if (GameData.instance.isGetPlayfabDatas && !btnStart.interactable) {
-            btnStart.interactable = true;
+            // Loading表示をTapStartに変える
+            UpDateDisplay();
         }    
+    }
+
+    /// <summary>
+    /// Loading =>TapStartに表示変更
+    /// </summary>
+    private void UpDateDisplay() {
+        lblTapStart.DOFade(0f, 1.0f);
+        lblTapStart.text = "Tap Start";
+        btnStart.interactable = true;
     }
 }

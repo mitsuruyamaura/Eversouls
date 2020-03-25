@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5277108615212167301
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5277108615212167303}
+  - component: {fileID: 5277108615212167302}
+  - component: {fileID: 5277108615212167296}
+  m_Layer: 0
+  m_Name: GameData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5277108615212167303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5277108615212167301}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 66.64356, y: 431.43286, z: -41.104763}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5277108615212167302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5277108615212167301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf89a49c953395b458f838d66998b475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currency: 0
+  rewordOn: 0
+  level: 0
+  ap: 0
+  playerName: 
+  maxHp: 0
+  money: 0
+  exp: 0
+  soulPoint: 0
+  contactCount: 0
+  questClearCountsByArea: 
+  totalCount: 0
+  skillPoint: 0
+  maxSp: 0
+  physical: 0
+  mental: 0
+  technical: 0
+  actionPoint: 0
+  response: 0
+  search: 0
+  endTutorial: 0
+  isGetPlayfabDatas: 0
+  areaDatas: {fileID: 11400000, guid: 0137183a245eb50489ac7234ebbdb190, type: 2}
+  charaDatas: {fileID: 11400000, guid: 2c63350afce2d9c4fab2fb2e9eaac91a, type: 2}
+  actionDataList: {fileID: 11400000, guid: 8fe4ba5a2dbbf1645a9254d6a6f21973, type: 2}
+  fieldDataList: {fileID: 11400000, guid: 36c696ed4dcc21f4eb17867130c9b123, type: 2}
+  secretItemDataList: {fileID: 11400000, guid: 194e5406207f3f9438b8b86b11c6f540, type: 2}
+  landscapeDataList: {fileID: 11400000, guid: fbd5dadb578eb844c85c01b7c428253f, type: 2}
+  trapDataList: {fileID: 11400000, guid: 15ef1e3bd846ced418d3ef442c9dff6c, type: 2}
+  questDataList: []
+  questData:
+    eventsRates: 
+    enemyEncountRates: 
+    secretItemRates: 
+    landscapeRates: 
+    trapRates: 
+    field: 0
+    fieldDatas: []
+    fieldTypes: 
+    feildRates: 
+    areaType: 0
+    timeType: 0
+    areaRarelity: 0
+    tempratureType: 0
+    areaInfo: 
+    iconNo: 0
+  choiceAreaNo: 0
+  charas: []
+  actions: []
+  areas: []
+  volumeBGM: 0
+  volumeSE: 0
+  homeBgmType: 0
+  useDebugOn: 0
+  itemSO: {fileID: 11400000, guid: 8141deb7b9939ff4a88e050408bfb4fe, type: 2}
+  isScriptableObjectLoad: 1
+  isFirstAccess: 0
+  haveSkillNoListString: 
+  haveSkillNoList: 
+  haveSkillDatas: []
+  abilityType: 0
+  temperatureType: 0
+--- !u!114 &5277108615212167296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5277108615212167301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cfa7158bc407644988af1a875282e15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSO: {fileID: 11400000, guid: 8141deb7b9939ff4a88e050408bfb4fe, type: 2}

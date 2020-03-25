@@ -1135,7 +1135,7 @@ GameObject:
   - component: {fileID: 444253677}
   - component: {fileID: 444253676}
   m_Layer: 0
-  m_Name: QuestManager
+  m_Name: Quest
   m_TagString: Quest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1196,7 +1196,6 @@ MonoBehaviour:
   branchCounts: 
   maxProgress: 0
   bossType: 0
-  txtDebug: {fileID: 586773010}
 --- !u!4 &444253677
 Transform:
   m_ObjectHideFlags: 0
@@ -1702,18 +1701,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 586773008}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &586773010 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4571018905219945271, guid: 731ef73294539b5469bdb9e645cd9258,
-    type: 3}
-  m_PrefabInstance: {fileID: 586773008}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &655768265
 GameObject:
   m_ObjectHideFlags: 0

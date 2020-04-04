@@ -9,6 +9,8 @@ public class Title : MonoBehaviour
 {
     [Header("スタートボタン(画面全体)")]
     public Button btnStart;
+    [Header("シェアボタン")]
+    public Button btnShare;
     [Header("Start点滅アニメ用")]
     public TMP_Text lblTapStart;
     [Header("Jsonファイル読み込み用")]
@@ -29,6 +31,7 @@ public class Title : MonoBehaviour
         // ボタン設定
         btnStart.onClick.AddListener(OnClickStart);
         btnStart.interactable = false;
+        btnShare.onClick.AddListener(() => StartCoroutine(OnClickShare()));
 
         // スタートテキストの点滅アニメ再生
         lblTapStart.text = "Loading...";
@@ -73,5 +76,18 @@ public class Title : MonoBehaviour
         lblTapStart.DOFade(0f, 1.0f);
         lblTapStart.text = "Tap Start";
         btnStart.interactable = true;
+    }
+
+    /// <summary>
+    /// シェア
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator OnClickShare() {
+        if (isClickable) {
+            yield break;
+        }
+        isClickable = true;
+        yield return StartCoroutine(ShareController.ShareScreenShot());
+        isClickable = false;
     }
 }

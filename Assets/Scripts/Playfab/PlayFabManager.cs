@@ -144,6 +144,8 @@ public class PlayFabManager : MonoBehaviour {
         Debug.LogError(error.GenerateErrorReport());
         conErrorReport = error.GenerateErrorReport();
         isError = true;
+
+        // TODO エラーポップアップを生成
     }
 
     /// <summary>
@@ -165,7 +167,7 @@ public class PlayFabManager : MonoBehaviour {
     /// <returns></returns>
     public IEnumerator GetUserData() {
         if (Application.internetReachability == NetworkReachability.NotReachable) {
-            // 取得できない場合の処理
+            // TODO 取得できない場合にはエラーポップアップを生成
         }
 
         bool isWait = true;
@@ -260,7 +262,7 @@ public class PlayFabManager : MonoBehaviour {
         void OnError(PlayFabError error) {
             Debug.Log(error.GenerateErrorReport());
             isWait = false;
-            // ポップアップなどを開く
+            // TODO エラーポップアップを生成
 
         }
     }
@@ -306,6 +308,8 @@ public class PlayFabManager : MonoBehaviour {
             Debug.Log("SetupUserDatasResult : OnError");
             Debug.Log(error.GenerateErrorReport());
             isWait = false;
+
+            // エラーポップアップを生成
         }
     }
 
@@ -349,6 +353,8 @@ public class PlayFabManager : MonoBehaviour {
             Debug.Log("UpdataUserDataResult : OnError");
             Debug.Log(error.GenerateErrorReport());
             isWait = false;
+
+            // エラーポップアップを生成
         }
     }
 
@@ -387,6 +393,8 @@ public class PlayFabManager : MonoBehaviour {
             Debug.Log("UpdataUserDataResult : OnError");
             Debug.Log(error.GenerateErrorReport());
             isWait = false;
+
+            // エラーポップアップを生成
         }
     }
 
@@ -396,7 +404,7 @@ public class PlayFabManager : MonoBehaviour {
     /// <returns></returns>
     public IEnumerator UpdataUserReword() {
         if (Application.internetReachability == NetworkReachability.NotReachable) {
-            // 取得できない場合の処理
+            // TODO 取得できない場合エラーポップアップを生成
         }
 
         bool isWait = true;
@@ -424,6 +432,8 @@ public class PlayFabManager : MonoBehaviour {
             Debug.Log("UpdataUserRewordResult : OnError");
             Debug.Log(error.GenerateErrorReport());
             isWait = false;
+
+            // エラーポップアップを生成
         }
     }
 
@@ -434,7 +444,7 @@ public class PlayFabManager : MonoBehaviour {
     /// <returns></returns>
     public IEnumerator GetTitleData() {
         if (Application.internetReachability == NetworkReachability.NotReachable) {
-            // ネットワークにアクセスできない場合の処理
+            // TODO ネットワークにアクセスできない場合エラーポップアップを生成
         }
 
         bool isWait = true;
@@ -528,6 +538,8 @@ public class PlayFabManager : MonoBehaviour {
             Debug.Log("GetTitleData : Failure...");
             Debug.Log(error.GenerateErrorReport());
             isWait = false;
+
+            // エラーポップアップを生成
         }
     }
 
@@ -574,7 +586,7 @@ public class PlayFabManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// stringとEnumのタイプをもらい、文字列をそのタイプのEnumにする
+    /// stringとEnumのタイプをもらい、文字列をそのタイプのEnumにして返却
     /// </summary>
     public IEnum GetEnumTypeFromString<IEnum>(string str) where IEnum : struct {
         return (IEnum)Enum.Parse(typeof(IEnum), str, true);

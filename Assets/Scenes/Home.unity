@@ -679,7 +679,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 128176432}
   m_TextComponent: {fileID: 1494743835}
   m_materialReferenceIndex: 1
@@ -1655,7 +1655,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 406738214}
   m_TextComponent: {fileID: 17689199}
   m_materialReferenceIndex: 1
@@ -4364,7 +4364,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0.015269022}
-  m_AnchoredPosition: {x: -32, y: 222.09998}
+  m_AnchoredPosition: {x: -32, y: 222.09999}
   m_SizeDelta: {x: 182.5, y: 319.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1179292959
@@ -6153,7 +6153,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 1508778388}
   m_TextComponent: {fileID: 1546278898}
   m_materialReferenceIndex: 1
@@ -6785,7 +6785,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 1580627893}
   m_TextComponent: {fileID: 1224795228}
   m_materialReferenceIndex: 1

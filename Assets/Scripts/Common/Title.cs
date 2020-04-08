@@ -5,20 +5,29 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 
-public class Title : MonoBehaviour
-{
+public class Title : MonoBehaviour {
     [Header("スタートボタン(画面全体)")]
     public Button btnStart;
     [Header("シェアボタン")]
     public Button btnShare;
     [Header("Start点滅アニメ用")]
-    public TMP_Text lblTapStart;
+    public TMP_Text txtTapStart;
+    [Header("Start点滅アニメ用")]
+    public TMP_Text txtVersion;
+
     [Header("Jsonファイル読み込み用")]
     public LoadMasterDataFromJson loadMasterDataFrom;
 
-    private bool isClickable;     // 重複タップ防止用
+    public bool isClickable;     // 重複タップ防止用
     [Header("PlayFab読み込みON")]
     public bool isPlayFabOn;
+
+    // 終了確認ポップアップ関連
+    public ConfirmPopup confirmPopupPrefab;
+    public Transform canvasTran;
+    private ConfirmPopup confirmPopup;
+    public bool isOpen;
+
 
     void Start() {
         isClickable = true;
@@ -33,9 +42,12 @@ public class Title : MonoBehaviour
         btnStart.interactable = false;
         btnShare.onClick.AddListener(() => StartCoroutine(OnClickShare()));
 
+        // アプリバージョン表示
+        txtVersion.text = "version " + Application.version.ToString();
+
         // スタートテキストの点滅アニメ再生
-        lblTapStart.text = "Loading...";
-        lblTapStart.DOFade(1f, 1.5f).SetLoops(-1, LoopType.Yoyo);
+        txtTapStart.text = "Loading...";
+        txtTapStart.DOFade(1f, 1.5f).SetLoops(-1, LoopType.Yoyo);
 
         isClickable = false;
     }
@@ -66,15 +78,26 @@ public class Title : MonoBehaviour
         if (GameData.instance.isGetPlayfabDatas && !btnStart.interactable) {
             // Loading表示をTapStartに変える
             UpDateDisplay();
-        }    
+        }
+
+        if (isClickable) {
+            return;
+        }
+
+        // アプリ終了確認ポップアップ
+        if (Input.GetKeyDown(KeyCode.Escape) && confirmPopup != null) {
+            CloseConfirmPopup();
+        } else if (Input.GetKeyDown(KeyCode.Escape) && confirmPopup == null) {
+            OpenConfirmPopup();
+        }
     }
 
     /// <summary>
     /// Loading =>TapStartに表示変更
     /// </summary>
     private void UpDateDisplay() {
-        lblTapStart.DOFade(0f, 1.0f);
-        lblTapStart.text = "Tap Start";
+        txtTapStart.DOFade(0f, 1.0f);
+        txtTapStart.text = "Tap Start";
         btnStart.interactable = true;
     }
 
@@ -87,7 +110,28 @@ public class Title : MonoBehaviour
             yield break;
         }
         isClickable = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
         yield return StartCoroutine(ShareController.ShareScreenShot());
+        isClickable = false;
+    }
+
+    /// <summary>
+    /// 終了確認ポップアップを生成
+    /// </summary>
+    private void OpenConfirmPopup() {
+        isClickable = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+        confirmPopup = Instantiate(confirmPopupPrefab, canvasTran, false);
+        isClickable = false;
+    }
+
+    /// <summary>
+    /// 終了確認ポップアップを破棄
+    /// </summary>
+    private void CloseConfirmPopup() {
+        isClickable = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+        confirmPopup.OnClickClosePopup();
         isClickable = false;
     }
 }

@@ -27,11 +27,12 @@ public class PopupBase : MonoBehaviour
     /// ポップアップを閉じる
     /// </summary>
     public virtual void OnClickClosePopup() {
-        if (!isSubmit) {
-            isSubmit = true;
-            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-            canvasGroup.DOFade(0f, 0.5f);
-            Destroy(gameObject, 0.5f);
+        if (isSubmit) {
+            return;
         }
+        isSubmit = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+        canvasGroup.DOFade(0f, 0.5f);
+        Destroy(gameObject, 0.5f);
     }
 }

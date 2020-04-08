@@ -855,7 +855,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 6888847433267742564}
   m_TextComponent: {fileID: 5891495681660701725}
   m_materialReferenceIndex: 1
@@ -1321,7 +1321,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 8923355782069671050}
   m_TextComponent: {fileID: 2665022820917515834}
   m_materialReferenceIndex: 1
@@ -1818,8 +1818,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2398154391341706646}
   - component: {fileID: 7111134080106760075}
-  - component: {fileID: 7245374976749614269}
   - component: {fileID: 5012494008228343771}
+  - component: {fileID: 2697678182763379266}
   m_Layer: 5
   m_Name: btn_Vision_Panel
   m_TagString: Untagged
@@ -1859,36 +1859,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6050226615461821956}
   m_CullTransparentMesh: 0
---- !u!114 &7245374976749614269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6050226615461821956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.8627451}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: d11a2255f74c8114f97632b44c5a7b04, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &5012494008228343771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1928,12 +1898,44 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 7245374976749614269}
+  m_TargetGraphic: {fileID: 2697678182763379266}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &2697678182763379266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6050226615461821956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ade1841702e9f704f9e419748980ea05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 21300000, guid: d11a2255f74c8114f97632b44c5a7b04, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+  Radius: 30
+  TriangleNum: 12
 --- !u!1 &6076801419832031318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1944,7 +1946,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6122875916340961166}
   - component: {fileID: 7795624148206906358}
-  - component: {fileID: 214205597084844628}
+  - component: {fileID: 932173483668244740}
   m_Layer: 5
   m_Name: Image_BackGround
   m_TagString: Untagged
@@ -1973,7 +1975,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3.3, y: 126.6}
+  m_AnchoredPosition: {x: -3.3, y: 0}
   m_SizeDelta: {x: 496.4, y: 565.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7795624148206906358
@@ -1984,7 +1986,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6076801419832031318}
   m_CullTransparentMesh: 0
---- !u!114 &214205597084844628
+--- !u!114 &932173483668244740
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1997,7 +1999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.6117647}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2750,7 +2752,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.79
+  m_padding: 1.52
   m_canvasRenderer: {fileID: 1833669480734067332}
   m_TextComponent: {fileID: 311061933847232441}
   m_materialReferenceIndex: 1

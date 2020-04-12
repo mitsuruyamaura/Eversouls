@@ -15,7 +15,9 @@ public class HomeManager : MonoBehaviour
     [Header("設定ボタン")]
     public Button btnSetting;
     [Header("幻視ボタン")]
-    public Button btnVisionPopup;
+    public Button btnVision;
+    [Header("ステータスボタン")]
+    public Button btnStatus;
 
     public Image imgHome;
     [Header("設定用ポップアップのプレファブ")]
@@ -24,9 +26,13 @@ public class HomeManager : MonoBehaviour
     public Transform canvasTran;
     [Header("幻視ポップアップのプレファブ")]
     public VisionPopup visionPopupPrefab;
+    [Header("ステータスポップアップのプレファブ")]
+    public StatusPopup statusPopupPrefab;
+
+    public bool isClickable;
 
     public bool isSetting;   // 設定ボタン重複タップ防止用
-    public QuestSelectPopup questSelectPopupPrefab;
+    public QuestSelectPopup questSelectPopupPrefab;  
 
     void Start(){
         SoundManager.Instance.PlayBGM(GameData.instance.homeBgmType);
@@ -40,7 +46,8 @@ public class HomeManager : MonoBehaviour
         btnBgm1.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_1));
         btnBgm2.onClick.AddListener(() => OnClickChangeBGM(SoundManager.ENUM_BGM.HOME_2));
         btnSetting.onClick.AddListener(OnClickOpenSettingPopup);
-        btnVisionPopup.onClick.AddListener(OnClickOpenVisionPopup);
+        btnVision.onClick.AddListener(OnClickOpenVisionPopup);
+        btnStatus.onClick.AddListener(OnClickOpenStatusPopup);
 
         StartCoroutine(SetupHomeImage());
 
@@ -117,11 +124,25 @@ public class HomeManager : MonoBehaviour
     /// 設定用ポップアップを生成
     /// </summary>
     private void OnClickOpenSettingPopup() {
-        if (!isSetting) {
-            isSetting = true;
-            SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-            SettingPopup setting = Instantiate(settingPopupPrefab, canvasTran, false);
-            setting.Setup(this);
+        if (isSetting) {
+            return;
         }
+        isSetting = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+        SettingPopup setting = Instantiate(settingPopupPrefab, canvasTran, false);
+        setting.Setup(this);
+    }
+
+    /// <summary>
+    /// ステータスポップアップを生成
+    /// </summary>
+    private void OnClickOpenStatusPopup() {
+        if (isClickable) {
+            return;
+        }
+        isSetting = true;
+        SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
+        StatusPopup status = Instantiate(statusPopupPrefab, canvasTran, false);
+        status.Setup(this);
     }
 }

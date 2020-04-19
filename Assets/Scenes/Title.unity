@@ -390,6 +390,7 @@ MonoBehaviour:
   confirmPopupPrefab: {fileID: 4412704571890756424, guid: 462abf0c445b211499a009116ec7c062,
     type: 3}
   canvasTran: {fileID: 2009948566}
+  isOpen: 0
 --- !u!4 &439907598
 Transform:
   m_ObjectHideFlags: 0
@@ -6156,7 +6157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -235, y: -12}
+  m_AnchoredPosition: {x: -235.00003, y: -12}
   m_SizeDelta: {x: -469.6, y: 400.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2018353861

@@ -1935,7 +1935,7 @@ MonoBehaviour:
   btnSetting: {fileID: 1043530841}
   btnVision: {fileID: 1390257079}
   btnStatus: {fileID: 731015895}
-  imgHome: {fileID: 1864891244}
+  imgHome: {fileID: 218367808}
   settingPopupPrefab: {fileID: 9009526783046369467, guid: 8f0251241c831f04a96118bd74a53733,
     type: 3}
   canvasTran: {fileID: 2009948566}
@@ -4344,7 +4344,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0.015269022}
-  m_AnchoredPosition: {x: -32, y: 222.10043}
+  m_AnchoredPosition: {x: -32, y: 222.10045}
   m_SizeDelta: {x: 182.5, y: 319.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1179292959
@@ -7709,5 +7709,10 @@ PrefabInstance:
       propertyPath: targetTran
       value: 
       objectReference: {fileID: 218367807}
+    - target: {fileID: 6334311940358587087, guid: c250313e56f5e1b48a2a7028dec15975,
+        type: 3}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c250313e56f5e1b48a2a7028dec15975, type: 3}

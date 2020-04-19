@@ -6,6 +6,7 @@ using DG.Tweening;
 
 public class HomeManager : MonoBehaviour
 {
+    // UI
     [Header("エリアボタン")]
     public Button[] btnAreas;
     [Header("BGM#1再生ボタン")]
@@ -18,8 +19,9 @@ public class HomeManager : MonoBehaviour
     public Button btnVision;
     [Header("ステータスボタン")]
     public Button btnStatus;
-
+    [Header("背景イメージ")]
     public Image imgHome;
+
     [Header("設定用ポップアップのプレファブ")]
     public SettingPopup settingPopupPrefab;
     [Header("設定用ポップアップの生成位置")]

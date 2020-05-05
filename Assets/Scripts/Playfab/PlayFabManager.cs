@@ -21,15 +21,20 @@ public class PlayFabManager : MonoBehaviour {
 
     [System.Serializable]
     public class SkillData {
-        public int skillNo;       // 所持スキルの番号
-        public string skillName;  // 所持スキルの名前
+        public int skillNo;               // スキルの番号
+        public string skillName;          // スキルの名前
         public int cost;
         public string skillType;
         public int imageNo;
-        public int skillAbilityNo;    // スキルの使用回数や効果を適用する際に参照する能力値()
+        public int skillAbilityNo;        // スキルの使用回数や効果を適用する際に参照する能力値()
         public string eventTypesString;
-        public EVENT_TYPE[] eventTypes;
+        public string expListString;      // レベルアップに必要な経験値リスト
+
+        public EVENT_TYPE[] eventTypes;   // ここからローカル
         public int amountCount;
+        public int[] expList;
+
+        public int level;                 // マスターでは持たない
     }
     public List<SkillData> skillDataList;
 
@@ -92,6 +97,30 @@ public class PlayFabManager : MonoBehaviour {
         public string chestType;                   // ENEMY_LEVEL_TYPE,SEASON_WIND_TYPE,RARE_TYPEから参照して作る。会話イベントはスキルがあれば発生。ランダム
     }
     public List<EnemyData> enemyDataList;
+
+    [System.Serializable]
+    public class MemoriaData {   // 必要があればSkillDataも持たせる
+        public int no;
+        public string title;
+        public string name;
+        public int maxHp;
+        public int physical;      // 武術
+        public int mental;        // 魔術
+        public int technical;     // 技術
+        public int actionPoint;   // 行動力
+        public int response;      // 反応
+        public int search;        // 探索
+        public string skillListString;
+        public string lebelBonusString;
+        public int iconNo;
+
+        public int[] skillList;   // ここからローカル
+        public int[] levelBonus;  // maxHp => searchまでのレベルアップボーナス(7項目)
+        
+        public int level;                           // マスターデータでは持たない。
+        public int exp;　　　　　　　　　　　　　　 // マスターデータでは持たない。
+    }
+    public List<MemoriaData> memoriaDataList;
 
 
     private void Awake() {
@@ -253,6 +282,10 @@ public class PlayFabManager : MonoBehaviour {
                         }
                     }
                 }
+                // TODO メモリア関連を追加する
+
+
+
                 Debug.Log("GetUserDataResult : Success!");
             }
             // 待機を終了
@@ -289,7 +322,7 @@ public class PlayFabManager : MonoBehaviour {
                 { "physical", GameData.instance.physical.ToString()},
                 { "mental", GameData.instance.mental.ToString()},
                 { "technical", GameData.instance.technical.ToString()},
-                { "haveSkillNoList", GameData.instance.GetHaveSkillListString()},
+                { "haveSkillNoList", GameData.instance.ConvertListIntToString(GameData.instance.haveSkillNoList)},
             }
         };
         // PlayFabへ送り、結果で分岐
@@ -334,7 +367,10 @@ public class PlayFabManager : MonoBehaviour {
                 { "physical", GameData.instance.physical.ToString()},
                 { "mental", GameData.instance.mental.ToString()},
                 { "technical", GameData.instance.technical.ToString()},
-                { "haveSkillNoList", GameData.instance.GetHaveSkillListString()},
+                { "haveSkillNoList", GameData.instance.ConvertListIntToString(GameData.instance.haveSkillNoList)},
+                
+                // TODO メモリア関連も追加する
+
             }
         };
         // PlayFabへ送り、結果で分岐
@@ -471,10 +507,13 @@ public class PlayFabManager : MonoBehaviour {
             skillDataList = new List<SkillData>();
             skillDataList = JsonHelper.ListFromJson<SkillData>(result.Data["SkillData"]);
 
-            // stringを配列にしてEventTypeに変換
+            // 各stringを適宜な型にキャストして配列に変換
             foreach (SkillData skillData in skillDataList) {
                 if (skillData.eventTypesString != "") {
                     skillData.eventTypes = skillData.eventTypesString.Split(',').Select(GetEnumTypeFromString<EVENT_TYPE>).ToArray();
+                }
+                if (skillData.expListString != "") {
+                    skillData.expList = skillData.expListString.Split(',').Select(int.Parse).ToArray();
                 }
             }
 
@@ -482,7 +521,7 @@ public class PlayFabManager : MonoBehaviour {
             itemDataList = new List<ItemData>();
             itemDataList = JsonHelper.ListFromJson<ItemData>(result.Data["ItemData"]);
 
-            // 各stringを配列にして、Enumや型に合った値に変換
+            // 各stringを適宜な型にキャストして配列に変換
             foreach (ItemData itemData in itemDataList) {
                 if (itemData.rarelityString != "") {
                     itemData.rarelities = itemData.rarelityString.Split(',').Select(GetEnumTypeFromString<RARE_TYPE>).ToArray();
@@ -514,7 +553,7 @@ public class PlayFabManager : MonoBehaviour {
             enemyDataList = new List<EnemyData>();
             enemyDataList = JsonHelper.ListFromJson<EnemyData>(result.Data["EnemyData"]);
 
-            // 各stringを配列にして、Enumや型に合った値に変換
+            // 各stringを適宜な型にキャストして配列に変換
             foreach (EnemyData enemyData in enemyDataList) {
                 enemyData.rarelity = GetEnumTypeFromString<RARE_TYPE>(enemyData.rarelityString);
                 enemyData.timeType = GetEnumTypeFromString<TIME_TYPE>(enemyData.timeTypeString);
@@ -530,6 +569,22 @@ public class PlayFabManager : MonoBehaviour {
                     enemyData.habitats = enemyData.habitatsString.Split(',').Select(GetEnumTypeFromString<FIELD_TYPE>).ToArray();
                 }
             }
+
+            // MemoriaDataを取得
+            memoriaDataList = new List<MemoriaData>();
+            memoriaDataList = JsonHelper.ListFromJson<MemoriaData>(result.Data["MemoriaData"]);
+
+            // 各stringを適宜な型にキャストして配列に変換
+            foreach (MemoriaData memoriaData in memoriaDataList) {
+                if (!string.IsNullOrEmpty(memoriaData.skillListString)) {
+                    memoriaData.skillList = memoriaData.skillListString.Split(',').Select(int.Parse).ToArray();
+                }
+                if (!string.IsNullOrEmpty(memoriaData.lebelBonusString)) {
+                    memoriaData.levelBonus = memoriaData.lebelBonusString.Split(',').Select(int.Parse).ToArray();
+                }
+            }
+
+
             // 取得完了したのでwhileを抜ける
             isWait = false;
         }

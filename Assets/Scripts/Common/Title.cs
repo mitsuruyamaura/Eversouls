@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using DG.Tweening;
 
 public class Title : MonoBehaviour {
@@ -11,12 +10,12 @@ public class Title : MonoBehaviour {
     [Header("シェアボタン")]
     public Button btnShare;
     [Header("Start点滅アニメ用")]
-    public TMP_Text txtTapStart;
+    public Text txtTapStart;
     [Header("Start点滅アニメ用")]
-    public TMP_Text txtVersion;
+    public Text txtVersion;
 
-    [Header("Jsonファイル読み込み用")]
-    public LoadMasterDataFromJson loadMasterDataFrom;
+    //[Header("Jsonファイル読み込み用")]
+    //public LoadMasterDataFromJson loadMasterDataFrom;
 
     public bool isClickable;     // 重複タップ防止用
     [Header("PlayFab読み込みON")]

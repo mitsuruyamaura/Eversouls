@@ -90,13 +90,23 @@ public class GameData : MonoBehaviour
     public bool isScriptableObjectLoad;
     public bool isFirstAccess;
 
-    public string haveSkillNoListString;   // 所持しているスキルを１つの文字列として受け取ったり送ったりするための変数
+    public string haveSkillNoListString;        // 所持しているスキルを１つの文字列として送受信するための変数
+    public string memoriaLevelListString;   // メモリアのレベルを１つの文字列として送受信するための変数
 
     [Header("所持しているスキル番号リスト")]
     public List<int> haveSkillNoList = new List<int>();　　　// haveSkillNoListStringを元にリスト化し、これを元にhaveSkillNoListStringを作る
     [Header("所持しているスキルのデータリスト")]
     public List<PlayFabManager.SkillData> haveSkillDatas = new List<PlayFabManager.SkillData>();　　// haveSkillNoListを参照してSkillDataから所持しているスキルリストを作る
     
+    [Header("現在のメモリアのレベルリスト")]
+    public List<int> memoriaLevelList = new List<int>();
+    [Header("現在のメモリアの経験値リスト")]
+    public List<int> memoriaExpList = new List<int>();
+    [Header("各メモリアの現在のスキルレベルリスト")]　// KeyはMemoriaNo、Valueはレベルの配列
+    public Dictionary<int, int[]> currentSkillLevelOfMemorias = new Dictionary<int, int[]>();
+
+    [Header("現在のメモリアのデータリスト")]
+    public List<PlayFabManager.MemoriaData> currentMemoriaDataList = new List<PlayFabManager.MemoriaData>(); 
 
     public enum ABILITY_TYPE {
         PHYSICAL,
@@ -140,13 +150,13 @@ public class GameData : MonoBehaviour
     }
 
     /// <summary>
-    /// スキルリストをカンマ区切りの１つの文字列にして戻す
+    /// List<int>をカンマ区切りの１つの文字列にして戻す
     /// </summary>
     /// <returns></returns>
-    public string GetHaveSkillListString() {
+    public string ConvertListIntToString(List<int> intList) {
         string retStr = "";
-        for (int i = 0; i < haveSkillNoList.Count; i++) {
-            retStr += haveSkillNoList[i] + ",";
+        for (int i = 0; i < intList.Count; i++) {
+            retStr += intList[i] + ",";
         }
         if (retStr != "") {
             return retStr.Substring(0, retStr.Length - 1);

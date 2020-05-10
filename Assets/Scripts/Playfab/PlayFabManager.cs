@@ -29,12 +29,14 @@ public class PlayFabManager : MonoBehaviour {
         public int skillAbilityNo;        // スキルの使用回数や効果を適用する際に参照する能力値()
         public string eventTypesString;
         public string expListString;      // レベルアップに必要な経験値リスト
+        public string info;
 
         public EVENT_TYPE[] eventTypes;   // ここからローカル
         public int amountCount;
         public int[] expList;
 
-        public int level;                 // マスターでは持たない
+        public int level = 0;                 // マスターでは持たない
+        public int successRate = 40;          // 計算して算出
     }
     public List<SkillData> skillDataList;
 
@@ -113,6 +115,7 @@ public class PlayFabManager : MonoBehaviour {
         public string skillListString;
         public string lebelBonusString;
         public int iconNo;
+        public string info;
 
         public int[] skillList;   // ここからローカル
         public int[] levelBonus;  // maxHp => searchまでのレベルアップボーナス(7項目)

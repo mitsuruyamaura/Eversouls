@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using TMPro;
+using System.Linq;
 
 public class QuestSelectPopup : PopupBase {
 
-    public QuestInfo questDataPrefab;
+    public QuestInfo questInfoPrefab;
     public List<QuestInfo> questList = new List<QuestInfo>();
     public List<GameData.QuestData> choiceQuestDataList;
 
     public Transform questTran;
     public Button btnRightArrow;
     public Button btnLeftArrow;
-    public TMP_Text txtQuestInfo;
 
     //重複タップ防止用フラグ
     private bool isClickable;
@@ -23,8 +22,16 @@ public class QuestSelectPopup : PopupBase {
 
     [Header("クエスト単位でスクロールビューを移動させるためのクラス")]
     public PageScrollRect page;
-    [Header("生成時にHomeManagerよりもらう")]
-    public HomeManager homeManager;
+    
+    HomeManager homeManager;
+
+    public PlayFabManager.MemoriaData memoriaData;　　　　　　　　　　　　　 // Memoriaの所持しているSikllList参照用
+    public List<ViewInfoDetail> viewInfoList = new List<ViewInfoDetail>();   // SkillDataとMemoriaDataの詳細を表示するリスト
+
+    public Transform skillDetailTran;
+    public Transform viewInfoTran;
+    public SkillDetail skillDetailPrefab;
+    public MemoriaDetail memoriaDetail;
 
     protected override void Start() {
         base.Start();
@@ -33,30 +40,35 @@ public class QuestSelectPopup : PopupBase {
         btnLeftArrow.onClick.AddListener(() => OnClickPrevButtonList());
         //btnLeftArrow.gameObject.SetActive(false);
 
-        btnFilter.interactable = false;
+        //btnFilter.interactable = false;
         page.questSelectPopup = this;
     }
 
     /// <summary>
     /// 選択したエリアのクエストパネルを生成
     /// </summary>
-    /// <param name="areaNo"></param>
     public void CreateQuestPanels(int areaNo, HomeManager homeManager) {
         isClickable = true;
 
         this.homeManager = homeManager;
-        GameData.instance.choiceAreaNo = areaNo;
 
+        GameData.instance.choiceAreaNo = areaNo;
+        GameData.instance.activeMomoriaNo = areaNo;
+
+        // MemoriaDetaを取得。MemoriaDetailを設定し、MemoriaStatusViewInfoを生成
+        memoriaData = PlayFabManager.instance.memoriaDataList.Find(x => x.no == GameData.instance.activeMomoriaNo);
+        memoriaDetail.Setup();
+             
         // スタートエリアを選択するためQuestDataオブジェクトをインスタンスする
         if (!GameData.instance.endTutorial) {
             // チュートリアルが終わっていなければチュートリアル用エリアの生成
-            QuestInfo quest = Instantiate(questDataPrefab, questTran, false);
+            QuestInfo quest = Instantiate(questInfoPrefab, questTran, false);
             quest.InitQuestData(0, this);
             questList.Add(quest);
         } else {
             Debug.Log(areaNo);
             for (int i = 0; i < GameData.instance.questClearCountsByArea[areaNo]; i++) {
-                QuestInfo quest = Instantiate(questDataPrefab, questTran, false);
+                QuestInfo quest = Instantiate(questInfoPrefab, questTran, false);
                 // TODO　固定にする？
                 int areaType = Random.Range(0, GameData.instance.areaDatas.areaDataList.Count);
                 quest.InitQuestData(areaType, this);
@@ -67,6 +79,13 @@ public class QuestSelectPopup : PopupBase {
             btnLeftArrow.gameObject.SetActive(false);
             btnRightArrow.gameObject.SetActive(false);
         }
+
+        // 所持しているSkillData分だけ、SkillDetailアイコンを生成
+        for (int i = 0; i <  memoriaData.skillList.Length; i++) {
+            SkillDetail skillDetail = Instantiate(skillDetailPrefab, skillDetailTran, false);
+            skillDetail.Setup(memoriaData.skillList[i], this);
+        }
+        
         isClickable = false;
     }
 
@@ -74,10 +93,8 @@ public class QuestSelectPopup : PopupBase {
     /// 選択中のクエストインフォを表示
     /// ObjectCencerAreaより呼ばれる
     /// </summary>
-    /// <param name="questInfo"></param>
     public void DisplaySelectQuestInfo(QuestInfo questInfo) {
         choiceQuestDataList = questInfo.questDataList;
-        txtQuestInfo.text = questInfo.areaInfo;
     }
 
     /// <summary>
@@ -187,5 +204,14 @@ public class QuestSelectPopup : PopupBase {
 
         canvasGroup.DOFade(0, 0.5f);
         StartCoroutine(homeManager.StartQuestScene());
+    }
+
+    /// <summary>
+    /// ポップアップを閉じる
+    /// </summary>
+    public override void OnClickClosePopup() {
+        homeManager.swipeMoveObject.isWindowOpen = false;
+        homeManager.isClickable = false;
+        base.OnClickClosePopup();
     }
 }

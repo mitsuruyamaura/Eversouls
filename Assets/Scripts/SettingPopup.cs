@@ -11,10 +11,10 @@ public class SettingPopup : PopupBase
     [Header("SE音量調整用")]
     public Slider sliderSE;
 
-    private HomeManager _homeManager;
+    private HomeManager homeManager;
 
     public void Setup(HomeManager homeManager) {
-        _homeManager = homeManager;
+        this.homeManager = homeManager;
 
         // 現在の音量を取得してスライダーセット
         sliderBGM.value = GameData.instance.volumeBGM;
@@ -29,7 +29,8 @@ public class SettingPopup : PopupBase
     public override void OnClickClosePopup() {
         StartCoroutine(SaveSettings());
         // 再度設定ボタンを押せるようにする
-        _homeManager.isSetting = false;
+        homeManager.swipeMoveObject.isWindowOpen = false;
+        homeManager.isClickable = false;
 
         base.OnClickClosePopup();
     }

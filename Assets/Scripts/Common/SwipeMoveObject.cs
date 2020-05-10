@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 //using UnityEngine.UI;　　　// Scrollbar用
 
 /// <summary>
@@ -11,6 +12,8 @@ public class SwipeMoveObject : MonoBehaviour
     [Header("移動速度")]
     public float speed;      // 3-5位でいい
     Vector3 mousePos;        // タップ位置の保存用
+
+    public bool isWindowOpen;// ウインドウが開いているかどうか
 
     //Vector2 startPos;　　　// MoveSwipeメソッドで使用
     //float xSpeed;　　　　　// MoveSwipeメソッドで使用
@@ -25,6 +28,21 @@ public class SwipeMoveObject : MonoBehaviour
     /// スワイプに合わせてすぐに移動するタイプ
     /// </summary>
     private void Move() {
+        //#if UNITY_EDITOR
+        //        if (EventSystem.current.IsPointerOverGameObject()) {
+        //            return;
+        //        }
+        //#else
+        //        if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) {
+        //            return;
+        //        }
+        //#endif
+        
+        if (isWindowOpen) {
+            // クエストウインドウが開いているときは処理しない
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0)) {
             mousePos = Input.mousePosition;
         }

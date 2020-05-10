@@ -12,6 +12,8 @@ public class VisionPopup : PopupBase
     public TMP_Text txtSubtractCurrencyPoint;
     public TMP_Text txtRewordCurrencyPoint;
 
+    HomeManager homeManager;
+
     protected override void Start() {
         base.Start();
 
@@ -26,6 +28,10 @@ public class VisionPopup : PopupBase
         if (GameData.instance.rewordOn) {
             btnReword.interactable = false;
         }
+    }
+
+    public void Setup(HomeManager homeManager) {
+        this.homeManager = homeManager;
     }
 
     /// <summary>
@@ -66,5 +72,13 @@ public class VisionPopup : PopupBase
             yield return StartCoroutine(PlayFabManager.instance.UpdataUserReword());
             isSubmit = false;
         }
+    }
+
+    public override void OnClickClosePopup() {
+        // 再度設定ボタンを押せるようにする
+        homeManager.swipeMoveObject.isWindowOpen = false;
+        homeManager.isClickable = false;
+
+        base.OnClickClosePopup();
     }
 }

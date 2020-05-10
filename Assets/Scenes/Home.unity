@@ -1637,9 +1637,9 @@ MonoBehaviour:
   statusPopupPrefab: {fileID: -725648467774455579, guid: 7a78ec758d91a2c4f87784e80c02bb46,
     type: 3}
   isClickable: 0
-  isSetting: 0
-  questSelectPopupPrefab: {fileID: 3394132411759674714, guid: 61df47e74814ef045a0e353fa5f18812,
+  questSelectPopupPrefab: {fileID: 8787455287764444680, guid: 6b08bfd64a66cf5499dadcb0722134e9,
     type: 3}
+  swipeMoveObject: {fileID: 8699642197145651728}
 --- !u!4 &439907598
 Transform:
   m_ObjectHideFlags: 0
@@ -2159,7 +2159,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 22.9, y: -4.1}
+  m_AnchoredPosition: {x: 22.900002, y: -4.0999985}
   m_SizeDelta: {x: -62.65001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &576457717
@@ -3673,7 +3673,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 29.5, y: 1.7}
+  m_AnchoredPosition: {x: 29.5, y: 1.7000008}
   m_SizeDelta: {x: -72.48001, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1440174506
@@ -4178,7 +4178,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 33.080017, y: -3.7}
+  m_AnchoredPosition: {x: 33.080017, y: -3.7000008}
   m_SizeDelta: {x: -66.16, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1622386403
@@ -5135,3 +5135,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c250313e56f5e1b48a2a7028dec15975, type: 3}
+--- !u!114 &8699642197145651728 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6334311940358587087, guid: c250313e56f5e1b48a2a7028dec15975,
+    type: 3}
+  m_PrefabInstance: {fileID: 8699642197145651727}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03d5d0fae6d67574aa5523dbaacbc69a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

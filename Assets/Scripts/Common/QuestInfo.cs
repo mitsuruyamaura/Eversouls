@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using System;
-using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
 
@@ -22,7 +20,7 @@ public class QuestInfo : MonoBehaviour
 
     // UI関連
     [Header("エリアのタイプ名表示")]
-    public TMP_Text txtAreaType;
+    public Text txtAreaType;
     public Image imgArea;
     public Button btnSubmit;
 
@@ -80,6 +78,10 @@ public class QuestInfo : MonoBehaviour
             }
         }
         btnSubmit.onClick.AddListener(() => StartCoroutine(OnClickSubmit()));
+
+        // クエストへ行くメッセージを点滅アニメ
+        txtAreaType.DOFade(1f, 1.5f).SetLoops(-1, LoopType.Yoyo);
+
         isClickable = false;
     }
 

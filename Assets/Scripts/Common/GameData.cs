@@ -106,7 +106,9 @@ public class GameData : MonoBehaviour
     public Dictionary<int, int[]> currentSkillLevelOfMemorias = new Dictionary<int, int[]>();
 
     [Header("現在のメモリアのデータリスト")]
-    public List<PlayFabManager.MemoriaData> currentMemoriaDataList = new List<PlayFabManager.MemoriaData>(); 
+    public List<PlayFabManager.MemoriaData> currentMemoriaDataList = new List<PlayFabManager.MemoriaData>();
+
+    public int activeMomoriaNo;
 
     public enum ABILITY_TYPE {
         PHYSICAL,

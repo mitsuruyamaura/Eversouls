@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEditorInternal;
 
 public class HomeManager : MonoBehaviour
 {
@@ -31,10 +32,9 @@ public class HomeManager : MonoBehaviour
     [Header("ステータスポップアップのプレファブ")]
     public StatusPopup statusPopupPrefab;
 
-    public bool isClickable;
-
-    public bool isSetting;   // 設定ボタン重複タップ防止用
-    public QuestSelectPopup questSelectPopupPrefab;  
+    public bool isClickable;    // 設定ボタン重複タップ防止用
+    public QuestSelectPopup questSelectPopupPrefab;
+    public SwipeMoveObject swipeMoveObject;
 
     void Start(){
         SoundManager.Instance.PlayBGM(GameData.instance.homeBgmType);
@@ -62,8 +62,14 @@ public class HomeManager : MonoBehaviour
     /// 幻視ポップアップを生成
     /// </summary>
     private void OnClickOpenVisionPopup() {
+        if (isClickable) {
+            return;
+        }
+        isClickable = true;
+        swipeMoveObject.isWindowOpen = true;
         SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
-        Instantiate(visionPopupPrefab, canvasTran, false);
+        VisionPopup visionPopup = Instantiate(visionPopupPrefab, canvasTran, false);
+        visionPopup.Setup(this);
     }
 
     /// <summary>
@@ -71,6 +77,11 @@ public class HomeManager : MonoBehaviour
     /// </summary>
     /// <param name="areaNo"></param>
     private void OnClickOpenQuestSelectPopup(int areaNo) {
+        if (isClickable) {
+            return;
+        }
+        isClickable = true;
+        swipeMoveObject.isWindowOpen = true;
         SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
         QuestSelectPopup questSelectPopup = Instantiate(questSelectPopupPrefab, canvasTran, false);
         questSelectPopup.CreateQuestPanels(areaNo, this);
@@ -126,10 +137,11 @@ public class HomeManager : MonoBehaviour
     /// 設定用ポップアップを生成
     /// </summary>
     private void OnClickOpenSettingPopup() {
-        if (isSetting) {
+        if (isClickable) {
             return;
         }
-        isSetting = true;
+        isClickable = true;
+        swipeMoveObject.isWindowOpen = true;
         SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
         SettingPopup setting = Instantiate(settingPopupPrefab, canvasTran, false);
         setting.Setup(this);
@@ -142,7 +154,8 @@ public class HomeManager : MonoBehaviour
         if (isClickable) {
             return;
         }
-        isSetting = true;
+        isClickable = true;
+        swipeMoveObject.isWindowOpen = true;
         SoundManager.Instance.PlaySE(SoundManager.ENUM_SE.BTN_OK);
         StatusPopup status = Instantiate(statusPopupPrefab, canvasTran, false);
         status.Setup(this);

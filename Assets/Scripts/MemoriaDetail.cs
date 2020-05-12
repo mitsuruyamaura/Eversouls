@@ -13,6 +13,10 @@ public class MemoriaDetail : MonoBehaviour
     public Text txtMemoriaName;
     public Image imgMemoriaChara;
     public Button btnMemoria;
+    public Text txtMemoriaLevel;
+    public Text txtHaveMagicWord;
+    public Text txtMemoriaExp;
+    public Text txtClearCount;
 
     public MemoriaStatusViewInfo memoriaStatusViewInfoPrefab;
 
@@ -32,6 +36,11 @@ public class MemoriaDetail : MonoBehaviour
         // 名前とタイトルと背景用アイコン表示
         txtMemoriaName.text = memoriaData.title + "\n" + memoriaData.name;
         imgMemoriaChara.sprite = GameData.instance.spriteAtlas.GetSprite("Memoria_" + memoriaData.iconNo);
+
+        txtMemoriaLevel.text = memoriaData.level.ToString();
+        txtHaveMagicWord.text = memoriaData.haveMagicWord;      // カンマ区切りのまま使う。ゲームブックのフラグをイメージさせる
+        txtMemoriaExp.text = memoriaData.exp.ToString();
+        txtClearCount.text = memoriaData.clearCount.ToString();
 
         btnMemoria.onClick.AddListener(OnClickDetail);
 

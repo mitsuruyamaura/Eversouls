@@ -116,6 +116,8 @@ public class PlayFabManager : MonoBehaviour {
         public string lebelBonusString;
         public int iconNo;
         public string info;
+        public string haveMagicWord;　// 記憶のフラグ。カンマ区切りになっているので、配列にして使用する
+        public int clearCount;    // クリア回数
 
         public int[] skillList;   // ここからローカル
         public int[] levelBonus;  // maxHp => searchまでのレベルアップボーナス(7項目)

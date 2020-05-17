@@ -24,11 +24,12 @@ public class SkillViewInfo : ViewInfoDetail
         viewNo = skillData.skillNo;
 
         // UI設定
-        txtSkillName.text = skillData.skillName;
-        txtSkillCost.text = skillData.cost.ToString();
-        txtSkillExp.text = skillData.expList[skillData.level].ToString();
-        txtInfo.text = skillData.info;
-        txtSkillLevel.text = skillData.level.ToString();
-        txtSkillSuccessRate.text = skillData.successRate.ToString();
+        txtSkillName.text = "Skill Name : " + skillData.skillName;
+        txtSkillCost.text = "Play Cost : " + skillData.cost.ToString();
+        txtSkillExp.text = "Required Exp : " + skillData.expList[skillData.level].ToString();
+        txtInfo.text = "Skill Info : " + skillData.info;
+        txtSkillLevel.text = "Skill Level : " + skillData.level.ToString();
+        txtSkillSuccessRate.text = "Success Rate : " + skillData.successRate.ToString();
+        txtType.text = "Skill Type : " + skillData.skillType;
     }
 }

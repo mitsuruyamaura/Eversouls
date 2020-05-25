@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -36,7 +35,7 @@ public class EnumTest : MonoBehaviour {
     void Start() {
         // 文字列を引数で渡した種類のEnumに変換
         string day = "friday";
-        dayType = GetEnumTypeFromString<DAY_TYPE>(day);
+        dayType = ConvertEnumType.GetEnumTypeFromString<DAY_TYPE>(day);
 
         // 配列の場合(Select(x => (x))の引数が省略できるので非常に楽)
         string times = "NIGHT,afternoon,Morning";
@@ -45,19 +44,19 @@ public class EnumTest : MonoBehaviour {
         //for (int i = 0; i < strArray.Length; i++) {
         //    timeTypeArray[i] = GetEnumTypeFromString<TIME_TYPE>(strArray[i]);
         //}
-        timeTypeArray = times.Split(',').Select(GetEnumTypeFromString<TIME_TYPE>).ToArray();
+        timeTypeArray = times.Split(',').Select(ConvertEnumType.GetEnumTypeFromString<TIME_TYPE>).ToArray();
 
         // Listの場合
         string seasons = "summer,Winter,spring,AUTUMN";
-        seasonTypeList = seasons.Split(',').Select(GetEnumTypeFromString<SEASON_TYPE>).ToList();
+        seasonTypeList = seasons.Split(',').Select(ConvertEnumType.GetEnumTypeFromString<SEASON_TYPE>).ToList();
     }
 
     /// <summary>
     /// stringとEnumのタイプをもらい、文字列をそのタイプのEnumにする
     /// </summary>
-    public IEnum GetEnumTypeFromString<IEnum>(string str) where IEnum : struct {
-        return (IEnum)Enum.Parse(typeof(IEnum), str, true);
-    }
+    //public IEnum GetEnumTypeFromString<IEnum>(string str) where IEnum : struct {
+    //    return (IEnum)Enum.Parse(typeof(IEnum), str, true);
+    //}
 
 
     // 自分の質問サイト
